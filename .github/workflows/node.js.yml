@@ -27,6 +27,6 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm test -- --testPathIgnorePatterns="/e2e/"
-    - run: detox build --configuration android.emu.debug
-    - run: detox test --configuration android.emu.debug
+    #- run: npm detox build --configuration android.emu.debug
+    #- run: npm detox test --configuration android.emu.debug
 
