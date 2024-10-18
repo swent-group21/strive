@@ -10,7 +10,7 @@ export default function SetProfilePicture() {
         <View style = {styles.backround}>
 
           <Image 
-            source={require('@/assets/images/sign-up-screen/Ellipse 3.png')}
+            source={require('@/assets/images/auth/SignUpScreen/Ellipse 3.png')}
             style={styles.ellipse}
           />
           
@@ -27,7 +27,7 @@ export default function SetProfilePicture() {
             {/* The profile picture */}
             <TouchableOpacity style={styles.imageContainer} onPress = {() => alert('Change profile picture')}>
                 <Image
-                    source={require('@/assets/images/sign-up-screen/Profile-PNG-File.png')}
+                    source={require('@/assets/images/auth/SignUpScreen/Profile-PNG-File.png')}
                     style={styles.profilePicture}
                     
                 />
