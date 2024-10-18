@@ -1,85 +1,108 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export default function WelcomeConceptScreen() {
-    return (
-        <View style={styles.container} testID="welcomeFinal">
-            <View style={styles.ovalShapeOne} testID="ovalShapeOne4"/>
-            <View style={styles.ovalShapeTwo} testID="ovalShapeTwo4"/>
+  return (
+    <View style={styles.container} testID="welcomeFinal">
+      <View style={styles.ovalShapeOne} testID="ovalShapeOne4" />
+      <View style={styles.ovalShapeTwo} testID="ovalShapeTwo4" />
 
-            <Text style={styles.title} testID="welcomeTitle4" >Ready to{'\n'}Strive?</Text>
-            
-            <View style={styles.buttonContainer} testID="buttonContainer4">
-                <TouchableOpacity style={styles.buttonAccount} onPress={() => alert('Login')} testID="loginButton">
-                    <Text style={styles.buttonText} testID="loginButtonText">Login</Text>
-                </TouchableOpacity>
-                {/* Add some space between the buttons */}
-                <Text /> 
-                <TouchableOpacity style={styles.buttonAccount} onPress={() => alert('Sign up')} testID="signupButton">
-                    <Text style={styles.buttonText} testID="signupButtonText">Sign Up</Text>
-                </TouchableOpacity>
-                {/* Add some space between the buttons */}
-                <Text /> 
-                <TouchableOpacity onPress={() => alert('Anonymous')} testID="guestButton">
-                    <Text >Continue as guest</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
+      <Text style={styles.title} testID="welcomeTitle4">
+        Ready to{"\n"}Strive?
+      </Text>
+
+      <View style={styles.buttonContainer} testID="buttonContainer4">
+        <TouchableOpacity
+          style={styles.buttonAccount}
+          onPress={() => alert("Login")}
+          testID="loginButton"
+        >
+          <Text style={styles.buttonText} testID="loginButtonText">
+            Login
+          </Text>
+        </TouchableOpacity>
+        {/* Add some space between the buttons */}
+        <Text />
+        <TouchableOpacity
+          style={styles.buttonAccount}
+          onPress={() => alert("Sign up")}
+          testID="signupButton"
+        >
+          <Text style={styles.buttonText} testID="signupButtonText">
+            Sign Up
+          </Text>
+        </TouchableOpacity>
+        {/* Add some space between the buttons */}
+        <Text />
+        <TouchableOpacity
+          onPress={() => alert("Anonymous")}
+          testID="guestButton"
+        >
+          <Text>Continue as guest</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        width: SCREEN_WIDTH,
-        height: SCREEN_HEIGHT,
-    },
-    ovalShapeOne: {
-        position: 'absolute',
-        top: SCREEN_HEIGHT * 0.8,
-        left: -SCREEN_WIDTH * 0.3,
-        width: SCREEN_WIDTH * 1.3,
-        height: SCREEN_HEIGHT * 0.7,
-        borderRadius: SCREEN_WIDTH * 0.7,
-        backgroundColor: '#E6BC95',
-    },
-    ovalShapeTwo: {
-        position: 'absolute',
-        top: -SCREEN_HEIGHT * 0.4,
-        left: SCREEN_WIDTH * 0.3,
-        width: SCREEN_WIDTH * 1.3,
-        height: SCREEN_HEIGHT * 0.7,
-        borderRadius: SCREEN_WIDTH * 0.7,
-        backgroundColor: '#E6BC95',
-    },
-    title: {
-        paddingTop: SCREEN_HEIGHT * 0.3,
-        paddingLeft: SCREEN_WIDTH * 0.05,
-        fontSize: 64,
-        fontWeight: '900',
-        color: '#000',
-        lineHeight: 62,
-        paddingBottom: SCREEN_HEIGHT * 0.12,
-    },
-    buttonContainer: {
-        flex: 1,
-        alignItems: 'center',
-        paddingBottom: 60,
-    },
-    buttonAccount: {
-        width: '80%',
-        height: SCREEN_HEIGHT * 0.05,  
-        backgroundColor: '#000',
-        borderRadius: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    buttonText: {
-        fontWeight: '600',
-        color: '#FFF',
-    },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  },
+  ovalShapeOne: {
+    position: "absolute",
+    top: SCREEN_HEIGHT * 0.8,
+    left: -SCREEN_WIDTH * 0.3,
+    width: SCREEN_WIDTH * 1.3,
+    height: SCREEN_HEIGHT * 0.7,
+    borderRadius: SCREEN_WIDTH * 0.7,
+    backgroundColor: "#E6BC95",
+  },
+  ovalShapeTwo: {
+    position: "absolute",
+    top: -SCREEN_HEIGHT * 0.4,
+    left: SCREEN_WIDTH * 0.3,
+    width: SCREEN_WIDTH * 1.3,
+    height: SCREEN_HEIGHT * 0.7,
+    borderRadius: SCREEN_WIDTH * 0.7,
+    backgroundColor: "#E6BC95",
+  },
+  title: {
+    paddingTop: SCREEN_HEIGHT * 0.3,
+    paddingLeft: SCREEN_WIDTH * 0.05,
+    fontSize: 64,
+    fontWeight: "900",
+    color: "#000",
+    lineHeight: 62,
+    paddingBottom: SCREEN_HEIGHT * 0.12,
+  },
+  buttonContainer: {
+    flex: 1,
+    alignItems: "center",
+    paddingBottom: 60,
+  },
+  buttonAccount: {
+    width: "80%",
+    height: SCREEN_HEIGHT * 0.05,
+    backgroundColor: "#000",
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    fontWeight: "600",
+    color: "#FFF",
+  },
 });
