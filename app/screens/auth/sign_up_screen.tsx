@@ -114,7 +114,11 @@ export default function SignUp() {
               </Text>
 
               {/* Sign Up buttons for Google */}
-              <TouchableOpacity style={styles.buttonContinueWith} onPress={() => alert('Sign In with Google')}>
+              <TouchableOpacity style={styles.buttonContinueWith} onPress={() => {
+                    alert('Sign In with Google')
+                    router.navigate('/screens/home/PLACEHOLDER_home_screen')
+                  }
+                }>
                 <View style={styles.buttonIcon}>
                     <Image source={require('@/assets/images/sign-up-screen/google.png')} style={styles.icon} />
                     <Text style={styles.buttonText}>Continue with Google</Text>
@@ -122,7 +126,10 @@ export default function SignUp() {
               </TouchableOpacity>
 
               {/* Sign Up buttons for Facebook */}
-              <TouchableOpacity style={styles.buttonContinueWith} onPress={() => alert('Sign In with Facebook')}>
+              <TouchableOpacity style={styles.buttonContinueWith} onPress={() => {
+                    alert('Sign In with Facebook')
+                    router.navigate('/screens/home/PLACEHOLDER_home_screen')
+                  }}>
                 <View style={styles.buttonIcon}>
                     <Image source={require('@/assets/images/sign-up-screen/facebook.png')} style={styles.icon} />
                     <Text style={styles.buttonText}>Continue with Facebook</Text>

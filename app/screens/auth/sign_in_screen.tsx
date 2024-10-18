@@ -44,7 +44,10 @@ export default function SignInScreen() {
         />
 
         {/* SignIn Button */}
-        <TouchableOpacity style={styles.buttonSignIn} onPress={() => alert('Sign In')} testID='signInButton'>
+        <TouchableOpacity style={styles.buttonSignIn} onPress={() => {
+                alert('Sign In')
+                router.navigate('/screens/home/PLACEHOLDER_home_screen')
+            }} testID='signInButton'>
             <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
 
@@ -54,7 +57,10 @@ export default function SignInScreen() {
         </TouchableOpacity>
 
         {/* Continue with Google */}
-        <TouchableOpacity style={styles.buttonContinueWith} onPress={() => alert('Sign In with Google')} testID='continueWithGoogleButton'>
+        <TouchableOpacity style={styles.buttonContinueWith} onPress={() => {
+                alert('Sign In with Google')
+                router.navigate('/screens/home/PLACEHOLDER_home_screen')
+            }} testID='continueWithGoogleButton'>
         <View style={styles.buttonContent}>
             <Image source={require('@/assets/images/auth/SignInScreen/google.png')} style={styles.icon} />
             <Text style={styles.buttonText}>Continue with Google</Text>
@@ -62,7 +68,10 @@ export default function SignInScreen() {
         </TouchableOpacity>
 
         {/* Continue with Facebook */}
-        <TouchableOpacity style={styles.buttonContinueWith} onPress={() => alert('Sign In with Facebook')} testID='continueWithFacebookButton'>
+        <TouchableOpacity style={styles.buttonContinueWith} onPress={() => {
+                alert('Sign In with Facebook')
+                router.navigate('/screens/home/PLACEHOLDER_home_screen')
+            }} testID='continueWithFacebookButton'>
         <View style={styles.buttonContent}>
             <Image source={require('@/assets/images/auth/SignInScreen/facebook.png')} style={styles.icon} />
             <Text style={styles.buttonText}>Continue with Facebook</Text>
