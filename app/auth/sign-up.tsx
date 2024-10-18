@@ -20,29 +20,30 @@ export default function SignUp() {
 
     return (
 
-      <View> 
+      <View testID="signUpScreen"> 
 
         {/* Image in the backround out of the scroll view for immonility */}
         <Image
           source={require('@/assets/images/sign-up-screen/Ellipse 3.png')}
           style={styles.backroundimage}
+          testID="signUpBackgroundImage"
         />
        
         <ScrollView>
         
           {/* Color of the backround */}
-          <View style = {styles.backround}>
+          <View style = {styles.backround} testID="signUpBackground">
 
           {/* Go back button */}
-          <TouchableOpacity style={styles.goBack} onPress={() => alert('Go back')}>
+          <TouchableOpacity style={styles.goBack} onPress={() => alert('Go back')} testID="signUpGoBackButton">
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
 
           {/* Title of the screen */}
-          <Text style = {styles.title}>Tell us about you !</Text>
+          <Text style = {styles.title} testID="signUpScreenTitle">Tell us about you !</Text>
 
           {/* The input fields */}
-          <View style = {styles.inputColumn}>
+          <View style = {styles.inputColumn} testID="signUpInputFields">
               
               {/* Name */}
               <Text style = {styles.titleinput}>Name *</Text>
@@ -52,6 +53,7 @@ export default function SignUp() {
                 placeholderTextColor="#888"
                 onChangeText={(text) => setName(text)}
                 autoComplete='name'
+                testID="signUpNameInput"
 
               />
               
@@ -63,6 +65,7 @@ export default function SignUp() {
                 placeholderTextColor="#888"
                 onChangeText={(text) => setSurname(text)}
                 autoComplete='family-name'
+                testID="signUpSurnameInput"
 
               />
 
@@ -78,6 +81,7 @@ export default function SignUp() {
                 autoCapitalize='none'
                 onChangeText={(text) => setEmail(text)}
                 maxLength={50}
+                testID="signUpEmailInput"
               />
 
               {/* Password */}
@@ -88,6 +92,7 @@ export default function SignUp() {
                 placeholderTextColor="#888"
                 secureTextEntry={true}
                 onChangeText={(text) => setPassword(text)}
+                testID="signUpPasswordInput"
               />
         
 
@@ -99,11 +104,12 @@ export default function SignUp() {
                 placeholderTextColor="#888"
                 secureTextEntry={true}
                 onChangeText={(text) => setConfirmPassword(text)}
+                testID="signUpConfirmPasswordInput"
               />
 
               {/* Register Button */}
-              <TouchableOpacity style={styles.buttonStrive} onPress={() => onClickStrive(password, confirmPassword, name, surname, email)}>
-                <Text style={styles.buttonText}>Strive with us</Text>
+              <TouchableOpacity style={styles.buttonStrive} onPress={() => onClickStrive(password, confirmPassword, name, surname, email)} testID="striveWithUsButton">
+                <Text style={styles.buttonText} testID="striveWithUsButtonText">Strive with us</Text>
               </TouchableOpacity>
 
           

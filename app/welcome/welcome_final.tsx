@@ -6,24 +6,24 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export default function WelcomeConceptScreen() {
     return (
-        <View style={styles.container}>
-            <View style={styles.ovalShapeOne} />
-            <View style={styles.ovalShapeTwo} />
+        <View style={styles.container} testID="welcomeFinal">
+            <View style={styles.ovalShapeOne} testID="ovalShapeOne4"/>
+            <View style={styles.ovalShapeTwo} testID="ovalShapeTwo4"/>
 
-            <Text style={styles.title}>Ready to{'\n'}Strive?</Text>
+            <Text style={styles.title} testID="welcomeTitle4" >Ready to{'\n'}Strive?</Text>
             
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.buttonAccount} onPress={() => alert('Login')}>
-                    <Text style={styles.buttonText} >Login</Text>
+            <View style={styles.buttonContainer} testID="buttonContainer4">
+                <TouchableOpacity style={styles.buttonAccount} onPress={() => alert('Login')} testID="loginButton">
+                    <Text style={styles.buttonText} testID="loginButtonText">Login</Text>
                 </TouchableOpacity>
                 {/* Add some space between the buttons */}
                 <Text /> 
-                <TouchableOpacity style={styles.buttonAccount} onPress={() => alert('Sign up')}>
-                    <Text style={styles.buttonText} >Sign Up</Text>
+                <TouchableOpacity style={styles.buttonAccount} onPress={() => alert('Sign up')} testID="signupButton">
+                    <Text style={styles.buttonText} testID="signupButtonText">Sign Up</Text>
                 </TouchableOpacity>
                 {/* Add some space between the buttons */}
                 <Text /> 
-                <TouchableOpacity onPress={() => alert('Anonymous')}>
+                <TouchableOpacity onPress={() => alert('Anonymous')} testID="guestButton">
                     <Text >Continue as guest</Text>
                 </TouchableOpacity>
             </View>

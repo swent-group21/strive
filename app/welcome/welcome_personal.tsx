@@ -6,11 +6,11 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export default function WelcomeConceptScreen() {
     return (
-        <View style={styles.container}>
-            <View style={styles.ovalShape} />
-            <View style={styles.textContainer}>
-                <Text style={styles.title}>Compete{'\n'}yourself</Text>
-                <Text style={styles.description}>
+        <View style={styles.container} testID="welcomePersonal">
+            <View style={styles.ovalShape} testID="ovalShape3"/>
+            <View style={styles.textContainer} testID="textContainer3">
+                <Text style={styles.title} testID="welcomeTitle3">Compete{'\n'}yourself</Text>
+                <Text style={styles.description} testID="welcomeDescription3">
                     Become the best version of yourself{'\n'} 
                     Interact with motivated people to reach your goals !
                 </Text>

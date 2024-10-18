@@ -20,7 +20,7 @@ export default function WelcomeScreens() {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={styles.container} testID='scrollView'>
             <ScrollView 
                 horizontal 
                 pagingEnabled 
@@ -36,7 +36,7 @@ export default function WelcomeScreens() {
 
             {/* Render the dots, only if not on the last screen */}
             {activeIndex < 3 && (
-                <View style={styles.dotContainer}>
+                <View style={styles.dotContainer} testID='activeIndex'>
                     {[0, 1, 2, 4].map((i) => (
                         <View
                             key={i}

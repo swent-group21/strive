@@ -7,14 +7,15 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export default function WelcomeIntroScreen() {
     return (
-        <View style={styles.container}>
-            <View style={styles.ovalShape} />
-            <Text style={styles.title}>So what is{'\n'}Strive{'\n'}about ?</Text>
-            <View style={styles.bottomContainer}>
+        <View style={styles.container} testID="welcomeIntro">
+            <View style={styles.ovalShape} testID="ovalShape" />
+            <Text style={styles.title} testID="welcomeTitle">So what is{'\n'}Strive{'\n'}about ?</Text>
+            <View style={styles.bottomContainer} testID="bottomContainer">
                 {/* Placeholder for the image */}
                 <Image
                     style={styles.image}
                     source={require('../../assets/images/goat_doodle.png')}
+                    testID="welcomeImage"
                 />
             </View>
         </View>
