@@ -41,12 +41,24 @@
     "tailwindcss": "^3.3.2"
   },
   "detox": {
-    "configurations": {
-      "android.emu.debug": {
+    "apps": {
+      "android.debug": {
+        "type": "android.apk",
         "binaryPath": "./app/build/outputs/apk/debug/app-debug.apk",
         "build": "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && cd ..",
+        "launchArgs": {}
+      }
+    },
+    "devices": {
+      "android.emulator": {
         "type": "android.emulator",
-        "name": "Pixel_2_API_29"
+        "device": { "avdName": "Pixel_30_API" }
+      }
+    },
+    "configurations": {
+      "android.emu.debug": {
+        "device": "android.emulator",
+        "app": "android.debug"
       }
     },
     "test-runner": "jest"
