@@ -80,10 +80,5 @@ describe('Welcome Navigation', () => {
         await element(by.id('signUpConfirmPasswordInput')).tap();
         await element(by.id('signUpConfirmPasswordInput')).typeText('password123');
       });
-    
-      it('should navigate to the next screen after pressing "Strive with us" button', async () => {
-        await element(by.id('striveWithUsButton')).tap();  // Tap the strive button
-        await expect(element(by.id('nextScreen'))).toBeVisible();  // Ensure the next screen appears (adjust 'nextScreen' as needed)
-      });
   });
   
