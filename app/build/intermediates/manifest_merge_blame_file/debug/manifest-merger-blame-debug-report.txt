@@ -1,0 +1,44 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.myapp"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+8-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="31" />
+9-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml
+10
+11    <application
+11-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml:4:5-18:19
+12        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+12-->[androidx.core:core:1.5.0] /home/mark/.gradle/caches/transforms-3/b3d376c9d170ab51886ac1decd002804/transformed/core-1.5.0/AndroidManifest.xml:24:18-86
+13        android:debuggable="true"
+14        android:icon="@mipmap/ic_launcher"
+14-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml:6:9-43
+15        android:label="MyApp"
+15-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml:5:9-30
+16        android:testOnly="true" >
+17
+18        <!-- MainActivity with android:exported set to true -->
+19        <activity
+19-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml:9:9-16:20
+20            android:name="com.example.myapp.MainActivity"
+20-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml:10:13-41
+21            android:exported="true" >
+21-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml:11:13-36
+22            <intent-filter>
+22-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml:12:13-15:29
+23                <action android:name="android.intent.action.MAIN" />
+23-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml:13:17-69
+23-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml:13:25-66
+24
+25                <category android:name="android.intent.category.LAUNCHER" />
+25-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml:14:17-77
+25-->/home/mark/branchjadaa/strive/app/src/main/AndroidManifest.xml:14:27-74
+26            </intent-filter>
+27        </activity>
+28    </application>
+29
+30</manifest>

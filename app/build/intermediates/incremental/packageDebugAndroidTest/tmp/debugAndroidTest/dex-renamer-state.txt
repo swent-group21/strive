@@ -1,0 +1,4 @@
+#Fri Oct 18 03:21:59 CEST 2024
+base.0=/home/mark/branchjadaa/strive/app/build/intermediates/dex/debugAndroidTest/mergeProjectDexDebugAndroidTest/0/classes.dex
+path.0=0/classes.dex
+renamed.0=classes.dex
