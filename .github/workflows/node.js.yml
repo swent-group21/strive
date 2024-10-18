@@ -27,17 +27,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm test -- --testPathIgnorePatterns="/e2e/"
-
-    - name: Build App
-      run: ./gradlew assembleRelease
-    - name: Upload APK to Artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: app
-        path: ./app/build/outputs/apk/debug/app-debug.apk
-        retention-days: 3
-
-    - run: npm install detox-cli --global
-    - run: detox build --configuration android.emu.debug
-    - run: detox test --configuration android.emu.debug
+    - run: npm test #-- --testPathIgnorePatterns="/e2e/"
