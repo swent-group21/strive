@@ -28,7 +28,7 @@ export function useHomeScreenViewModel(
   });
   const navigateToProfile = () => navigation.navigate("Profile");
   const navigateToMap = () => navigation.navigate("MapScreen");
-  const navigateToCamera = () => navigation.navigate("Camera");
+  const navigateToCamera = () => navigation.navigate("Camera", { group_id: "home" });
   const navigateToFriends = () => navigation.navigate("Friends");
 
   // Fetch the current challenge
@@ -38,30 +38,37 @@ export function useHomeScreenViewModel(
         const currentChallengeData =
           await firestoreCtrl.getChallengeDescription();
         setTitleChallenge(currentChallengeData);
+        return currentChallengeData.title;
       } catch (error) {
         console.error("Error fetching current challenge: ", error);
       }
     };
 
-    fetchCurrentChallenge();
-  }, [firestoreCtrl]);
+    const fetchChallenges = async (challengeTitle: string) => {
+      try {
+        await firestoreCtrl
+          .getPostsByChallengeTitle(challengeTitle)
+          .then((challenge: DBChallenge[]) => {
+            const homeChallenges = challenge.filter(
+              (challenge) => challenge.group_id === "home",
+            );
+            // Sort challenges by date
+            const sortedChallenges = challenge.sort((a, b) =>
+              a.date && b.date ? new Date(b.date).getTime() - new Date(a.date).getTime() : 0,
+            );
+            setChallenges(sortedChallenges);
+          });
+      } catch (error) {
+        console.error("Error fetching challenges: ", error);
+      }
+    };
 
-  // Fetch the challenges
-  useEffect(() => {
-    if (user.uid) {
-      const fetchChallenges = async () => {
-        try {
-          const challengesData = await firestoreCtrl.getKChallenges(100);
-          setChallenges(challengesData);
-        } catch (error) {
-          console.error("Error fetching challenges: ", error);
-        }
-      };
-      fetchChallenges();
-    }
+    fetchCurrentChallenge().then((challengeTitle) => {
+      console.log("Current challenge fetched : ", challengeTitle);
+      if (user.uid) fetchChallenges(challengeTitle);
+    });
   }, [user.uid, firestoreCtrl]);
 
-  // Fetch the groups
   useEffect(() => {
     if (user.uid) {
       const fetchGroups = async () => {

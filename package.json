@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "test": "jest",
     "lint": "expo lint",
-    "format": "npx prettier --check ."
+    "format": "npx prettier --write ."
   },
   "doctor": {
     "exclude": [

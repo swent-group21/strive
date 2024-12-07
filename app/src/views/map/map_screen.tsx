@@ -70,8 +70,8 @@ export default function MapScreen({
             }}
             image={require(uri)}
             flat={true}
-            title={challenge.challenge_name}
-            description={challenge.description}
+            title={challenge.caption}
+            description={`${challenge.date.toDate().toLocaleString()}`}
             onCalloutPress={() => {
               navigation.navigate("Maximize", {
                 challenge: challenge,

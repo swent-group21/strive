@@ -23,6 +23,7 @@ export function useMaximizeScreenViewModel(
   const [postUser, setPostUser] = useState<DBUser>();
   const [likeList, setLikeList] = useState<string[]>([]);
   const [isLiked, setIsLiked] = useState(false);
+  const [userProfilePicture, setUserProfilePicture] = useState<string>("");
 
   const currentUserId = user.uid;
   const currentUserName = user.name;
@@ -55,6 +56,23 @@ export function useMaximizeScreenViewModel(
     });
   }, [challenge, firestoreCtrl, currentUserId]);
 
+  // Fetch user data
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        if (
+          user.image_id?.startsWith("http") ||
+          user.image_id?.startsWith("https://")
+        ) {
+          setUserProfilePicture(user.image_id);
+        }
+      } catch (error) {
+        console.error("Error fetching challenges: ", error);
+      }
+    };
+    fetchUser();
+  }, [user]);
+
   const toggleLike = () => {
     setIsLiked(!isLiked);
     const updatedLikeList = isLiked
@@ -79,10 +97,10 @@ export function useMaximizeScreenViewModel(
     }
   };
 
-  const postDate: Date = challenge.date ? challenge.date : new Date();
-  const postTitle = challenge.challenge_name || "Secret Challenge";
+  const postDate: any = challenge.date ? challenge.date : new Date();
   const postImage = challenge.image_id ?? "";
-  const postDescription = challenge.description ?? "";
+  const postCaption =
+    challenge.caption == "" ? "Secret Challenge" : challenge.caption;
 
   return {
     commentText,
@@ -94,9 +112,9 @@ export function useMaximizeScreenViewModel(
     toggleLike,
     addComment,
     postDate,
-    postTitle,
     postImage,
-    postDescription,
+    postCaption,
     navigateGoBack,
+    userProfilePicture,
   };
 }
