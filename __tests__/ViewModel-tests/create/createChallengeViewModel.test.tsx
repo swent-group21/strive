@@ -5,6 +5,7 @@ import {
 } from "expo-location";
 import { createChallenge } from "@/types/ChallengeBuilder";
 import CreateChallengeViewModel from "@/src/viewmodels/create/CreateChallengeViewModel";
+import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
 // Mock `expo-location`
 jest.mock("expo-location", () => ({
@@ -19,17 +20,24 @@ jest.mock("@/types/ChallengeBuilder", () => ({
   createChallenge: jest.fn(),
 }));
 
+// Mock FirestoreCtrl
+jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
+  return jest.fn().mockImplementation(() => ({
+    // Mock FirestoreCtrl methods
+  }));
+});
+const mockFirestoreCtrl = new FirestoreCtrl();
+
 const mockNavigation = {
-  reset: jest.fn(),
+  navigate: jest.fn(),
 };
 
 const mockRoute = {
   params: {
     image_id: "mock-image-id",
+    group_id: "home",
   },
 };
-
-const mockFirestoreCtrl = {};
 
 describe("CreateChallengeViewModel", () => {
   beforeEach(() => {
@@ -144,13 +152,11 @@ describe("CreateChallengeViewModel", () => {
       "Test Challenge",
       "Test Description",
       null, // Location is null by default
+      "home",
       expect.any(Date),
       "mock-image-id",
     );
-    expect(mockNavigation.reset).toHaveBeenCalledWith({
-      index: 0,
-      routes: [{ name: "Home" }],
-    });
+    expect(mockNavigation.navigate).toHaveBeenCalledWith("Home");
   });
 
   it("should handle errors during challenge creation", async () => {

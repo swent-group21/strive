@@ -23,6 +23,12 @@ const mockNavigation = {
   navigate: jest.fn(),
 };
 
+const mockRoute = {
+  params: {
+    group_id: "mock-group-id",
+  },
+};
+
 describe("useCameraViewModel", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -34,7 +40,7 @@ describe("useCameraViewModel", () => {
       jest.fn(),
     ]);
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation),
+      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
     );
 
     expect(result.current.facing).toBe("back");
@@ -47,7 +53,7 @@ describe("useCameraViewModel", () => {
 
   it("should toggle camera facing", () => {
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation),
+      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
     );
 
     act(() => {
@@ -65,7 +71,7 @@ describe("useCameraViewModel", () => {
 
   it("should toggle flash mode", () => {
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation),
+      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
     );
 
     act(() => {
@@ -94,7 +100,7 @@ describe("useCameraViewModel", () => {
     };
 
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation),
+      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
     );
 
     // Set the picture state directly
@@ -109,6 +115,7 @@ describe("useCameraViewModel", () => {
 
     expect(mockFirestoreCtrl.uploadImageFromUri).toHaveBeenCalled;
     expect(mockNavigation.navigate).toHaveBeenCalledWith("CreateChallenge", {
+      group_id: "mock-group-id",
       image_id: "mock-image-id",
     });
   });
@@ -121,7 +128,7 @@ describe("useCameraViewModel", () => {
     ]);
 
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation),
+      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
     );
 
     await act(async () => {

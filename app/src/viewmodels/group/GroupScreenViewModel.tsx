@@ -37,18 +37,16 @@ export default function useGroupScreenViewModel(
       const fetchGroups = async () => {
         try {
           // Fetch groups
-          await firestoreCtrl.getGroupsByUserId(user.uid)
-            .then((groups) => {
+          await firestoreCtrl.getGroupsByUserId(user.uid).then((groups) => {
             const filteredGroups = groups.filter(
               (group) =>
                 groupId !== group.gid && group.updateDate !== undefined,
-            )
+            );
             /*const sortedGroups = filteredGroups.sort(
               (a, b) => b.updateDate.getTime() - a.updateDate.getTime(),
             );*/
             setOtherGroups(filteredGroups);
-            });
-
+          });
         } catch (error) {
           console.error("Error fetching groups: ", error);
         }
