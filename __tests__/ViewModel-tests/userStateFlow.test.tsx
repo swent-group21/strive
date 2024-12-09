@@ -87,7 +87,7 @@ jest.mock("expo-image-picker", () => ({
 }));
 
 // Mock user Sign-in Sign-up
-var mockUser = {
+let mockUser = {
   uid: "",
   email: "",
   name: "",
@@ -101,7 +101,7 @@ const mockSetUser = jest.fn((user) => {
 });
 
 // Mock User full
-var mockUserFull = {
+let mockUserFull = {
   uid: "123",
   email: "test@example.com",
   name: "TestUser",
@@ -115,7 +115,7 @@ const mockSetUserFull = jest.fn((user) => {
 });
 
 // Mock user consistency
-var mockUserConsistency = {
+let mockUserConsistency = {
   uid: "123",
   email: "test@example.com",
   name: "TestUser",

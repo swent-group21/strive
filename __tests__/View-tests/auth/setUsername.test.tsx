@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  render,
-  fireEvent,
-  screen,
-  waitFor,
-} from "@testing-library/react-native";
+import { render, fireEvent, screen } from "@testing-library/react-native";
 import SetUsernameScreen from "@/src/views/auth/set_up_screen";
 import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 

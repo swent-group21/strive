@@ -1,9 +1,8 @@
-import { FlatList } from "react-native";
+import { useEffect, useState } from "react";
+import { FlatList, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/theme/ThemedText";
 import { UserListItem } from "@/components/friends/UserListItems";
 import { ThemedView } from "@/components/theme/ThemedView";
-import { StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
 
 /**
  * List of filtered users component
@@ -47,7 +46,7 @@ export default function ListOfFilteredUsers({
   const handleAdd = async (userId: string) => {
     try {
       await firestoreCtrl.addFriend(uid, userId);
-      console.log("Friend request sent");
+      console.info("Friend request sent");
       setUserStatuses((prev) => ({
         ...prev,
         [userId]: { ...prev[userId], isRequested: true },

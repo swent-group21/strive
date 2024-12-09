@@ -1,8 +1,7 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react-native";
 import CreateGroupScreen from "@/src/views/group/CreateGroupScreen";
-import { DBUser } from "@/src/models/firebase/FirestoreCtrl";
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
+import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 // Mock de useGroupScreenViewModel
 
@@ -38,10 +37,7 @@ const mockUser: DBUser = {
 };
 
 describe("Create Group Screen renders", () => {
-  const mockNavigation = { navigate: jest.fn() };
   const mockFirestoreCtrl = new FirestoreCtrl();
-  //const mockCreateGroupViewModel =
-  //require("@/src/viewmodels/group/CreateGroupViewModel").CreateGroupViewModel;
 
   beforeEach(() => {
     jest.clearAllMocks();

@@ -2,7 +2,6 @@ import FirestoreCtrl, {
   DBGroup,
   DBUser,
 } from "@/src/models/firebase/FirestoreCtrl";
-import { Timestamp } from "firebase/firestore";
 
 /**
  * Used to create a Group and store it in Firestore DB

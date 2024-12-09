@@ -1,6 +1,6 @@
 import { renderHook, act } from "@testing-library/react-native";
 import { signInAsGuest } from "@/types/Auth";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 import WelcomeFinalViewModel from "@/src/viewmodels/welcome/FinalScreenViewModel";
 
 // Mock FirestoreCtrl
@@ -19,13 +19,6 @@ describe("WelcomeFinalViewModel", () => {
     navigate: jest.fn(),
   };
   const mockSetUser = jest.fn();
-  const mockUser: DBUser = {
-    uid: "mock-uid",
-    email: "test@example.com",
-    name: "Test User",
-    image_id: "",
-    createdAt: new Date(),
-  };
 
   beforeEach(() => {
     jest.clearAllMocks();

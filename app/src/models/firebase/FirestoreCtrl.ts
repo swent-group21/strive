@@ -1,4 +1,4 @@
-import { limit, documentId, GeoPoint } from "firebase/firestore";
+import { limit, GeoPoint } from "firebase/firestore";
 import {
   firestore,
   doc,
@@ -103,6 +103,7 @@ export default class FirestoreCtrl {
         throw new Error("User not found.");
       }
     } catch (error) {
+      console.error("Error getting user: ", error);
       throw error;
     }
   }

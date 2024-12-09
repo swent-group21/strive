@@ -3,8 +3,7 @@ import FirestoreCtrl, {
   DBChallenge,
   DBUser,
   DBGroup,
-  DBChallengeDescription,
-} from "../../models/firebase/FirestoreCtrl";
+} from "@/src/models/firebase/FirestoreCtrl";
 
 export default function useGroupScreenViewModel(
   user: DBUser,
@@ -42,9 +41,6 @@ export default function useGroupScreenViewModel(
               (group) =>
                 groupId !== group.gid && group.updateDate !== undefined,
             );
-            /*const sortedGroups = filteredGroups.sort(
-              (a, b) => b.updateDate.getTime() - a.updateDate.getTime(),
-            );*/
             setOtherGroups(filteredGroups);
           });
         } catch (error) {

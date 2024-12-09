@@ -1,12 +1,12 @@
 import React from "react";
-import { StyleSheet, Dimensions, Switch } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { ThemedTextInput } from "@/components/theme/ThemedTextInput";
 import { ThemedText } from "@/components/theme/ThemedText";
 import { ThemedScrollView } from "@/components/theme/ThemedScrollView";
 import { BottomBar } from "@/components/navigation/BottomBar";
 import { ThemedView } from "@/components/theme/ThemedView";
 import CreateGroupViewModel from "@/src/viewmodels/group/CreateGroupViewModel";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 const { width, height } = Dimensions.get("window");
 

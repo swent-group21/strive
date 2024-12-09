@@ -15,7 +15,7 @@ describe("ListOfFriends", () => {
   });
 
   it("renders a list of friends", () => {
-    const { getByText, getByTestId } = render(
+    const { getByText } = render(
       <ListOfFriends
         friends={mockFriends}
         handleFriendPress={mockHandleFriendPress}

@@ -2,7 +2,6 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import CreateChallengeScreen from "@/src/views/create/create_challenge";
 import CreateChallengeViewModel from "@/src/viewmodels/create/CreateChallengeViewModel";
-import { Switch } from "react-native-gesture-handler";
 import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
 jest.mock("@/src/viewmodels/create/CreateChallengeViewModel");

@@ -30,7 +30,7 @@ export default function CreateChallengeViewModel({
 
   const imageId = route.params?.image_id;
   const group_id = route.params?.group_id;
-  console.log("group_id in create :", group_id);
+  console.info("group_id in create :", group_id);
 
   // Toggle location switch
   const toggleLocation = () => setIsLocationEnabled((prev) => !prev);
@@ -40,7 +40,6 @@ export default function CreateChallengeViewModel({
     async function fetchLocation() {
       let { status } = await requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        //console.log("Permission to access location denied");
         setIsLocationEnabled(false);
         return;
       }

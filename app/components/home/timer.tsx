@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import NumberCard from "@/components/home/number_cards";
 
 const MILLISECONDS_IN_SECOND = 1000;

@@ -9,7 +9,6 @@ import { BottomBar } from "@/components/navigation/BottomBar";
 import { ThemedText } from "@/components/theme/ThemedText";
 import { ThemedTextButton } from "@/components/theme/ThemedTextButton";
 import useGroupScreenViewModel from "@/src/viewmodels/group/GroupScreenViewModel";
-import { DBGroup, DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 const { width, height } = Dimensions.get("window");
 

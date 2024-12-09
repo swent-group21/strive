@@ -1,10 +1,10 @@
 import React from "react";
-import { render } from "@testing-library/react-native";
+import { render, waitFor } from "@testing-library/react-native";
 import GroupScreen from "@/src/views/group/GroupScreen";
 import useGroupScreenViewModel from "@/src/viewmodels/group/GroupScreenViewModel";
-import { DBChallenge } from "@/src/models/firebase/FirestoreCtrl";
-import { View } from "react-native";
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
+import FirestoreCtrl, {
+  DBChallenge,
+} from "@/src/models/firebase/FirestoreCtrl";
 
 const mockChallenge1: DBChallenge = {
   challenge_name: "Challenge Test 1",
@@ -50,7 +50,6 @@ jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
 });
 
 describe("Group Screen renders challenges", () => {
-  const mockNavigation = { navigate: jest.fn() };
   const mockFirestoreCtrl = new FirestoreCtrl();
 
   beforeEach(() => {
@@ -61,7 +60,7 @@ describe("Group Screen renders challenges", () => {
     jest.clearAllMocks();
   });
 
-  it("renders the group screen", () => {
+  it("renders the group screen", async () => {
     const { getByTestId } = render(
       <GroupScreen
         user={{}}
@@ -70,10 +69,12 @@ describe("Group Screen renders challenges", () => {
         firestoreCtrl={mockFirestoreCtrl}
       />,
     );
-    expect(getByTestId("group-screen")).toBeTruthy();
+    await waitFor(() => {
+      expect(getByTestId("group-screen")).toBeTruthy();
+    });
   });
 
-  it("renders the group name", () => {
+  it("renders the group name", async () => {
     const { getByTestId } = render(
       <GroupScreen
         user={{}}
@@ -82,10 +83,12 @@ describe("Group Screen renders challenges", () => {
         firestoreCtrl={mockFirestoreCtrl}
       />,
     );
-    expect(getByTestId("topTitle-Test Name")).toBeTruthy();
+    await waitFor(() => {
+      expect(getByTestId("topTitle-Test Name")).toBeTruthy();
+    });
   });
 
-  it("renders the home button", () => {
+  it("renders the home button", async () => {
     const { getByTestId } = render(
       <GroupScreen
         user={{}}
@@ -94,10 +97,12 @@ describe("Group Screen renders challenges", () => {
         firestoreCtrl={mockFirestoreCtrl}
       />,
     );
-    expect(getByTestId("home-button")).toBeTruthy();
+    await waitFor(() => {
+      expect(getByTestId("home-button")).toBeTruthy();
+    });
   });
 
-  it("renders the other groups icons", () => {
+  it("renders the other groups icons", async () => {
     const { getByTestId } = render(
       <GroupScreen
         user={{}}
@@ -106,10 +111,12 @@ describe("Group Screen renders challenges", () => {
         firestoreCtrl={mockFirestoreCtrl}
       />,
     );
-    expect(getByTestId("group-id-0")).toBeTruthy();
+    await waitFor(() => {
+      expect(getByTestId("group-id-0")).toBeTruthy();
+    });
   });
 
-  it("renders the create group button", () => {
+  it("renders the create group button", async () => {
     const { getByTestId } = render(
       <GroupScreen
         user={{}}
@@ -118,10 +125,12 @@ describe("Group Screen renders challenges", () => {
         firestoreCtrl={mockFirestoreCtrl}
       />,
     );
-    expect(getByTestId("create-group-button")).toBeTruthy();
+    await waitFor(() => {
+      expect(getByTestId("create-group-button")).toBeTruthy();
+    });
   });
 
-  it("renders the group challenge title", () => {
+  it("renders the group challenge title", async () => {
     const { getByTestId } = render(
       <GroupScreen
         user={{}}
@@ -130,10 +139,12 @@ describe("Group Screen renders challenges", () => {
         firestoreCtrl={mockFirestoreCtrl}
       />,
     );
-    expect(getByTestId("description-id")).toBeTruthy();
+    await waitFor(() => {
+      expect(getByTestId("description-id")).toBeTruthy();
+    });
   });
 
-  it("renders all the challenges", () => {
+  it("renders all the challenges", async () => {
     const { getByTestId } = render(
       <GroupScreen
         user={{}}
@@ -142,8 +153,10 @@ describe("Group Screen renders challenges", () => {
         firestoreCtrl={mockFirestoreCtrl}
       />,
     );
-    expect(getByTestId("challenge-id-0")).toBeTruthy();
-    expect(getByTestId("challenge-id-1")).toBeTruthy();
+    await waitFor(() => {
+      expect(getByTestId("challenge-id-0")).toBeTruthy();
+      expect(getByTestId("challenge-id-1")).toBeTruthy();
+    });
   });
 });
 

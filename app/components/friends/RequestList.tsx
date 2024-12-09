@@ -1,6 +1,5 @@
 import { FlatList } from "react-native";
 import { FriendRequestItem } from "@/components/friends/FriendRequestItem";
-import { ThemedText } from "@/components/theme/ThemedText";
 
 /**
  * Request List with all users that have sent a friend request to the current user

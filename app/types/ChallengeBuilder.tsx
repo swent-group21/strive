@@ -35,6 +35,7 @@ export const buildChallenge = async (
 
     return challengeData;
   } catch (error) {
+    console.error("Error building challenge: ", error);
     throw error;
   }
 };

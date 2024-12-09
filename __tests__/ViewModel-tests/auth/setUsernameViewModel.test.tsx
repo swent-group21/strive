@@ -74,9 +74,7 @@ describe("SetUsernameViewModel", () => {
 
   it("should set errorMessage if image picking fails", async () => {
     // Mock console.error
-    const consoleErrorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
 
     (ImagePicker.launchImageLibraryAsync as jest.Mock).mockRejectedValueOnce(
       new Error("ImagePickerError"),
@@ -134,9 +132,7 @@ describe("SetUsernameViewModel", () => {
 
   it("should handle errors during upload and set errorMessage", async () => {
     // Mock console.error
-    const consoleErrorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
 
     (mockFirestoreCtrl.setName as jest.Mock).mockRejectedValueOnce(
       new Error("FirestoreError"),

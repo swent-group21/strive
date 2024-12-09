@@ -1,7 +1,6 @@
 import { renderHook, act, waitFor } from "@testing-library/react-native";
 import FirestoreCtrl, {
   DBChallenge,
-  DBComment,
   DBUser,
 } from "@/src/models/firebase/FirestoreCtrl";
 import { useMaximizeScreenViewModel } from "@/src/viewmodels/home/MaximizeScreenViewModel";

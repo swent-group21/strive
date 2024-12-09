@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, Dimensions, Image } from "react-native";
+import React from "react";
+import { StyleSheet, Dimensions } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { ThemedText } from "@/components/theme/ThemedText";
 import { ThemedView } from "@/components/theme/ThemedView";
 import { ThemedTextButton } from "@/components/theme/ThemedTextButton";
-import React from "react";
 
 const { width, height } = Dimensions.get("window");
 

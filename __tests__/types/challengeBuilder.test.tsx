@@ -84,9 +84,7 @@ describe("createChallenge", () => {
 
   it("should log an error when Firestore operations fail", async () => {
     // Mock console.error
-    const consoleErrorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
 
     mockFirestoreCtrl.getUser = jest
       .fn()

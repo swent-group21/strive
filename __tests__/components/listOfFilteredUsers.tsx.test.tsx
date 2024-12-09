@@ -14,8 +14,13 @@ describe("ListOfFilteredUsers", () => {
     removeFriendRequest: jest.fn(() => Promise.resolve()),
   };
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.spyOn(console, "info").mockImplementation(() => {});
+  });
+
   it("renders filtered users with correct statuses", async () => {
-    const { getByText, getByTestId } = render(
+    const { getByText } = render(
       <ListOfFilteredUsers
         filteredUsers={mockFilteredUsers}
         searchText="John"

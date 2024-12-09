@@ -2,7 +2,6 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import WelcomeFinalScreen from "@/src/views/welcome/final_screen";
 import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 // Mock FirestoreCtrl
 jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
