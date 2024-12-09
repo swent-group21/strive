@@ -1,7 +1,6 @@
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { ThemedText } from "@/components/theme/ThemedText";
 import { ThemedView } from "@/components/theme/ThemedView";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { Colors } from "@/constants/Colors";
 import { ThemedIconButton } from "@/components/theme/ThemedIconButton";
 
@@ -18,33 +17,40 @@ export const FriendRequestItem = ({
   avatar,
   onAccept,
   onDecline,
+  testID,
 }: any) => (
   <ThemedView style={styles.requestItem} testID="friend-request-item">
     {avatar ? (
       <Image
         source={{ uri: avatar }}
         style={styles.avatar}
-        testID="friend-avatar-image"
+        testID={`friend-avatar-${testID}`}
       />
     ) : (
       <ThemedView
         style={[styles.avatar, styles.defaultAvatar]}
-        testID="friend-default-avatar"
+        testID={`friend-avatar-${testID}`}
       >
-        <ThemedText style={styles.avatarText} testID="friend-avatar-text">
+        <ThemedText
+          style={styles.avatarText}
+          testID={`friend-avatar-text-${testID}`}
+        >
           {name.charAt(0).toUpperCase()}
         </ThemedText>
       </ThemedView>
     )}
-    <ThemedText style={styles.name} testID="friend-name">
+    <ThemedText style={styles.name} testID={`friend-name-${testID}`}>
       {name}
     </ThemedText>
-    <View style={styles.requestButtons} testID="friend-request-buttons">
+    <View
+      style={styles.requestButtons}
+      testID={`friend-request-buttons-${testID}`}
+    >
       {/* Accept Button with Icon */}
       <ThemedIconButton
         name="check"
         onPress={onAccept}
-        testID="accept-button"
+        testID={`accept-button-${testID}`}
         color="#fff"
         style={styles.acceptButton}
       />
@@ -54,7 +60,7 @@ export const FriendRequestItem = ({
       <ThemedIconButton
         name="close"
         onPress={onDecline}
-        testID="decline-button"
+        testID={`decline-button-${testID}`}
         color="#fff"
         style={styles.declineButton}
       />
