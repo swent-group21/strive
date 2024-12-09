@@ -23,7 +23,7 @@ export default function CreateGroupViewModel({
   // Create the challenge
   const makeGroup = async () => {
     try {
-      const creationDate = Timestamp.now();
+      const creationDate = new Date();
       const members = [user.uid];
 
       await createGroup(
