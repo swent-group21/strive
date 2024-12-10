@@ -24,6 +24,7 @@ jest.mock("@/types/ChallengeBuilder", () => ({
 jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
   return jest.fn().mockImplementation(() => ({
     // Mock FirestoreCtrl methods
+    getImageUrl: jest.fn((image_id) => ("mock-image-url")),
   }));
 });
 const mockFirestoreCtrl = new FirestoreCtrl();
@@ -55,8 +56,7 @@ describe("CreateChallengeViewModel", () => {
       }),
     );
 
-    expect(result.current.challengeName).toBe("");
-    expect(result.current.description).toBe("");
+    expect(result.current.caption).toBe("");
     expect(result.current.location).toBe(null);
     expect(result.current.isLocationEnabled).toBe(true);
   });
@@ -139,10 +139,17 @@ describe("CreateChallengeViewModel", () => {
       }),
     );
 
+    // wait for useEffect to finish
+  await act(async () => {
+    await Promise.resolve();
+  })
+
     act(() => {
-      result.current.setChallengeName("Test Challenge");
-      result.current.setDescription("Test Description");
+      result.current.setCaption("Test Challenge");
     });
+
+    expect(mockFirestoreCtrl.getImageUrl).toHaveBeenCalledWith("mock-image-id");
+    expect(mockFirestoreCtrl.getImageUrl).toHaveReturnedWith("mock-image-url");
 
     await act(async () => {
       await result.current.makeChallenge();
@@ -151,11 +158,11 @@ describe("CreateChallengeViewModel", () => {
     expect(createChallenge).toHaveBeenCalledWith(
       mockFirestoreCtrl,
       "Test Challenge",
-      "Test Description",
       null, // Location is null by default
       "home",
+      "Challenge Title",
       expect.any(Date),
-      "mock-image-id",
+      "mock-image-url",
     );
     expect(mockNavigation.navigate).toHaveBeenCalledWith("Home");
   });

@@ -5,6 +5,7 @@ import {
 } from "expo-location";
 import FirestoreCtrl, {
   DBChallenge,
+  DBChallengeDescription,
 } from "@/src/models/firebase/FirestoreCtrl";
 import { GeoPoint } from "firebase/firestore";
 
@@ -30,6 +31,11 @@ export function useMapScreenViewModel(
   const [challengesWithLocation, setChallengesWithLocation] = useState<
     DBChallenge[]
   >([]);
+  const [titleChallenge, setTitleChallenge] = useState<DBChallengeDescription>({
+    title: "Challenge Title",
+    description: "Challenge Description",
+    endDate: new Date(2024, 1, 1, 0, 0, 0, 0),
+  });
 
   const navigateGoBack = () => {
     navigation.goBack();
@@ -61,13 +67,22 @@ export function useMapScreenViewModel(
     if (userLocation === undefined) getCurrentLocation();
   }, []);
 
-  /**
-   * Fetches challenges with valid locations from Firestore.
-   */
   useEffect(() => {
-    const fetchChallenges = async () => {
+    const fetchCurrentChallenge = async () => {
       try {
-        const challengesData = await firestoreCtrl.getKChallenges(100);
+        const currentChallengeData =
+          await firestoreCtrl.getChallengeDescription();
+        setTitleChallenge(currentChallengeData);
+        return currentChallengeData.title;
+      } catch (error) {
+        console.error("Error fetching current challenge: ", error);
+      }
+    };
+
+    const fetchChallenges = async (challengeTitle: string) => {
+      try {
+        const challengesData =
+          await firestoreCtrl.getPostsByChallengeTitle(challengeTitle);
         const filteredChallenges = challengesData.filter(
           (challenge) =>
             challenge.location !== undefined && challenge.location !== null,
@@ -78,8 +93,12 @@ export function useMapScreenViewModel(
       }
     };
 
-    fetchChallenges();
+    fetchCurrentChallenge().then((challengeTitle) => {
+      fetchChallenges(challengeTitle);
+    });
   }, [firestoreCtrl]);
+
+  
 
   return {
     permission,

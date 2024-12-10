@@ -39,11 +39,11 @@ const mockUser: DBUser = {
 };
 const mockChallenge: DBChallenge = {
   challenge_id: "1",
-  challenge_name: "Test Challenge",
-  description: "Challenge description",
+  caption: "Test Challenge",
   uid: "54321",
   date: new Date(),
   image_id: "test-image-id",
+  challenge_description: "Challenge description",
 };
 
 const mockNavigation = {
@@ -221,8 +221,7 @@ describe("useMaximizeScreenViewModel", () => {
     );
 
     await waitFor(() => {
-      expect(result.current.postTitle).toBe("Test Challenge");
-      expect(result.current.postDescription).toBe("Challenge description");
+      expect(result.current.postCaption).toBe("Test Challenge");
       expect(result.current.postImage).toBe("test-image-id");
       expect(result.current.postDate).toBe(mockChallenge.date);
     });

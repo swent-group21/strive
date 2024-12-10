@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Dimensions, Image } from "react-native";
+import { StyleSheet, Dimensions, Image, TouchableOpacity } from "react-native";
 import { TopBar } from "@/components/navigation/TopBar";
 import { ThemedView } from "@/components/theme/ThemedView";
 import { ThemedText } from "@/components/theme/ThemedText";
@@ -46,10 +46,10 @@ export default function MaximizeScreen({
     toggleLike,
     addComment,
     postDate,
-    postTitle,
     postImage,
-    postDescription,
+    postCaption,
     navigateGoBack,
+    userProfilePicture,
   } = useMaximizeScreenViewModel(user, challenge, firestoreCtrl, navigation);
 
   const noImageUri = require("@/assets/images/no-image.svg");
@@ -57,7 +57,7 @@ export default function MaximizeScreen({
   return (
     <ThemedView style={styles.bigContainer}>
       <TopBar
-        title={postTitle}
+        title=""
         leftIcon="arrow-back-outline"
         leftAction={() => navigateGoBack()}
       />
@@ -69,14 +69,23 @@ export default function MaximizeScreen({
         colorType="transparent"
       >
         <ThemedView style={styles.user} colorType="transparent">
-          <ThemedIconButton
-            name="person-circle-outline"
-            onPress={() => {}}
-            size={45}
-            colorType="white"
-          />
+          {userProfilePicture ? (
+            <TouchableOpacity onPress={() => {}}>
+              <Image
+                source={{ uri: userProfilePicture }}
+                style={styles.iconImage}
+              />
+            </TouchableOpacity>
+          ) : (
+            <ThemedIconButton
+              name="person-circle-outline"
+              onPress={() => {}}
+              size={45}
+              color="white"
+            />
+          )}
           <ThemedView style={styles.userInfo} colorType="transparent">
-            <ThemedText colorType="white">{postUser?.name}</ThemedText>
+            <ThemedText colorType="white" type="defaultSemiBold">{postUser?.name}</ThemedText>
             <ThemedText colorType="white">
               {"on " + postDate.toUTCString()}
             </ThemedText>
@@ -112,14 +121,21 @@ export default function MaximizeScreen({
             onPress={toggleLike}
             size={35}
             color={isLiked ? "red" : "white"}
+            testID="like-button"
           />
           <ThemedText style={styles.likeCountText} colorType="white">
             {likeList.length} {likeList.length === 1 ? "like" : "likes"}
           </ThemedText>
         </ThemedView>
 
-        <ThemedView style={styles.descriptionContainer} colorType="transparent">
-          <ThemedText colorType="white">{postDescription}</ThemedText>
+        <ThemedView
+          style={styles.descriptionContainer}
+          colorType="transparent"
+          testID="caption-id"
+        >
+          <ThemedText colorType="white" type="defaultSemiBold">
+            {postCaption}
+          </ThemedText>
         </ThemedView>
 
         <ThemedView style={styles.row} colorType="transparent">
@@ -127,12 +143,14 @@ export default function MaximizeScreen({
             style={styles.commentInput}
             value={commentText}
             onChangeText={setCommentText}
+            testID="comment-input"
           />
           <ThemedIconButton
             name="send"
             size={25}
             colorType="white"
             onPress={addComment}
+            testID="send-comment"
           />
         </ThemedView>
 
@@ -197,7 +215,7 @@ const styles = StyleSheet.create({
 
   row: {
     width: "90%",
-    minHeight: height * 0.1,
+    minHeight: height * 0.08,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -223,7 +241,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "90%",
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingTop: 5,
   },
 
   likeButtonContainer: {
@@ -247,5 +265,12 @@ const styles = StyleSheet.create({
 
   spacer: {
     width: width * 0.5,
+  },
+
+
+  iconImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
 });

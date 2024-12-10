@@ -46,11 +46,12 @@ jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
 });
 
 const challengeDB: DBChallenge = {
-  challenge_name: "challengeName",
   challenge_id: "challenge123",
+  caption: "challengeName",
   uid: "user123",
   image_id: "https://example.com/image.jpg",
   likes: ["12345", "67890"],
+  challenge_description: "challengeDescription",
 };
 
 const mockFirestoreCtrl = new FirestoreCtrl();
@@ -119,6 +120,11 @@ describe("Challenge Component", () => {
     );
 
     const touchable = screen.getByTestId("challenge-touchable");
+
+    // Make sure the useEffects have run
+    await act(async () => {
+      await Promise.resolve();
+    });
 
     // Initially, the detailed view should not be open
     expect(() => screen.getByTestId("challenge-container")).toThrow();

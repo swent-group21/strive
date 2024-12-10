@@ -6,16 +6,16 @@ import FirestoreCtrl, {
 } from "@/src/models/firebase/FirestoreCtrl";
 
 const mockChallenge1: DBChallenge = {
-  challenge_name: "Challenge Test 1",
-  description: "Description Test 1",
+  caption: "Challenge Test 1",
   uid: "1234",
   group_id: "1234",
+  challenge_description: "Description Test",
 };
 const mockChallenge2: DBChallenge = {
-  challenge_name: "Challenge Test 2",
-  description: "Description Test 2",
+  caption: "Challenge Test 2",
   uid: "12345678",
   group_id: "1234",
+  challenge_description: "Description Test",
 };
 const mockGroupChallenges: DBChallenge[] = [mockChallenge1, mockChallenge2];
 

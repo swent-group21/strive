@@ -5,7 +5,7 @@ import {
   LocationObject,
 } from "expo-location";
 import { createChallenge } from "@/types/ChallengeBuilder";
-import FirestoreCtrl, { DBGroup } from "@/src/models/firebase/FirestoreCtrl";
+import FirestoreCtrl, { DBGroup, DBChallengeDescription } from "@/src/models/firebase/FirestoreCtrl";
 
 /**
  * View model for the create challenge screen.
@@ -23,14 +23,20 @@ export default function CreateChallengeViewModel({
   navigation: any;
   route: any;
 }) {
-  const [challengeName, setChallengeName] = useState("");
-  const [description, setDescription] = useState("");
   const [location, setLocation] = useState<LocationObject | null>(null);
   const [isLocationEnabled, setIsLocationEnabled] = useState(true);
+  const [caption, setCaption] = useState("");
 
-  const imageId = route.params?.image_id;
+  const [descriptionTitle, setDescriptionTitle] =
+    useState<DBChallengeDescription>({
+      title: "Challenge Title",
+      description: "Challenge Description",
+      endDate: new Date(2024, 1, 1, 0, 0, 0, 0),
+    });
+
+  const [postImage, setPostImage] = useState<string>("");
+
   const group_id = route.params?.group_id;
-  console.info("group_id in create :", group_id);
 
   // Toggle location switch
   const toggleLocation = () => setIsLocationEnabled((prev) => !prev);
@@ -49,18 +55,50 @@ export default function CreateChallengeViewModel({
     fetchLocation();
   }, []);
 
+  // Fetch the image URL
+  useEffect(() => {
+    async function getImage(image_id: string) {
+      try {
+        const url = await firestoreCtrl.getImageUrl(image_id);
+        setPostImage(url);
+      } catch (error) {
+        console.log("Error fetching image");
+        throw error;
+      }
+    }
+    getImage(route.params?.image_id);
+  }, []);
+
+  // Fetch the description title
+  useEffect(() => {
+    async function fetchDescriptionTitle() {
+      try {
+        const currentChallengeData =
+          await firestoreCtrl.getChallengeDescription();
+
+        setDescriptionTitle(currentChallengeData);
+        console.log("Description title: ", currentChallengeData.title);
+      } catch (error) {
+        console.log("Error fetching description id");
+        return error;
+      }
+    }
+
+    fetchDescriptionTitle();
+  }, []);
+
   // Create the challenge
   const makeChallenge = async () => {
     try {
       const date = new Date();
       await createChallenge(
         firestoreCtrl,
-        challengeName,
-        description,
+        caption,
         isLocationEnabled ? location : null,
         group_id,
+        descriptionTitle.title ?? "",
         date,
-        imageId,
+        postImage,
       );
       if (group_id == "" || group_id == "home") {
         navigation.navigate("Home");
@@ -76,10 +114,9 @@ export default function CreateChallengeViewModel({
   };
 
   return {
-    challengeName,
-    setChallengeName,
-    description,
-    setDescription,
+    caption,
+    setCaption,
+    postImage,
     location,
     isLocationEnabled,
     toggleLocation,

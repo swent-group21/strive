@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, Dimensions, Image } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Image,
+  View,
+} from "react-native";
 import { Colors } from "@/constants/Colors";
 import { ThemedText } from "@/components/theme/ThemedText";
 import { ThemedView } from "@/components/theme/ThemedView";
@@ -42,9 +48,9 @@ export function Challenge({
   const [user, setUser] = useState<DBUser>();
 
   const uri = "@/assets/images/no-image.svg";
+  const [userPp, setUserPp] = useState<string>("");
 
-  // @ts-ignore - date is a Timestamp object
-  let challengeDate: Date = challengeDB.date ? challengeDB.date : new Date();
+  let challengeDate: any = challengeDB.date;
 
   // Fetch user data
   useEffect(() => {
@@ -52,6 +58,12 @@ export function Challenge({
       const fetchUser = async () => {
         try {
           const userData = await firestoreCtrl.getUser(challengeDB.uid);
+          if (
+            userData.image_id?.startsWith("http") ||
+            userData.image_id?.startsWith("https://")
+          ) {
+            setUserPp(userData.image_id);
+          }
           setUser(userData);
         } catch (error) {
           console.error("Error fetching challenges: ", error);
@@ -102,15 +114,22 @@ export function Challenge({
                 <ThemedView
                   style={[styles.user, { justifyContent: "space-between" }]}
                 >
-                  <ThemedView style={styles.user}>
-                    <ThemedIconButton
-                      name="person-circle-outline"
-                      onPress={() => {
-                        /* user button */
-                      }}
-                      size={45}
-                      color="white"
-                    />
+                  <View style={styles.user}>
+                    {userPp ? (
+                      <TouchableOpacity onPress={() => {}}>
+                        <Image
+                          source={{ uri: userPp }}
+                          style={styles.iconImage}
+                        />
+                      </TouchableOpacity>
+                    ) : (
+                      <ThemedIconButton
+                        name="person-circle-outline"
+                        onPress={() => {}}
+                        size={45}
+                        color="white"
+                      />
+                    )}
                     <ThemedView style={styles.userInfo}>
                       <ThemedText
                         lightColor="white"
@@ -124,10 +143,10 @@ export function Challenge({
                         darkColor="white"
                         type="small"
                       >
-                        {"on " + challengeDate.toUTCString()}
+                        {"on " + challengeDate.toDate().toLocaleString()}
                       </ThemedText>
                     </ThemedView>
-                  </ThemedView>
+                  </View>
                   <ThemedIconButton
                     testID="expand-button"
                     name="chevron-expand-outline"
@@ -237,5 +256,10 @@ const styles = StyleSheet.create({
     padding: 15,
     gap: 3,
     backgroundColor: "transparent",
+  },
+  iconImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
   },
 });

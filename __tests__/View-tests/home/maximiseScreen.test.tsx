@@ -13,10 +13,11 @@ describe("MaximizeScreen UI Tests", () => {
   const mockChallenge = {
     challenge_id: "challenge123",
     uid: "user456",
-    challenge_name: "Test Challenge",
-    description: "Test Description",
+    caption: "Test Challenge",
     image_id: "test_image",
     created_at: new Date("2024-01-01T00:00:00Z"),
+    description: "Test Description",
+    group_id: "group123",
   };
 
   beforeEach(() => {
@@ -45,9 +46,10 @@ describe("MaximizeScreen UI Tests", () => {
         toggleLike: jest.fn(),
         addComment: jest.fn(),
         postDate: new Date("2024-01-01T00:00:00Z"),
-        postTitle: "Test Challenge",
         postImage: "test_image",
-        postDescription: "Test Description",
+        postCaption: "Test Challenge",
+        navigateGoBack: jest.fn(),
+        userProfilePicture: "test_pp",
       },
     );
   });
@@ -69,7 +71,6 @@ describe("MaximizeScreen UI Tests", () => {
     );
 
     expect(getByText("Test Challenge")).toBeTruthy();
-    expect(getByText("Test Description")).toBeTruthy();
     expect(getByText("This is a comment")).toBeTruthy();
     expect(getByText("Another comment")).toBeTruthy();
   });

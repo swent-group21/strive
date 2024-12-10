@@ -37,7 +37,10 @@ export function SingleComment(comment: Readonly<DBComment>) {
             paddingBottom: 10,
           }}
         >
-          <Text style={styles.user}> {comment.user_name} </Text>
+          <Text style={styles.user} testID={`comment-text`}>
+            {" "}
+            {comment.user_name}{" "}
+          </Text>
           <Text style={styles.textofcomment}>
             {comment.created_at.toLocaleString()}
           </Text>

@@ -8,11 +8,12 @@ describe("buildChallenge", () => {
 
   it("should return a valid DBChallenge object when challenge is found", async () => {
     const mockChallenge = {
-      challenge_name: "Test Challenge",
-      description: "A test description",
+      caption: "Test Challenge",
       uid: "user123",
       date: new Date(),
       location: { latitude: 10, longitude: 20 },
+      group_id: "home",
+      challenge_description: "Test description",
     };
 
     mockFirestoreCtrl.getChallenge = jest.fn().mockResolvedValue(mockChallenge);
@@ -20,11 +21,12 @@ describe("buildChallenge", () => {
     const result = await buildChallenge("challenge123", mockFirestoreCtrl);
 
     expect(result).toEqual({
-      challenge_name: "Test Challenge",
-      description: "A test description",
+      caption: "Test Challenge",
       uid: "user123",
       date: mockChallenge.date,
       location: mockChallenge.location,
+      group_id: "home",
+      challenge_description: "Test description",
     });
     expect(mockFirestoreCtrl.getChallenge).toHaveBeenCalledWith("challenge123");
   });
@@ -54,18 +56,18 @@ describe("createChallenge", () => {
 
     // Mock location and challenge data
     const challengeData = {
-      challenge_name: "Test Challenge",
-      description: "Test Description",
+      caption: "Test Challenge",
       date: new Date(),
+      description: "Test Description",
     };
 
     // Call createChallenge with mock data
     await createChallenge(
       mockFirestoreCtrl,
-      challengeData.challenge_name,
-      challengeData.description,
+      challengeData.caption,
       null,
       "123",
+      challengeData.description,
       challengeData.date,
     );
 
@@ -73,11 +75,11 @@ describe("createChallenge", () => {
     expect(mockFirestoreCtrl.getUser).toHaveBeenCalled();
     expect(mockFirestoreCtrl.newChallenge).toHaveBeenCalledWith(
       expect.objectContaining({
-        challenge_name: "Test Challenge",
-        description: "Test Description",
+        caption: "Test Challenge",
         uid: "user123",
         date: challengeData.date,
         location: null,
+        challenge_description: "Test Description",
       }),
     );
   });
@@ -96,9 +98,10 @@ describe("createChallenge", () => {
       createChallenge(
         mockFirestoreCtrl,
         "Test",
-        "Description",
         null_location,
         "123",
+        "Test Challenge",
+        new Date(),
       ),
     ).resolves.toBeUndefined(); // Function should handle the error internally
   });
