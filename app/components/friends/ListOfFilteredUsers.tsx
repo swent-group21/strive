@@ -13,7 +13,7 @@ import { ThemedView } from "@/components/theme/ThemedView";
  * @returns ListOfFilteredUsers Component
  */
 export default function ListOfFilteredUsers({
-  filteredUsers,
+  filteredUsers = [],
   searchText,
   firestoreCtrl,
   uid,
@@ -75,7 +75,9 @@ export default function ListOfFilteredUsers({
       {filteredUsers.length > 0 ? (
         <FlatList
           data={filteredUsers}
-          keyExtractor={(item) => item.uid}
+          keyExtractor={(item) =>
+            item.uid || item.id || Math.random().toString()
+          }
           renderItem={({ item }) => {
             const { isFriend, isRequested } = userStatuses[item.uid] || {
               isFriend: false,

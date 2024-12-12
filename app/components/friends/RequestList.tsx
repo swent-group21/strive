@@ -34,7 +34,7 @@ export default function RequestList({
       renderItem={({ item, index }) => (
         <FriendRequestItem
           name={item.name}
-          key={index}
+          key={item.uid}
           testID={index}
           avatar={item.image_id}
           onAccept={() => handleAccept(item.uid)}

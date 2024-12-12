@@ -14,14 +14,15 @@ export default function ListOfFriends({ friends, handleFriendPress }: any) {
     <FlatList
       data={friends}
       keyExtractor={(item) => item.uid}
-      style={{ padding: 10, maxHeight: height * 0.15 }}
+      style={{ padding: 5, maxHeight: height * 0.2 }}
       renderItem={({ item, index }) => (
         <FriendListItem
-          key={index}
           name={item.name}
+          key={item.uid}
           avatar={item.image_id}
           onPress={() => handleFriendPress(item.uid)}
           testID={`friend-item-${item.name}`}
+          height={height * 0.2}
         />
       )}
       horizontal

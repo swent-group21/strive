@@ -100,20 +100,4 @@ describe("useFriendsScreenViewModel", () => {
     expect(mockFirestoreCtrl.getFriendRequests).toHaveBeenCalledWith(uid);
     expect(result.current.requests).toEqual(mockRequests);
   });
-
-  it("logs the correct message on handleFriendPress", async () => {
-    console.log = jest.fn();
-
-    const { result } = renderHook(() =>
-      useFriendsScreenViewModel(mockFirestoreCtrl, uid),
-    );
-
-    await act(async () => {
-      result.current.handleFriendPress("friend1");
-    });
-
-    expect(console.log).toHaveBeenCalledWith(
-      "Navigate to friend friend1's profile",
-    );
-  });
 });

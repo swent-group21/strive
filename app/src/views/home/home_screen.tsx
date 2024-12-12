@@ -5,6 +5,7 @@ import {
   StyleSheet,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  TouchableOpacity,
 } from "react-native";
 import { TopBar } from "@/components/navigation/TopBar";
 import { Challenge } from "@/components/home/Challenge";
@@ -13,7 +14,6 @@ import { ThemedView } from "@/components/theme/ThemedView";
 import { BottomBar } from "@/components/navigation/BottomBar";
 import { ThemedScrollView } from "@/components/theme/ThemedScrollView";
 import { ThemedText } from "@/components/theme/ThemedText";
-import { ThemedTextButton } from "@/components/theme/ThemedTextButton";
 import { useHomeScreenViewModel } from "@/src/viewmodels/home/HomeScreenViewModel";
 import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 import GroupIcon from "@/components/home/GroupIcon";
@@ -41,13 +41,24 @@ export default function HomeScreen({
     navigateToFriends,
   } = useHomeScreenViewModel(user, firestoreCtrl, navigation);
 
-  const [filterByFriends] = useState(false);
+  const [filterByFriends, setFilterByFriends] = useState(false);
 
   // Animation for hiding groups
   const scrollY = useRef(new Animated.Value(0)).current;
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleThreshold = 100; // Distance to toggle the groups visibility
+
+  const underlineAnim = useRef(new Animated.Value(0)).current;
+
+  const handleFilterChange = (isFriends: boolean) => {
+    Animated.timing(underlineAnim, {
+      toValue: isFriends ? width * 0.5 : 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+    setFilterByFriends(isFriends);
+  };
 
   const handleScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = e.nativeEvent.contentOffset.y;
@@ -117,17 +128,49 @@ export default function HomeScreen({
             style={styles.createGroupContainer}
             testID="create-group-button"
           >
-            <ThemedTextButton
+            <TouchableOpacity
               style={styles.createGroupButton}
               onPress={() => navigation.navigate("CreateGroup")}
-              text="+"
-              textStyle={styles.createGroupText}
-              textColorType="textOverLight"
-              colorType="backgroundSecondary"
-            />
+            >
+              <ThemedText style={styles.createGroupText}>+</ThemedText>
+            </TouchableOpacity>
           </ThemedView>
         </ThemedScrollView>
       </Animated.View>
+
+      {/* Filter Buttons with Underline */}
+      <ThemedView style={styles.filterContainer}>
+        <TouchableOpacity
+          onPress={() => handleFilterChange(false)}
+          style={styles.filterButton}
+        >
+          <ThemedText
+            style={[
+              styles.filterText,
+              !filterByFriends && styles.activeFilterText,
+            ]}
+            testID="all-posts-button"
+          >
+            All Posts
+          </ThemedText>
+          {!filterByFriends && <Animated.View style={[styles.underline]} />}
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleFilterChange(true)}
+          style={styles.filterButton}
+        >
+          <ThemedText
+            style={[
+              styles.filterText,
+              filterByFriends && styles.activeFilterText,
+            ]}
+            testID="friends-button"
+          >
+            My Friends
+          </ThemedText>
+          {filterByFriends && <Animated.View style={[styles.underline]} />}
+        </TouchableOpacity>
+      </ThemedView>
 
       {/* Challenges */}
       <Animated.FlatList
@@ -181,7 +224,7 @@ const styles = StyleSheet.create({
   groupsContainer: {
     overflow: "hidden",
     backgroundColor: "transparent",
-    marginBottom: 10,
+    marginBottom: 5,
   },
   createGroupContainer: {
     flex: 1,
@@ -210,5 +253,29 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     marginTop: 20,
+  },
+  filterContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  filterButton: {
+    alignItems: "center",
+    width: width * 0.5,
+  },
+  filterText: {
+    fontSize: 16,
+    color: "#888",
+  },
+  activeFilterText: {
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  underline: {
+    marginTop: 5,
+    height: 2,
+    width: 0.2 * width,
+    backgroundColor: "#fff",
   },
 });

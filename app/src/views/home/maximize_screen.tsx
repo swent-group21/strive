@@ -33,7 +33,7 @@ export default function MaximizeScreen({
   readonly firestoreCtrl: FirestoreCtrl;
 }) {
   const challenge: DBChallenge = route.params?.challenge;
-  const noImage = "@/assets/images/no-image.svg";
+  const noImage = require("@/assets/images/no-image.svg");
 
   const {
     commentText,
@@ -137,7 +137,7 @@ export default function MaximizeScreen({
           <ThemedView style={styles.imageContainer}>
             <Image
               testID="post-image"
-              source={postImage ? { uri: postImage } : require(noImage)}
+              source={postImage ? { uri: postImage } : noImage}
               style={styles.postImage}
             />
           </ThemedView>
@@ -154,10 +154,10 @@ export default function MaximizeScreen({
         <ThemedView style={styles.likeSection}>
           <ThemedIconButton
             name={isLiked ? "heart" : "heart-outline"}
+            testID="like-button"
             onPress={toggleLike}
             size={30}
             color={isLiked ? "red" : "white"}
-            testID="like-button"
           />
           <ThemedText style={styles.likeCount}>
             {likeList.length} {likeList.length <= 1 ? "Like" : "Likes"}

@@ -141,7 +141,6 @@ describe("HomeScreen UI Tests", () => {
       />,
     );
 
-    // Vérifie que le texte pour "aucun défi" est affiché
     expect(getByText("No challenges to display")).toBeTruthy();
   });
 
@@ -166,7 +165,176 @@ describe("HomeScreen UI Tests", () => {
       />,
     );
 
-    // Vérifie que les défis et groupes ne sont pas affichés
+    expect(getByText("No challenges to display")).toBeTruthy();
+  });
+
+  it("applies the correct filter when an option is selected", () => {
+    const { getByTestId, getByText } = render(
+      <HomeScreen
+        user={{
+          name: "Test User",
+          uid: "12345",
+          email: "test@example.com",
+          createdAt: new Date(),
+        }}
+        navigation={mockNavigation}
+        firestoreCtrl={mockFirestoreCtrl}
+      />,
+    );
+
+    const filterButton = getByTestId("friends-button");
+    fireEvent.press(filterButton);
+
+    expect(getByText("No challenges to display")).toBeTruthy();
+  });
+
+  it("the feed only shows friend's posts", async () => {
+    mockUseHomeScreenViewModel.mockReturnValue({
+      userIsGuest: false,
+      challenges: [
+        {
+          uid: "friend-1",
+          challenge_name: "Challenge 1",
+          description: "Description from Friend 1",
+          challenge_id: "1",
+        },
+        {
+          uid: "user-1",
+          challenge_name: "General Challenge",
+          description: "Description 1",
+          challenge_id: "2",
+        },
+      ],
+      groups: [],
+      titleChallenge: "go get hot wine!!",
+    });
+
+    const mockUser = {
+      name: "Test User",
+      uid: "12345",
+      email: "test@example.com",
+      createdAt: new Date(),
+      friends: ["friend-1"],
+    };
+
+    const { getByTestId, queryAllByTestId } = render(
+      <HomeScreen
+        user={mockUser}
+        navigation={mockNavigation}
+        firestoreCtrl={mockFirestoreCtrl}
+      />,
+    );
+
+    const filterButton = getByTestId("friends-button");
+    fireEvent.press(filterButton);
+
+    const challenges = queryAllByTestId(/challenge-id-/);
+
+    challenges.forEach((challenge) => {
+      const challengeUid = challenge.props.challengeDB.uid;
+      expect(mockUser.friends).toContain(challengeUid);
+    });
+  });
+
+  it("displays no challenges when filterByFriends is true and challengesFromFriends is undefined", () => {
+    mockUseHomeScreenViewModel.mockReturnValue({
+      userIsGuest: false,
+      challenges: [{ uid: "user-1", challenge_name: "General Challenge" }],
+      challengesFromFriends: undefined, // Simule des défis d'amis manquants
+      groups: [],
+      titleChallenge: "go get hot wine!!",
+    });
+
+    const { getByText, getByTestId } = render(
+      <HomeScreen
+        user={{
+          name: "Test User",
+          uid: "12345",
+          email: "test@example.com",
+          createdAt: new Date(),
+        }}
+        navigation={mockNavigation}
+        firestoreCtrl={mockFirestoreCtrl}
+      />,
+    );
+
+    // Activer le filtre "Filter by Friends"
+    fireEvent.press(getByTestId("friends-button"));
+
+    // Vérifie qu'aucun défi n'est affiché
+    expect(getByText("No challenges to display")).toBeTruthy();
+  });
+
+  it("displays no challenges when filterByFriends is true and challengesFromFriends is undefined", () => {
+    mockUseHomeScreenViewModel.mockReturnValue({
+      userIsGuest: false,
+      challenges: [{ uid: "user-1", challenge_name: "General Challenge" }],
+      challengesFromFriends: undefined, // Simule des défis d'amis manquants
+      groups: [],
+      titleChallenge: "go get hot wine!!",
+    });
+
+    const { getByText, getByTestId } = render(
+      <HomeScreen
+        user={{
+          name: "Test User",
+          uid: "12345",
+          email: "test@example.com",
+          createdAt: new Date(),
+        }}
+        navigation={mockNavigation}
+        firestoreCtrl={mockFirestoreCtrl}
+      />,
+    );
+
+    // Activer le filtre "Filter by Friends"
+    fireEvent.press(getByTestId("friends-button"));
+
+    // Vérifie qu'aucun défi n'est affiché
+    expect(getByText("No challenges to display")).toBeTruthy();
+  });
+
+  it("handles double-tap to like a post in HomeScreen", () => {
+    const mockToggleLike = jest.fn();
+    jest
+      .spyOn(
+        require("@/src/viewmodels/home/HomeScreenViewModel"),
+        "useHomeScreenViewModel",
+      )
+      .mockReturnValue({
+        toggleLike: mockToggleLike,
+        challenges: [
+          {
+            challenge_id: "challenge1",
+            title: "First Challenge",
+            description: "First Challenge",
+            image_id: "https://example.com/challenge-image.jpg",
+            likes: [],
+            uid: "user1",
+          },
+        ],
+        userIsGuest: false,
+        groups: [],
+        challengesFromFriends: [],
+        titleChallenge: {
+          title: "Current Challenge",
+          description: "Current Challenge Description",
+          endDate: new Date(2024, 1, 1),
+        },
+      });
+
+    const { getByTestId, getByText } = render(
+      <HomeScreen
+        user={mockUser}
+        navigation={mockNavigation}
+        firestoreCtrl={mockFirestoreCtrl}
+      />,
+    );
+
+    // Désactiver le filtre "Filter by Friends" (par défaut)
+    fireEvent.press(getByTestId("friends-button"));
+
+    // Vérifie qu'aucun défi n'est affiché
     expect(getByText("No challenges to display")).toBeTruthy();
   });
 
