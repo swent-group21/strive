@@ -16,10 +16,6 @@ export type RootStackParamList = {
   Maximize: {
     challenge: DBChallenge;
   };
-  CreateChallenge: {
-    picture_id: string;
-    group_id: string;
-  };
   Profile: undefined;
   MapScreen: undefined;
   GroupScreen: {

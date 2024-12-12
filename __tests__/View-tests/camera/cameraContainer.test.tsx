@@ -1,4 +1,3 @@
-import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import Camera from "@/src/views/camera/CameraContainer";
 import useCameraViewModel from "@/src/viewmodels/camera/CameraViewModel";

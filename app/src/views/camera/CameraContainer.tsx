@@ -1,17 +1,11 @@
-import React from "react";
-import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  TouchableOpacity,
-  ImageBackground,
-  Dimensions,
-} from "react-native";
+import { Text, Button, StyleSheet, Dimensions, Image } from "react-native";
 import { CameraView } from "expo-camera";
-import { Ionicons } from "@expo/vector-icons";
 import useCameraViewModel from "@/src/viewmodels/camera/CameraViewModel";
 import { ThemedIconButton } from "@/components/theme/ThemedIconButton";
+import { ThemedView } from "@/components/theme/ThemedView";
+import { TopBar } from "@/components/navigation/TopBar";
+import { ThemedText } from "@/components/theme/ThemedText";
+import { ThemedTextInput } from "@/components/theme/ThemedTextInput";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,57 +22,65 @@ export default function Camera({ navigation, firestoreCtrl, route }: any) {
     requestPermission,
     camera,
     picture,
+    description,
     isCameraEnabled,
     isFlashEnabled,
-    zoom,
+    isLocationEnabled,
     toggleCameraFacing,
     toggleFlashMode,
+    toggleLocation,
+    toggleCameraState,
+    setDescription,
     takePicture,
-    imageUrlGen,
-    setIsCameraEnabled,
+    makeChallenge,
+    goBack,
   } = useCameraViewModel(firestoreCtrl, navigation, route);
 
   if (!permission) {
     return (
-      <View style={styles.container}>
+      <ThemedView style={styles.container}>
         <Text style={styles.message}>
           Errors occurred while requesting permission
         </Text>
         <Button onPress={requestPermission} title="Grant Permission" />
-      </View>
+      </ThemedView>
     );
   }
 
   if (!permission.granted) {
     return (
-      <View style={styles.container}>
+      <ThemedView style={styles.container}>
         <Text style={styles.message}>
           We need your permission to show the camera
         </Text>
         <Button onPress={requestPermission} title="Grant Permission" />
-      </View>
+      </ThemedView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container} colorType="backgroundPrimary">
+      <TopBar title="Camera" leftIcon="chevron-down" leftAction={goBack} />
       {isCameraEnabled ? (
-        <CameraView
-          style={styles.camera}
-          facing={facing}
-          enableTorch={isFlashEnabled}
-          ref={camera}
-          zoom={zoom}
-          testID="camera-view"
-        >
-          <View style={styles.buttonPlaceHolder}>
+        <ThemedView style={styles.cameraContainer} colorType="transparent">
+          <CameraView
+            style={styles.camera}
+            facing={facing}
+            enableTorch={isFlashEnabled}
+            ref={camera}
+            zoom={0}
+            mirror={facing === "front"}
+            testID="camera-view"
+          />
+
+          <ThemedView style={styles.buttonPlaceHolder} colorType="transparent">
             <ThemedIconButton
-              onPress={toggleCameraFacing}
-              testID="Switch-Button"
               style={styles.changeOrientationAndFlash}
-              name="camera-reverse"
+              onPress={toggleFlashMode}
+              name={isFlashEnabled ? "flash" : "flash-off"}
               size={24}
               color="white"
+              testID="Flash-Button"
             />
 
             <ThemedIconButton
@@ -91,33 +93,66 @@ export default function Camera({ navigation, firestoreCtrl, route }: any) {
             />
 
             <ThemedIconButton
+              onPress={toggleCameraFacing}
+              testID="Switch-Button"
               style={styles.changeOrientationAndFlash}
-              onPress={toggleFlashMode}
-              name={isFlashEnabled ? "flash-off" : "flash"}
+              name="camera-reverse"
               size={24}
               color="white"
-              testID="Flash-Button"
             />
-          </View>
-        </CameraView>
+          </ThemedView>
+        </ThemedView>
       ) : (
-        <View>
-          <ImageBackground
-            source={{ uri: picture?.uri }}
-            style={styles.pictureBackround}
+        <ThemedView style={styles.cameraContainer} colorType="transparent">
+          <ThemedView style={styles.camera} colorType="transparent">
+            <Image source={{ uri: picture?.uri }} style={styles.preview} />
+            <ThemedView style={styles.button} colorType="transparent">
+              <ThemedView style={styles.buttonContainer}>
+                <ThemedIconButton
+                  onPress={toggleLocation}
+                  name={`navigate-circle${isLocationEnabled ? "" : "-outline"}`}
+                  size={35}
+                  color="white"
+                  testID="Location-Button"
+                />
+                <ThemedText colorType="textPrimary">
+                  {isLocationEnabled
+                    ? " Location Enabled  "
+                    : " Location Disabled  "}
+                </ThemedText>
+              </ThemedView>
+
+              <ThemedView style={[styles.buttonContainer, { gap: 10 }]}>
+                <ThemedIconButton
+                  onPress={toggleCameraState}
+                  name={"refresh-circle"}
+                  size={40}
+                  color="white"
+                  testID="Reload-Button"
+                />
+                <ThemedIconButton
+                  onPress={makeChallenge}
+                  name="arrow-redo-circle"
+                  size={40}
+                  color="white"
+                  testID="Submit-Button"
+                />
+              </ThemedView>
+            </ThemedView>
+          </ThemedView>
+
+          <ThemedTextInput
+            style={styles.input}
+            placeholder="Caption"
+            onChangeText={setDescription}
+            value={description}
+            viewWidth="98%"
+            colorType="white"
+            testID="Caption-Input"
           />
-          <TouchableOpacity
-            style={styles.goBack}
-            onPress={() => setIsCameraEnabled(true)}
-          >
-            <Ionicons name="close" size={30} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.send} onPress={imageUrlGen}>
-            <Ionicons name="send" size={30} color="white" />
-          </TouchableOpacity>
-        </View>
+        </ThemedView>
       )}
-    </View>
+    </ThemedView>
   );
 }
 
@@ -126,68 +161,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+
   message: {
     textAlign: "center",
     paddingBottom: 10,
   },
+
   camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: "transparent",
-  },
-  button: {
-    flex: 1,
-    alignSelf: "flex-end",
+    flex: 3,
+    alignSelf: "center",
     alignItems: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  },
-
-  picture: {
+    maxHeight: height * 0.65,
     width: width,
-    height: height,
-    position: "absolute",
-    bottom: 0,
-    left: 0,
+    borderRadius: 30,
+    marginTop: 10,
+    justifyContent: "flex-end",
   },
 
-  pictureBackround: {
-    width: width,
-    height: height,
-    resizeMode: "cover",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  goBack: {
-    position: "absolute",
-    top: height * 0.0,
-    left: width * 0.0,
-    width: width * 0.3,
-    height: width * 0.3,
-    backgroundColor: "transparent",
-    borderRadius: 90,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  send: {
-    position: "absolute",
-    bottom: height * 0.0,
-    right: width * 0.0,
-    width: width * 0.3,
-    height: width * 0.3,
-    backgroundColor: "transparent",
-    borderRadius: 90,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   takePicture: {
     backgroundColor: "transparent",
     borderRadius: 90,
@@ -203,13 +193,70 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
+  cameraContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+
   buttonPlaceHolder: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
+    alignItems: "center",
     width: width,
-    height: height * 0.3,
-    bottom: height * -0.1,
+    marginTop: 30,
+    marginBottom: 60,
+  },
+
+  button: {
+    margin: 10,
+    borderRadius: 90,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "90%",
+  },
+
+  buttonContainer: {
+    borderRadius: 90,
+    backgroundColor: "#00000088",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  preview: {
+    height: height * 0.65,
+    width: width,
+    bottom: 0,
+    left: 0,
+    borderRadius: 30,
     position: "absolute",
-    flex: 1,
+  },
+
+  input: {
+    alignSelf: "center",
+    width: "100%",
+    padding: 10,
+    marginVertical: 30,
+    textAlign: "center",
+    fontSize: 20,
+  },
+  switch: {
+    alignSelf: "flex-start",
+    width: "15%",
+    borderWidth: 2,
+    borderRadius: 15,
+  },
+  switchText: {
+    width: "90%",
+    padding: 15,
+    alignSelf: "center",
+  },
+  containerRow: {
+    width: "90%",
+    backgroundColor: "transparent",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "baseline",
+    padding: 15,
   },
 });

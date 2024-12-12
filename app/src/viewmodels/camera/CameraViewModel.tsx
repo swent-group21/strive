@@ -1,13 +1,18 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   CameraType,
   useCameraPermissions,
   CameraCapturedPicture,
   CameraPictureOptions,
-  FlashMode,
   CameraView,
 } from "expo-camera";
-import { Platform } from "react-native";
+import {
+  getCurrentPositionAsync,
+  LocationObject,
+  requestForegroundPermissionsAsync,
+} from "expo-location";
+import { createChallenge } from "@/types/ChallengeBuilder";
+import { DBGroup } from "@/src/models/firebase/FirestoreCtrl";
 
 /**
  * ViewModel for the camera screen.
@@ -20,33 +25,34 @@ export default function useCameraViewModel(
   navigation: any,
   route: any,
 ) {
-  const [facing, setFacing] = useState<CameraType>("back");
-  const [permission, requestPermission] = useCameraPermissions();
+  // Camera state
   const camera = useRef<CameraView>(null);
-  const [picture, setPicture] = useState<CameraCapturedPicture>();
+  const cameraPictureOptions: CameraPictureOptions = { base64: true };
+  const [permission, requestPermission] = useCameraPermissions();
   const [isCameraEnabled, setIsCameraEnabled] = useState(true);
-  const [flashMode, setFlashMode] = useState<FlashMode>("off");
+  const [picture, setPicture] = useState<CameraCapturedPicture>();
+
+  const [facing, setFacing] = useState<CameraType>("back");
+
   const [isFlashEnabled, setIsFlashEnabled] = useState(false);
-  const [zoom, setZoom] = useState(0);
-  const [lastZoom] = useState(0);
+
+  // Location state
+  const [location, setLocation] = useState<LocationObject | null>(null);
+  const [isLocationEnabled, setIsLocationEnabled] = useState(true);
+
+  // Challenge state
+  const [description, setDescription] = useState("");
 
   const group_id = route.params?.group_id;
 
-  const cameraPictureOptions: CameraPictureOptions = { base64: true };
+  // Go back to the previous screen
+  const goBack = () => {
+    navigation.navigate("Home");
+  };
 
-  // Calculate the zoom level
-  const calculateZoom = (event: any, velocity: number, outFactor: number) => {
-    const scaleFactor = Platform.OS === "ios" ? 0.01 : 25;
-    const reduceFactor = Platform.OS === "ios" ? 0.02 : 50;
-
-    if (velocity > 0) {
-      return zoom + event.scale * velocity * scaleFactor;
-    } else {
-      return (
-        zoom -
-        event.scale * (outFactor || 1) * Math.abs(velocity) * reduceFactor
-      );
-    }
+  // Change the camera state
+  const toggleCameraState = () => {
+    setIsCameraEnabled((prev) => !prev);
   };
 
   // Change the camera facing
@@ -56,25 +62,8 @@ export default function useCameraViewModel(
 
   // Change the flash mode
   const toggleFlashMode = () => {
-    setFlashMode((current) => (current === "off" ? "on" : "off"));
     setIsFlashEnabled((prev) => !prev);
   };
-
-  // Function not used in the current implementation but can be used to zoom in/out
-  useCallback(
-    (event: any) => {
-      const velocity = event.velocity / 20;
-      const outFactor = lastZoom * (Platform.OS === "ios" ? 40 : 15);
-
-      let newZoom = calculateZoom(event, velocity, outFactor);
-
-      if (newZoom < 0) newZoom = 0;
-      else if (newZoom > 0.7) newZoom = 0.7;
-
-      setZoom(newZoom);
-    },
-    [zoom, lastZoom],
-  );
 
   // Take a picture with the camera
   const takePicture = async () => {
@@ -90,13 +79,47 @@ export default function useCameraViewModel(
     }
   };
 
-  // Generate an image URL from the picture taken
-  const imageUrlGen = async () => {
-    const img_id = await firestoreCtrl.uploadImageFromUri(picture?.uri);
-    navigation.navigate("CreateChallenge", {
-      image_id: img_id,
-      group_id: group_id,
-    });
+  // Toggle location switch
+  const toggleLocation = () => setIsLocationEnabled((prev) => !prev);
+
+  // Fetch the current location
+  useEffect(() => {
+    async function fetchLocation() {
+      let { status } = await requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setIsLocationEnabled(false);
+        return;
+      }
+      let currentLocation = await getCurrentPositionAsync();
+      setLocation(currentLocation);
+    }
+    fetchLocation();
+  }, []);
+
+  // Create the challenge
+  const makeChallenge = async () => {
+    try {
+      const imageId = await firestoreCtrl.uploadImageFromUri(picture?.uri);
+      const date = new Date();
+      await createChallenge(
+        firestoreCtrl,
+        group_id,
+        description,
+        isLocationEnabled ? location : null,
+        group_id,
+        date,
+        imageId,
+      );
+      if (group_id == "" || group_id == "home") {
+        navigation.navigate("Home");
+      } else {
+        const group: DBGroup = await firestoreCtrl.getGroup(group_id);
+        navigation.navigate("GroupScreen", { currentGroup: group });
+      }
+    } catch (error) {
+      console.error("Unable to create challenge", error);
+      return error;
+    }
   };
 
   return {
@@ -105,14 +128,18 @@ export default function useCameraViewModel(
     requestPermission,
     camera,
     picture,
+    description,
+    location,
     isCameraEnabled,
-    flashMode,
     isFlashEnabled,
-    zoom,
+    isLocationEnabled,
     toggleCameraFacing,
     toggleFlashMode,
+    toggleLocation,
+    toggleCameraState,
+    setDescription,
     takePicture,
-    imageUrlGen,
-    setIsCameraEnabled,
+    makeChallenge,
+    goBack,
   };
 }

@@ -13,7 +13,6 @@ import ForgotPasswordScreen from "@/src/views/auth/forgot_password_screen";
 import Camera from "@/src/views/camera/CameraContainer";
 import SetUsername from "@/src/views/auth/set_up_screen";
 import MaximizeScreen from "@/src/views/home/maximize_screen";
-import CreateChallengeScreen from "@/src/views/create/create_challenge";
 import ProfileScreen from "@/src/views/home/profile_screen";
 import MapScreen from "@/src/views/map/map_screen";
 import FriendsScreen from "@/src/views/friends/friends_screen";
@@ -133,16 +132,6 @@ export const Nav: React.FC<AppStackProps> = ({
           <Screen name="Maximize">
             {(props: any) => (
               <MaximizeScreen
-                {...props}
-                user={user}
-                firestoreCtrl={firestoreCtrl}
-              />
-            )}
-          </Screen>
-
-          <Screen name="CreateChallenge">
-            {(props: any) => (
-              <CreateChallengeScreen
                 {...props}
                 user={user}
                 firestoreCtrl={firestoreCtrl}

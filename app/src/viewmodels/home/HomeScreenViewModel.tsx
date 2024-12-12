@@ -28,7 +28,8 @@ export function useHomeScreenViewModel(
   });
   const navigateToProfile = () => navigation.navigate("Profile");
   const navigateToMap = () => navigation.navigate("MapScreen");
-  const navigateToCamera = () => navigation.navigate("Camera");
+  const navigateToCamera = () =>
+    navigation.navigate("Camera", { group_id: "home" });
   const navigateToFriends = () => navigation.navigate("Friends");
 
   // Fetch the current challenge
