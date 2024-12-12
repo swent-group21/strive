@@ -14,7 +14,15 @@ const HOURS_IN_DAY = 24;
  * @param testID : testID for the component
  * @returns : a component for the timer
  */
-function Timer({ endDate, onTimerFinished, testID }: any) {
+function Timer({
+  endDate,
+  onTimerFinished,
+  testID,
+}: {
+  readonly endDate: any;
+  readonly onTimerFinished: () => void;
+  readonly testID?: string;
+}) {
   const targetTime = endDate;
   const [currentTime, setCurrentTime] = useState(Date.now());
   const timeBetween = useMemo(

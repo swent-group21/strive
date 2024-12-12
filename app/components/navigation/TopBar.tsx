@@ -43,7 +43,14 @@ export function TopBar({
   rightAction = () => {},
   title,
   colorType = "white",
-}: Readonly<TopbarProps>) {
+}: {
+  readonly leftIcon?: string;
+  readonly leftAction?: () => void;
+  readonly rightIcon?: string;
+  readonly rightAction?: () => void;
+  readonly title?: string;
+  readonly colorType?: keyof typeof Colors.light & keyof typeof Colors.dark;
+}) {
   const color = useThemeColor({}, colorType);
 
   const isImageUrl = (icon?: string) =>

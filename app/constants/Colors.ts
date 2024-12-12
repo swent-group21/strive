@@ -6,6 +6,9 @@
 const tintColorLight = "#0a7ea4";
 const tintColorDark = "#fff";
 
+/**
+ * Colors that are used in the app
+ */
 export const Colors = {
   light: {
     transparent: "transparent",

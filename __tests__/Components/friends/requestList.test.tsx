@@ -1,12 +1,17 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import RequestList from "@/components/friends/RequestList";
+import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
-describe("RequestList", () => {
-  const mockFirestoreCtrl = {
+jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
+  return jest.fn().mockImplementation(() => ({
     acceptFriend: jest.fn(),
     rejectFriend: jest.fn(),
-  };
+  }));
+});
+
+describe("RequestList", () => {
+  const mockFirestoreCtrl = new FirestoreCtrl();
 
   const uid = "current-user-id";
   const requests = [

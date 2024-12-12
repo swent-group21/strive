@@ -4,6 +4,7 @@ import { Colors } from "@/constants/Colors";
 import { ThemedText } from "@/components/theme/ThemedText";
 import { ThemedView } from "@/components/theme/ThemedView";
 import { ThemedTextButton } from "@/components/theme/ThemedTextButton";
+import FirestoreCtrl, { DBGroup } from "@/src/models/firebase/FirestoreCtrl";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,7 +23,13 @@ export default function GroupIcon({
   firestoreCtrl,
   index,
   testID,
-}: any) {
+}: {
+  readonly groupDB: DBGroup;
+  readonly navigation: any;
+  readonly firestoreCtrl: FirestoreCtrl;
+  readonly index: number;
+  readonly testID: string;
+}) {
   // Display loading state or handle absence of challenge data
   if (!groupDB) {
     return <ThemedText>Loading Group...</ThemedText>;

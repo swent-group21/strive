@@ -16,13 +16,20 @@ const defaultLocation = new GeoPoint(43.6763, 7.0122);
 /**
  * View model for the map screen.
  * @param firestoreCtrl : FirestoreCtrl object
+ * @param navigation : navigation object
+ * @param firstLocation : the user's first location
  * @returns : permission, userLocation, and challengesWithLocation
  */
 export function useMapScreenViewModel(
   firestoreCtrl: FirestoreCtrl,
   navigation: any,
   firstLocation: GeoPoint | undefined,
-) {
+): {
+  permission: boolean;
+  userLocation: GeoPoint | undefined;
+  challengesWithLocation: DBChallenge[];
+  navigateGoBack: () => void;
+} {
   const [permission, setPermission] = useState<boolean>(false);
   const [userLocation, setUserLocation] = useState<GeoPoint | undefined>(
     firstLocation,

@@ -13,7 +13,14 @@ export default function SignInViewModel(
   firestoreCtrl: FirestoreCtrl,
   navigation: any,
   setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
-) {
+): {
+  email: string;
+  password: string;
+  errorMessage: string | null;
+  handleEmailChange: (text: string) => void;
+  handlePasswordChange: (text: string) => void;
+  handleSignIn: () => Promise<void>;
+} {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);

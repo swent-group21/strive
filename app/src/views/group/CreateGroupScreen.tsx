@@ -6,7 +6,7 @@ import { ThemedScrollView } from "@/components/theme/ThemedScrollView";
 import { BottomBar } from "@/components/navigation/BottomBar";
 import { ThemedView } from "@/components/theme/ThemedView";
 import CreateGroupViewModel from "@/src/viewmodels/group/CreateGroupViewModel";
-import { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 const { width, height } = Dimensions.get("window");
 
@@ -17,7 +17,7 @@ export default function CreateGroupScreen({
 }: {
   readonly user: DBUser;
   readonly navigation: any;
-  readonly firestoreCtrl: any;
+  readonly firestoreCtrl: FirestoreCtrl;
 }) {
   const {
     groupName,
@@ -64,11 +64,7 @@ export default function CreateGroupScreen({
         />
 
         {/* Submit button */}
-        <BottomBar
-          rightIcon="arrow-forward"
-          rightAction={makeGroup}
-          testID="bottom-bar"
-        />
+        <BottomBar rightIcon="arrow-forward" rightAction={makeGroup} />
       </ThemedScrollView>
     </ThemedView>
   );

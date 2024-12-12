@@ -12,6 +12,7 @@ import { CameraView } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import useCameraViewModel from "@/src/viewmodels/camera/CameraViewModel";
 import { ThemedIconButton } from "@/components/theme/ThemedIconButton";
+import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
 const { width, height } = Dimensions.get("window");
 
@@ -21,7 +22,15 @@ const { width, height } = Dimensions.get("window");
  * @param firestoreCtrl : FirestoreCtrl object
  * @returns : a screen for the camera
  */
-export default function Camera({ navigation, firestoreCtrl, route }: any) {
+export default function Camera({
+  navigation,
+  firestoreCtrl,
+  route,
+}: {
+  readonly navigation: any;
+  readonly firestoreCtrl: FirestoreCtrl;
+  readonly route: any;
+}) {
   const {
     facing,
     permission,

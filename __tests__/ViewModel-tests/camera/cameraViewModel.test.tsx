@@ -1,3 +1,4 @@
+import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 import useCameraViewModel from "@/src/viewmodels/camera/CameraViewModel";
 import { renderHook, act } from "@testing-library/react-native";
 import { useCameraPermissions, CameraCapturedPicture } from "expo-camera";
@@ -15,9 +16,12 @@ jest.mock("expo-camera", () => ({
   },
 }));
 
-const mockFirestoreCtrl = {
-  uploadImageFromUri: jest.fn().mockResolvedValue("mock-image-id"),
-};
+jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
+  return jest.fn().mockImplementation(() => ({
+    uploadImageFromUri: jest.fn().mockResolvedValue("mock-image-id"),
+  }));
+});
+const mockFirestoreCtrl = new FirestoreCtrl();
 
 const mockNavigation = {
   navigate: jest.fn(),
@@ -90,8 +94,6 @@ describe("useCameraViewModel", () => {
   });
 
   it("should handle image URL generation and navigate to CreateChallenge", async () => {
-    mockFirestoreCtrl.uploadImageFromUri.mockResolvedValue("mock-image-id");
-
     const mockPicture: CameraCapturedPicture = {
       uri: "mock-picture-uri",
       width: 1080,

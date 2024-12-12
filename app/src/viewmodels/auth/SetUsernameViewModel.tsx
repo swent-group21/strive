@@ -13,7 +13,14 @@ export default function SetUsernameViewModel(
   user: DBUser,
   firestoreCtrl: FirestoreCtrl,
   setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
-) {
+): {
+  username: string;
+  image: string | null;
+  errorMessage: string | null;
+  handleUsernameChange: (text: string) => void;
+  pickImage: () => Promise<void>;
+  upload: () => Promise<void>;
+} {
   const [username, setUsername] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);

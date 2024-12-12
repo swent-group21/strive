@@ -10,13 +10,24 @@ import FirestoreCtrl, {
  * View model for the home screen.
  * @param user : the user object
  * @param firestoreCtrl : FirestoreCtrl object
+ * @param navigation : navigation object
  * @returns : userIsGuest, challenges, groups, and titleChallenge
  */
 export function useHomeScreenViewModel(
   user: DBUser,
   firestoreCtrl: FirestoreCtrl,
   navigation: any,
-) {
+): {
+  userIsGuest: boolean;
+  challenges: DBChallenge[];
+  groups: DBGroup[];
+  titleChallenge: DBChallengeDescription;
+  navigateToProfile: () => void;
+  navigateToMap: () => void;
+  navigateToCamera: () => void;
+  navigateToFriends: () => void;
+  challengesFromFriends: DBChallenge[];
+} {
   const userIsGuest = user.name === "Guest";
 
   const [challenges, setChallenges] = useState<DBChallenge[]>([]);

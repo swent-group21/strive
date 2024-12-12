@@ -1,18 +1,35 @@
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import ListOfFilteredUsers from "@/components/friends/ListOfFilteredUsers";
+import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
-describe("ListOfFilteredUsers", () => {
-  const mockFilteredUsers = [
-    { uid: "1", name: "John Doe", image_id: "https://example.com/avatar1.png" },
-    { uid: "2", name: "Jane Smith", image_id: null },
-  ];
-  const mockFirestoreCtrl = {
+jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
+  return jest.fn().mockImplementation(() => ({
     isFriend: jest.fn((uid, friendId) => Promise.resolve(friendId === "1")), // John is a friend
     isRequested: jest.fn(() => Promise.resolve(false)),
     addFriend: jest.fn(() => Promise.resolve()),
     removeFriendRequest: jest.fn(() => Promise.resolve()),
-  };
+  }));
+});
+
+describe("ListOfFilteredUsers", () => {
+  const mockFilteredUsers: DBUser[] = [
+    {
+      uid: "1",
+      name: "John Doe",
+      email: "johndoe@gmail.com",
+      createdAt: new Date(),
+      image_id: "https://example.com/avatar1.png",
+    },
+    {
+      uid: "2",
+      name: "Jane Smith",
+      email: "janesmith@gmail.com",
+      createdAt: new Date(),
+      image_id: null,
+    },
+  ];
+  const mockFirestoreCtrl = new FirestoreCtrl();
 
   beforeEach(() => {
     jest.clearAllMocks();

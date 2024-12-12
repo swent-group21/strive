@@ -9,6 +9,7 @@ import { BottomBar } from "@/components/navigation/BottomBar";
 import { ThemedText } from "@/components/theme/ThemedText";
 import { ThemedTextButton } from "@/components/theme/ThemedTextButton";
 import useGroupScreenViewModel from "@/src/viewmodels/group/GroupScreenViewModel";
+import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 const { width, height } = Dimensions.get("window");
 
@@ -17,7 +18,12 @@ export default function GroupScreen({
   navigation,
   route,
   firestoreCtrl,
-}: any) {
+}: {
+  readonly user: DBUser;
+  readonly navigation: any;
+  readonly route: any;
+  readonly firestoreCtrl: FirestoreCtrl;
+}) {
   const {
     groupChallenges,
     otherGroups,
@@ -55,6 +61,7 @@ export default function GroupScreen({
             navigation={navigation}
             firestoreCtrl={firestoreCtrl}
             key={index}
+            index={index}
             testID={`group-id-${index}`}
           />
         ))}
@@ -108,7 +115,6 @@ export default function GroupScreen({
       </ThemedScrollView>
 
       <BottomBar
-        testID="bottom-bar"
         leftIcon="map-outline"
         centerIcon="camera-outline"
         rightIcon="trophy-outline"

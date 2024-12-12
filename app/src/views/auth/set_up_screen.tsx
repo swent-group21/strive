@@ -98,7 +98,6 @@ export default function SetUsernameScreen({
       </ThemedScrollView>
 
       <BottomBar
-        testID="bottom-bar-right-icon"
         rightIcon="arrow-forward"
         rightAction={async () => {
           await upload();

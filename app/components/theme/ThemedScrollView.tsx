@@ -9,6 +9,13 @@ export type ThemedScrollViewProps = ScrollViewProps & {
   colorType?: keyof typeof Colors.dark & keyof typeof Colors.light;
 };
 
+/**
+ * ThemedScrollView component which wraps the ScrollView component from react-native
+ * @param lightColor : light color for the ScrollView
+ * @param darkColor : dark color for the ScrollView
+ * @param colorType : color type for the ScrollView
+ * @returns ThemedScrollView Component
+ */
 export function ThemedScrollView({
   style,
   lightColor,

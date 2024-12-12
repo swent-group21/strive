@@ -6,20 +6,38 @@ import {
   CameraPictureOptions,
   FlashMode,
   CameraView,
+  PermissionResponse,
 } from "expo-camera";
 import { Platform } from "react-native";
+import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
 /**
  * ViewModel for the camera screen.
  * @param firestoreCtrl : FirestoreCtrl object
  * @param navigation : navigation object
+ * @param route : route object
  * @returns : functions for the camera screen
  */
 export default function useCameraViewModel(
-  firestoreCtrl: any,
+  firestoreCtrl: FirestoreCtrl,
   navigation: any,
   route: any,
-) {
+): {
+  facing: CameraType;
+  permission: PermissionResponse | null;
+  requestPermission: () => Promise<PermissionResponse>;
+  camera: React.RefObject<CameraView>;
+  picture: CameraCapturedPicture | undefined;
+  isCameraEnabled: boolean;
+  flashMode: FlashMode;
+  isFlashEnabled: boolean;
+  zoom: number;
+  toggleCameraFacing: () => void;
+  toggleFlashMode: () => void;
+  takePicture: () => Promise<void>;
+  imageUrlGen: () => Promise<void>;
+  setIsCameraEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+} {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const camera = useRef<CameraView>(null);

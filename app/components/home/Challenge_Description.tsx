@@ -25,7 +25,11 @@ export function ChallengeDescription({
   dBChallengeDescription,
   onTimerFinished,
   testID,
-}: Readonly<ChallengeDescriptionProps>) {
+}: {
+  readonly dBChallengeDescription: DBChallengeDescription;
+  readonly onTimerFinished: () => void;
+  readonly testID?: string;
+}) {
   return (
     <ThemedView style={styles.challenge} testID={testID}>
       <ThemedText style={{ fontSize: 20, fontWeight: "bold" }}>

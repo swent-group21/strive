@@ -1,12 +1,19 @@
 import { renderHook, act, waitFor } from "@testing-library/react-native";
 import { useFriendsScreenViewModel } from "@/src/viewmodels/friends/FriendsScreenViewModel";
+import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
+
+jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
+  return jest.fn().mockImplementation(() => {
+    return {
+      getAllUsers: jest.fn(),
+      getFriends: jest.fn(),
+      getFriendRequests: jest.fn(),
+    };
+  });
+});
 
 describe("useFriendsScreenViewModel", () => {
-  const mockFirestoreCtrl = {
-    getAllUsers: jest.fn(),
-    getFriends: jest.fn(),
-    getFriendRequests: jest.fn(),
-  };
+  const mockFirestoreCtrl = new FirestoreCtrl();
 
   const uid = "current-user-id";
 
@@ -19,7 +26,9 @@ describe("useFriendsScreenViewModel", () => {
       { uid: "user1", name: "John Doe" },
       { uid: "user2", name: "Jane Smith" },
     ];
-    mockFirestoreCtrl.getAllUsers.mockResolvedValueOnce(mockUsers);
+    (mockFirestoreCtrl.getAllUsers as jest.Mock).mockResolvedValueOnce(
+      mockUsers,
+    );
 
     const { result } = renderHook(() =>
       useFriendsScreenViewModel(mockFirestoreCtrl, uid),
@@ -36,7 +45,9 @@ describe("useFriendsScreenViewModel", () => {
       { uid: "user1", name: "John Doe" },
       { uid: "user2", name: "Jane Smith" },
     ];
-    mockFirestoreCtrl.getAllUsers.mockResolvedValueOnce(mockUsers);
+    (mockFirestoreCtrl.getAllUsers as jest.Mock).mockResolvedValueOnce(
+      mockUsers,
+    );
 
     const { result } = renderHook(() =>
       useFriendsScreenViewModel(mockFirestoreCtrl, uid),
@@ -58,7 +69,9 @@ describe("useFriendsScreenViewModel", () => {
       { uid: "user1", name: "John Doe" },
       { uid: "current-user-id", name: "Me" },
     ];
-    mockFirestoreCtrl.getAllUsers.mockResolvedValueOnce(mockUsers);
+    (mockFirestoreCtrl.getAllUsers as jest.Mock).mockResolvedValueOnce(
+      mockUsers,
+    );
 
     const { result } = renderHook(() =>
       useFriendsScreenViewModel(mockFirestoreCtrl, uid),
@@ -75,7 +88,9 @@ describe("useFriendsScreenViewModel", () => {
 
   it("fetches and sets friends correctly", async () => {
     const mockFriends = [{ uid: "friend1", name: "Alice" }];
-    mockFirestoreCtrl.getFriends.mockResolvedValueOnce(mockFriends);
+    (mockFirestoreCtrl.getFriends as jest.Mock).mockResolvedValueOnce(
+      mockFriends,
+    );
 
     const { result } = renderHook(() =>
       useFriendsScreenViewModel(mockFirestoreCtrl, uid),
@@ -89,7 +104,9 @@ describe("useFriendsScreenViewModel", () => {
 
   it("fetches and sets friend requests correctly", async () => {
     const mockRequests = [{ uid: "request1", name: "Bob" }];
-    mockFirestoreCtrl.getFriendRequests.mockResolvedValueOnce(mockRequests);
+    (mockFirestoreCtrl.getFriendRequests as jest.Mock).mockResolvedValueOnce(
+      mockRequests,
+    );
 
     const { result } = renderHook(() =>
       useFriendsScreenViewModel(mockFirestoreCtrl, uid),

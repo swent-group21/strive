@@ -5,6 +5,9 @@
 
 import { StyleSheet } from "react-native";
 
+/**
+ * Text styles that are used in the app
+ */
 export const TextStyles = StyleSheet.create({
   superTitle: {
     fontSize: 67,

@@ -5,6 +5,11 @@ import FirestoreCtrl, {
 
 /**
  * Used to create a Group and store it in Firestore DB
+ * @param firestoreCtrl : FirestoreCtrl object
+ * @param name : the name of the group
+ * @param challengeTitle : the title of the challenge
+ * @param members : the members of the group
+ * @param updateDate : the update date of the group
  */
 export const createGroup = async (
   firestoreCtrl: FirestoreCtrl,

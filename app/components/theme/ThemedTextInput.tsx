@@ -16,6 +16,19 @@ interface ThemedTextInputProps extends TextInputProps {
   testID?: string;
 }
 
+/**
+ * ThemedTextInput component which wraps the TextInput component from react-native with an optional title
+ * @param lightColor : light color for the text input
+ * @param darkColor : dark color for the text input
+ * @param colorType : color type for the text input
+ * @param borderColorType : border color type for the text input
+ * @param title : title for the text input
+ * @param titleStyle : style for the title
+ * @param viewWidth : width for the view
+ * @param type : type of the text input
+ * @param testID : testID for the component
+ * @returns ThemedTextInput Component
+ */
 export function ThemedTextInput({
   lightColor,
   darkColor,

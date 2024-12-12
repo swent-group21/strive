@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 /**
  * View model for the Friends screen.
@@ -7,7 +7,18 @@ import { DBUser } from "@/src/models/firebase/FirestoreCtrl";
  * @param uid : the user's ID
  * @returns : searchText, setSearchText, users, friends, requests, filteredUsers, handleFriendPress
  */
-export function useFriendsScreenViewModel(firestoreCtrl: any, uid: string) {
+export function useFriendsScreenViewModel(
+  firestoreCtrl: FirestoreCtrl,
+  uid: string,
+): {
+  searchText: string;
+  setSearchText: React.Dispatch<React.SetStateAction<string>>;
+  users: DBUser[];
+  friends: DBUser[];
+  requests: DBUser[];
+  filteredUsers: DBUser[];
+  handleFriendPress: (friendId: string) => void;
+} {
   const [searchText, setSearchText] = useState("");
   const [users, setUsers] = useState<DBUser[]>([]);
   const [friends, setFriends] = useState<DBUser[]>([]);

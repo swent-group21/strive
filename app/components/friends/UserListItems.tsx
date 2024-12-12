@@ -21,7 +21,14 @@ export const UserListItem = ({
   isRequested,
   onAdd,
   onCancelRequest,
-}: any) => {
+}: {
+  readonly name: string;
+  readonly avatar?: string;
+  readonly isFriend: boolean;
+  readonly isRequested: boolean;
+  readonly onAdd: () => void;
+  readonly onCancelRequest: () => void;
+}) => {
   const [status, setStatus] = useState("ADD");
 
   // Set the status of the user based on the friend and requested status

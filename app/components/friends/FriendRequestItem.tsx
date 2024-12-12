@@ -18,7 +18,13 @@ export const FriendRequestItem = ({
   onAccept,
   onDecline,
   testID,
-}: any) => (
+}: {
+  readonly name: string;
+  readonly avatar?: string;
+  readonly onAccept: () => void;
+  readonly onDecline: () => void;
+  readonly testID: string;
+}) => (
   <ThemedView style={styles.requestItem} testID="friend-request-item">
     {avatar ? (
       <Image

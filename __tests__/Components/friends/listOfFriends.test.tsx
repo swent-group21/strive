@@ -1,11 +1,24 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import ListOfFriends from "@/components/friends/ListOfFriends";
+import { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 describe("ListOfFriends", () => {
-  const mockFriends = [
-    { uid: "1", name: "John Doe", image_id: "https://example.com/avatar1.png" },
-    { uid: "2", name: "Jane Smith", image_id: null },
+  const mockFriends: DBUser[] = [
+    {
+      uid: "1",
+      name: "John Doe",
+      email: "johndoe@gmail.com",
+      createdAt: new Date(),
+      image_id: "https://example.com/avatar1.png",
+    },
+    {
+      uid: "2",
+      name: "Jane Smith",
+      email: "janesmith@gmail.com",
+      createdAt: new Date(),
+      image_id: null,
+    },
   ];
 
   const mockHandleFriendPress = jest.fn();

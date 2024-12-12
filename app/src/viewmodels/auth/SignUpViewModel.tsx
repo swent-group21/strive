@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { isValidEmail, signUpWithEmail } from "@/types/Auth";
 import { Alert } from "react-native";
+import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 /**
  * ViewModel for the SignUp screen
@@ -11,9 +12,24 @@ import { Alert } from "react-native";
  */
 export default function useSignUpViewModel(
   navigation: any,
-  setUser: any,
-  firestoreCtrl: any,
-) {
+  setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
+  firestoreCtrl: FirestoreCtrl,
+): {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  setName: (text: string) => void;
+  setSurname: (text: string) => void;
+  setEmail: (text: string) => void;
+  setPassword: (text: string) => void;
+  setConfirmPassword: (text: string) => void;
+  handleSignUp: () => Promise<void>;
+  isEmailValid: boolean;
+  isPasswordValid: boolean;
+  isConfirmPasswordValid: boolean;
+} {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");

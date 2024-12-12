@@ -16,7 +16,18 @@ export function useProfileScreenViewModel(
   setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
   firestoreCtrl: FirestoreCtrl,
   navigation: any,
-) {
+): {
+  userIsGuest: boolean;
+  name: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+  image: string | null;
+  pickImage: () => Promise<void>;
+  upload: () => Promise<void>;
+  handleLogOut: () => Promise<void>;
+  handleChangeEmail: () => Promise<void>;
+  handleChangePassword: () => Promise<void>;
+  navigateGoBack: () => void;
+} {
   const userIsGuest = user.name === "Guest";
 
   const [name, setName] = useState<string>(user.name);

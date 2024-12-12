@@ -10,7 +10,15 @@ import { Colors } from "@/constants/Colors";
  * @param onPress : function to call when the user presses the friend item
  * @returns FriendListItem Component
  */
-export const FriendListItem = ({ name, avatar, onPress }: any) => (
+export const FriendListItem = ({
+  name,
+  avatar,
+  onPress,
+}: {
+  readonly name: string;
+  readonly avatar?: string;
+  readonly onPress: () => void;
+}) => (
   <TouchableOpacity
     style={styles.friendItem}
     onPress={onPress}

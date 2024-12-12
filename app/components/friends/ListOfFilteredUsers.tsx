@@ -3,6 +3,7 @@ import { FlatList, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/theme/ThemedText";
 import { UserListItem } from "@/components/friends/UserListItems";
 import { ThemedView } from "@/components/theme/ThemedView";
+import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 /**
  * List of filtered users component
@@ -17,7 +18,12 @@ export default function ListOfFilteredUsers({
   searchText,
   firestoreCtrl,
   uid,
-}: any) {
+}: {
+  readonly filteredUsers: DBUser[];
+  readonly searchText: string;
+  readonly firestoreCtrl: FirestoreCtrl;
+  readonly uid: string;
+}) {
   const [userStatuses, setUserStatuses] = useState<{
     [key: string]: { isFriend: boolean; isRequested: boolean };
   }>({});

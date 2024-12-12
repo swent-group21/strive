@@ -20,6 +20,14 @@ export function isValidEmail(email: string) {
   return reg.test(email);
 }
 
+/***
+ * Function to log in with email and password
+ * @param email - email to log in with
+ * @param password - password to log in with
+ * @param firestoreCtrl - FirestoreCtrl object
+ * @param navigation - navigation object
+ * @param setUser - setUser function
+ */
 export const logInWithEmail = async (
   email: string,
   password: string,
@@ -75,6 +83,15 @@ export const logInWithEmail = async (
   }
 };
 
+/***
+ * Function to sign up with email and password
+ * @param userName - name of the user
+ * @param email - email to sign up with
+ * @param password - password to sign up with
+ * @param firestoreCtrl - FirestoreCtrl object
+ * @param navigation - navigation object
+ * @param setUser - setUser function
+ */
 export const signUpWithEmail = async (
   userName: string,
   email: string,
@@ -117,6 +134,12 @@ export const signUpWithEmail = async (
   }
 };
 
+/***
+ * Function to sign in as a guest
+ * @param firestoreCtrl - FirestoreCtrl object
+ * @param navigation - navigation object
+ * @param setUser - setUser function
+ */
 export const signInAsGuest = async (
   firestoreCtrl: FirestoreCtrl,
   navigation: any,
@@ -149,6 +172,10 @@ export const signInAsGuest = async (
     });
 };
 
+/***
+ * Function to log out
+ * @param navigation - navigation object
+ */
 export const logOut = async (navigation: any) => {
   signOut(auth)
     .then(() => {
@@ -164,6 +191,10 @@ export const logOut = async (navigation: any) => {
     });
 };
 
+/***
+ * Function to reset password
+ * @param email - email to reset password for
+ */
 export const resetPassword = async (email: string) => {
   if (email) {
     sendPasswordResetEmail(auth, email)
@@ -180,6 +211,10 @@ export const resetPassword = async (email: string) => {
   }
 };
 
+/***
+ * Function to reset email
+ * @param email - email to reset to
+ */
 export const resetEmail = async (email: string) => {
   if (email) {
     if (isValidEmail(email)) {

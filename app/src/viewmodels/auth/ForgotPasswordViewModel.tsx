@@ -5,7 +5,12 @@ import { resetPassword } from "@/types/Auth";
  * ViewModel for the ForgotPassword screen
  * @returns : email, errorMessage, handleEmailChange, and handleResetPassword
  */
-export default function ForgotPasswordViewModel() {
+export default function ForgotPasswordViewModel(): {
+  email: string;
+  errorMessage: string | null;
+  handleEmailChange: (text: string) => void;
+  handleResetPassword: () => Promise<void>;
+} {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 

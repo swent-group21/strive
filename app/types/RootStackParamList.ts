@@ -1,5 +1,8 @@
 import { DBChallenge, DBGroup } from "@/src/models/firebase/FirestoreCtrl";
 
+/*
+ * RootStackParamList defines the types for the navigation stack
+ */
 export type RootStackParamList = {
   Welcome: undefined;
   WelcomeFinal: undefined;

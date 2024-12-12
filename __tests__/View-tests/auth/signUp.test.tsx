@@ -6,6 +6,12 @@ import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
 jest.mock("@/src/viewmodels/auth/SignUpViewModel");
 
+jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
+  return jest.fn().mockImplementation(() => ({
+    // Implement the FirestoreCtrl methods here
+  }));
+});
+
 describe("SignUp Screen Tests", () => {
   const mockNavigation = { goBack: jest.fn() };
   const mockSetUser = jest.fn();
@@ -52,7 +58,7 @@ describe("SignUp Screen Tests", () => {
   it("calls setName when the name input changes", () => {
     const mockSetName = jest.fn();
     (useSignUpViewModel as jest.Mock).mockReturnValue({
-      ...useSignUpViewModel(mockNavigation, mockFirestoreCtrl, mockSetUser),
+      ...useSignUpViewModel(mockNavigation, mockSetUser, mockFirestoreCtrl),
       setName: mockSetName,
     });
 
@@ -73,7 +79,7 @@ describe("SignUp Screen Tests", () => {
   it("calls handleSignUp when the Sign Up button is pressed", () => {
     const mockHandleSignUp = jest.fn();
     (useSignUpViewModel as jest.Mock).mockReturnValue({
-      ...useSignUpViewModel(mockNavigation, mockFirestoreCtrl, mockSetUser),
+      ...useSignUpViewModel(mockNavigation, mockSetUser, mockFirestoreCtrl),
       handleSignUp: mockHandleSignUp,
     });
 

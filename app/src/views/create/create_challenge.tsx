@@ -99,11 +99,7 @@ export default function CreateChallengeScreen({
         </ThemedView>
 
         {/* Submit button */}
-        <BottomBar
-          rightIcon="arrow-forward"
-          rightAction={makeChallenge}
-          testID="bottom-bar"
-        />
+        <BottomBar rightIcon="arrow-forward" rightAction={makeChallenge} />
       </ThemedScrollView>
     </ThemedView>
   );
