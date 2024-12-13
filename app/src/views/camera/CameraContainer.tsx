@@ -59,7 +59,7 @@ export default function Camera({ navigation, firestoreCtrl, route }: any) {
   }
 
   return (
-    <ThemedView style={styles.container} colorType="backgroundPrimary">
+    <ThemedView style={styles.container} colorType="backgroundPrimary" testID="camera-screen">
       <TopBar title="Camera" leftIcon="chevron-down" leftAction={goBack} />
       {isCameraEnabled ? (
         <ThemedView style={styles.cameraContainer} colorType="transparent">
