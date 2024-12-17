@@ -65,7 +65,7 @@ describe("GroupIcon Component", () => {
 
     // Press the icons
     await waitFor(() => {
-      fireEvent.press(getByTestId("group-pressable-button"));
+      fireEvent.press(getByTestId("group-pressable-button-groupName"));
     });
 
     // Check if the onPress method has been called

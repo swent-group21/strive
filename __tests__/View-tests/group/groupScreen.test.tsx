@@ -148,7 +148,7 @@ describe("Group Screen renders challenges", () => {
       />,
     );
     await waitFor(() => {
-      expect(getByTestId("description-id")).toBeTruthy();
+      expect(getByTestId("description-id-Test Name")).toBeTruthy();
     });
   });
 

@@ -89,9 +89,12 @@ export function useHomeScreenViewModel(
 
   // Fetch the groups
   useEffect(() => {
+    console.log("Fetching groups...");
     if (user.uid) {
+      console.log("User ID: ", user.uid);
       const fetchGroups = async () => {
         try {
+          console.log("Fetching groups2...");
           await firestoreCtrl
             .getGroupsByUserId(user.uid)
             .then((group: DBGroup[]) => {
@@ -102,7 +105,9 @@ export function useHomeScreenViewModel(
                     new Date(a.updateDate).getTime()
                   : 0,
               );
+              console.log("Groups fetched: ", sortedGroups);
               setGroups(sortedGroups);
+              console.log("Groups set: ", groups);
             });
         } catch (error) {
           console.error("Error fetching groups: ", error);
