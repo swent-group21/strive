@@ -66,7 +66,7 @@ export default function MaximizeScreen({
   console.log("Area: ", groupCenter, groupRadius);
 
   return (
-    <ThemedView style={styles.bigContainer}>
+    <ThemedView style={styles.bigContainer} testID="maximize-screen">
       <TopBar
         title=""
         leftIcon="arrow-back-outline"

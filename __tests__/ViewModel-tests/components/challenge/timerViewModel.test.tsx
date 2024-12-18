@@ -1,6 +1,6 @@
 import React from "react";
 import { render, act, renderHook } from "@testing-library/react-native";
-import Timer from "@/src/views/components/challenge/timer";
+import { Timer } from "@/src/views/components/challenge/timer";
 import { useTimerViewModel } from "@/src/viewmodels/components/challenge/TimerViewModel";
 
 // Test for the Timer ViewModel

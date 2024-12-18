@@ -15,7 +15,7 @@ const HOURS_IN_DAY = 24;
  * @param testID : testID for the component
  * @returns : a component for the timer
  */
-export default function Timer({ endDate, onTimerFinished, testID }: any) {
+export function Timer({ endDate, onTimerFinished, testID }: any) {
   const { days, hours, minutes, seconds } = useTimerViewModel({
     endDate,
     onTimerFinished,

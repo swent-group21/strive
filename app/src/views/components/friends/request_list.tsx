@@ -34,7 +34,7 @@ export function RequestList({
         <FriendRequestItem
           name={item.name}
           key={item.uid}
-          testID={index.toString()}
+          testID={item.name}
           avatar={item.image_id}
           onAccept={() => handleAccept(item.uid)}
           onDecline={() => handleDecline(item.uid)}

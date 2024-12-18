@@ -45,7 +45,6 @@ export function useListOfFilteredUsersViewModel({
   const handleAdd = async (userId: string) => {
     try {
       await firestoreCtrl.addFriend(uid, userId);
-      console.info("Friend request sent");
       setUserStatuses((prev) => ({
         ...prev,
         [userId]: { ...prev[userId], isRequested: true },
@@ -59,7 +58,6 @@ export function useListOfFilteredUsersViewModel({
   const handleRemove = async (userId: string) => {
     try {
       await firestoreCtrl.removeFriendRequest(uid, userId);
-      console.log("Friend request canceled");
       setUserStatuses((prev) => ({
         ...prev,
         [userId]: { ...prev[userId], isRequested: false },

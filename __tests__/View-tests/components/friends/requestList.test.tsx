@@ -44,8 +44,8 @@ describe("RequestList Component", () => {
     );
 
     expect(getByTestId("friend-request-list")).toBeTruthy();
-    expect(getByTestId("friend-request-buttons-0")).toBeTruthy(); // John's request
-    expect(getByTestId("friend-request-buttons-1")).toBeTruthy(); // Jane's request
+    expect(getByTestId("friend-request-buttons-John")).toBeTruthy(); // John's request
+    expect(getByTestId("friend-request-buttons-Jane")).toBeTruthy(); // Jane's request
   });
 
   it("calls the right methods button is pressed", async () => {
@@ -65,8 +65,8 @@ describe("RequestList Component", () => {
       />,
     );
 
-    const acceptButton = getByTestId("accept-button-0");
-    const declineButton = getByTestId("decline-button-1");
+    const acceptButton = getByTestId("accept-button-John");
+    const declineButton = getByTestId("decline-button-Jane");
     fireEvent.press(acceptButton);
     fireEvent.press(declineButton);
 
