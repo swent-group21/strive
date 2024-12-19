@@ -36,6 +36,19 @@ export function useMaximizeScreenViewModel(
     navigation.goBack();
   };
 
+  const [showGuestPopup, setShowGuestPopup] = useState<string | null>(null);
+
+  const handleUserInteraction = (
+    guestPopUpMsg: string,
+    interaction: () => void,
+  ) => {
+    if (user.name === "Guest") {
+      setShowGuestPopup(guestPopUpMsg);
+    } else {
+      interaction();
+    }
+  };
+
   useEffect(() => {
     // Fetch post user data
     const postUid = challenge.uid;
@@ -115,5 +128,8 @@ export function useMaximizeScreenViewModel(
     navigateGoBack,
     groupCenter,
     groupRadius,
+    showGuestPopup,
+    setShowGuestPopup,
+    handleUserInteraction,
   };
 }

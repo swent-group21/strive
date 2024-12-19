@@ -81,6 +81,10 @@ export function useChallengeViewModel({
 
   const handleLikePress = async () => {
     try {
+      if (currentUser.name == "Guest") {
+        return;
+      }
+
       const newIsLiked = !isLiked;
       setIsLiked(newIsLiked);
 
