@@ -85,7 +85,10 @@ export default function GroupScreen({
       </ThemedScrollView>
 
       {/* Challenge Title */}
-      <ThemedView style={styles.challengeTitle} testID={`description-id`}>
+      <ThemedView
+        style={styles.challengeTitle}
+        testID={`description-id-${groupName}`}
+      >
         <ThemedText style={{ fontSize: 20, fontWeight: "bold" }}>
           {groupChallengeTitle}
         </ThemedText>

@@ -43,7 +43,7 @@ export function Challenge({
   return (
     <TouchableWithoutFeedback
       onPress={handleDoubleTap}
-      testID={`challenge-id-${index}`}
+      testID={`challenge-id-${challengeDB.caption}`}
     >
       <ThemedView style={styles.challengeContainer} testID={testID}>
         {/* User Info */}

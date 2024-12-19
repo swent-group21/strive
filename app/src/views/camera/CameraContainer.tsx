@@ -39,7 +39,7 @@ export default function Camera({ navigation, firestoreCtrl, route }: any) {
 
   if (!permission) {
     return (
-      <ThemedView style={styles.container}>
+      <ThemedView style={styles.container} testID="camera-screen">
         <Text style={styles.message}>
           Errors occurred while requesting permission
         </Text>
@@ -50,7 +50,7 @@ export default function Camera({ navigation, firestoreCtrl, route }: any) {
 
   if (!permission.granted) {
     return (
-      <ThemedView style={styles.container}>
+      <ThemedView style={styles.container} testID="camera-screen">
         <Text style={styles.message}>
           We need your permission to show the camera
         </Text>
@@ -60,10 +60,18 @@ export default function Camera({ navigation, firestoreCtrl, route }: any) {
   }
 
   return (
-    <ThemedView style={styles.container} colorType="backgroundPrimary">
+    <ThemedView
+      style={styles.container}
+      colorType="backgroundPrimary"
+      testID="camera-screen"
+    >
       <TopBar title="Camera" leftIcon="chevron-down" leftAction={goBack} />
       {isCameraEnabled ? (
-        <ThemedView style={styles.cameraContainer} colorType="transparent">
+        <ThemedView
+          style={styles.cameraContainer}
+          colorType="transparent"
+          testID="camera-container"
+        >
           <CameraView
             style={styles.camera}
             facing={facing}
@@ -104,7 +112,11 @@ export default function Camera({ navigation, firestoreCtrl, route }: any) {
           </ThemedView>
         </ThemedView>
       ) : (
-        <ThemedView style={styles.cameraContainer} colorType="transparent">
+        <ThemedView
+          style={styles.cameraContainer}
+          colorType="transparent"
+          testID="camera-preview"
+        >
           <ThemedView style={styles.camera} colorType="transparent">
             <Image source={{ uri: picture?.uri }} style={styles.preview} />
             <ThemedView style={styles.button} colorType="transparent">

@@ -60,14 +60,12 @@ describe("HomeScreen UI Tests", () => {
       challenges: [
         {
           uid: "1",
-          challenge_name: "Challenge 1",
-          description: "Description 1",
+          caption: "Challenge 1",
           challenge_id: "1",
         },
         {
           uid: "2",
-          challenge_name: "Challenge 2",
-          description: "Description 2",
+          caption: "Challenge 2",
           challenge_id: "2",
         },
       ],
@@ -107,8 +105,8 @@ describe("HomeScreen UI Tests", () => {
       expect(getByText("Group 2")).toBeTruthy();
 
       // Vérifie si les défis s'affichent
-      expect(getByTestId("challenge-id-0")).toBeTruthy();
-      expect(getByTestId("challenge-id-1")).toBeTruthy();
+      expect(getByTestId("challenge-id-Challenge 1")).toBeTruthy();
+      expect(getByTestId("challenge-id-Challenge 2")).toBeTruthy();
 
       // Vérifie le défi actuel
       expect(getByText("Current Challenge")).toBeTruthy();
@@ -351,8 +349,7 @@ describe("HomeScreen UI Tests", () => {
         challenges: [
           {
             challenge_id: "challenge1",
-            title: "First Challenge",
-            description: "First Challenge",
+            caption: "First Challenge",
             image_id: "https://example.com/challenge-image.jpg",
             likes: [],
             uid: "user1",
@@ -376,7 +373,7 @@ describe("HomeScreen UI Tests", () => {
       />,
     );
 
-    const postImage = getByTestId("challenge-id-0");
+    const postImage = getByTestId("challenge-id-First Challenge");
     fireEvent.press(postImage); // Simulate double-tap
     fireEvent.press(postImage); // Simulate double-tap
 

@@ -134,7 +134,7 @@ export default function HomeScreen({
               navigation={navigation}
               firestoreCtrl={firestoreCtrl}
               key={index}
-              testID={`group-id-${index}`}
+              testID={`group-id-${group.name}`}
             />
           ))}
           <ThemedView
@@ -152,6 +152,7 @@ export default function HomeScreen({
               textStyle={styles.createGroupText}
               textColorType="textOverLight"
               colorType="backgroundSecondary"
+              testID="create-group-pressable-button"
             />
           </ThemedView>
         </ThemedScrollView>
