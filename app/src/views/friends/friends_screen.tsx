@@ -2,23 +2,23 @@ import { FlatList, StyleSheet, Text } from "react-native";
 import { TopBar } from "@/src/views/components/navigation/top_bar";
 import { ThemedView } from "@/src/views/components/theme/themed_view";
 import { ThemedText } from "@/src/views/components/theme/themed_text";
-import { getAuth } from "firebase/auth";
 import { SearchBar } from "@/src/views/components/friends/search_bar";
 import ListOfFriends from "@/src/views/components/friends/list_of_friends";
 import { RequestList } from "@/src/views/components/friends/request_list";
 import ListOfFilteredUsers from "@/src/views/components/friends/list_of_filtered_users";
 import { useFriendsScreenViewModel } from "@/src/viewmodels/friends/FriendsScreenViewModel";
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
+import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 export default function FriendsScreen({
   navigation,
   firestoreCtrl,
+  user,
 }: {
   readonly navigation: any;
   readonly firestoreCtrl: FirestoreCtrl;
+  readonly user: DBUser;
 }) {
-  const auth = getAuth();
-  const uid = auth.currentUser?.uid;
+  const uid = user?.uid;
 
   const {
     searchText,
@@ -87,7 +87,7 @@ export default function FriendsScreen({
   ];
 
   return (
-    <ThemedView style={styles.bigContainer}>
+    <ThemedView style={styles.bigContainer} testID="friendsScreen">
       {/* Barre de recherche */}
       <TopBar
         title="Strive is better with friends"

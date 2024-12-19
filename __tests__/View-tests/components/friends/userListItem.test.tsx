@@ -49,7 +49,7 @@ describe("UserListItem", () => {
 
     expect(getByText("J")).toBeTruthy();
     expect(getByText("John Doe")).toBeTruthy();
-    expect(getByTestId("add-button-John Doe")).toBeTruthy();
+    expect(getByTestId("handle-button-John Doe")).toBeTruthy();
     expect(getByText("ADD")).toBeTruthy();
   });
 

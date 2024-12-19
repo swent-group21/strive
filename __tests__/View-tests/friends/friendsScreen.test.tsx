@@ -39,6 +39,13 @@ const mockFilteredUsers: DBUser[] = [
   },
 ];
 
+const mockUser: DBUser = {
+  uid: "test-user-id",
+  name: "Tester",
+  email: "tester@test.com",
+  createdAt: new Date(),
+};
+
 describe("FriendsScreen Tests - Various Scenarios", () => {
   const mockNavigation = {
     goBack: jest.fn(),
@@ -48,13 +55,6 @@ describe("FriendsScreen Tests - Various Scenarios", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-
-    // Mock Firebase Auth
-    (getAuth as jest.Mock).mockReturnValue({
-      currentUser: {
-        uid: "test-user-id",
-      },
-    });
   });
 
   it("renders FriendsScreen with no requests and no friends", () => {
@@ -72,6 +72,7 @@ describe("FriendsScreen Tests - Various Scenarios", () => {
       <FriendsScreen
         navigation={mockNavigation}
         firestoreCtrl={mockFirestoreCtrl}
+        user={mockUser}
       />,
     );
 
@@ -97,6 +98,7 @@ describe("FriendsScreen Tests - Various Scenarios", () => {
       <FriendsScreen
         navigation={mockNavigation}
         firestoreCtrl={mockFirestoreCtrl}
+        user={mockUser}
       />,
     );
 
@@ -121,6 +123,7 @@ describe("FriendsScreen Tests - Various Scenarios", () => {
       <FriendsScreen
         navigation={mockNavigation}
         firestoreCtrl={mockFirestoreCtrl}
+        user={mockUser}
       />,
     );
 
@@ -161,6 +164,7 @@ describe("FriendsScreen Tests - Various Scenarios", () => {
       <FriendsScreen
         navigation={mockNavigation}
         firestoreCtrl={mockFirestoreCtrl}
+        user={mockUser}
       />,
     );
 
@@ -186,6 +190,7 @@ describe("FriendsScreen Tests - Various Scenarios", () => {
       <FriendsScreen
         navigation={mockNavigation}
         firestoreCtrl={mockFirestoreCtrl}
+        user={mockUser}
       />,
     );
 

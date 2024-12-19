@@ -70,7 +70,7 @@ describe("ListOfFilteredUsers Component", () => {
       />,
     );
 
-    const addButton = getByTestId("add-button-Jane Smith");
+    const addButton = getByTestId("handle-button-Jane Smith");
     fireEvent.press(addButton);
 
     await waitFor(() => expect(mockHandleAdd).toHaveBeenCalledWith("2"));

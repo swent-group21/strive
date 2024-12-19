@@ -1,6 +1,6 @@
 import React from "react";
 import { render, act } from "@testing-library/react-native";
-import Timer from "@/src/views/components/challenge/timer";
+import { Timer } from "@/src/views/components/challenge/timer";
 
 // Mock the NumberCard component to isolate Timer logic
 jest.mock("@/src/views/components/challenge/number_cards", () => {
