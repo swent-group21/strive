@@ -1,4 +1,3 @@
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 import useCameraViewModel from "@/src/viewmodels/camera/CameraViewModel";
 import { createChallenge } from "@/types/ChallengeBuilder";
 import { renderHook, act, waitFor } from "@testing-library/react-native";
@@ -29,15 +28,14 @@ jest.mock("expo-camera", () => ({
   },
 }));
 
-// Mock FirestoreCtrl
-jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
-  return jest.fn().mockImplementation(() => ({
-    getGroup: jest.fn(),
-    createChallenge: jest.fn(),
-    uploadImage: jest.fn(async () => "mock-image-id"),
-  }));
-});
-const mockFirestoreCtrl = new FirestoreCtrl();
+jest.mock("@/src/models/firebase/GetFirestoreCtrl", () => ({
+  getGroup: jest.fn(),
+  createChallenge: jest.fn(),
+}));
+
+jest.mock("@/src/models/firebase/SetFirestoreCtrl", () => ({
+  uploadImage: jest.fn(async () => "mock-image-id"),
+}));
 
 // Mock `createChallenge`
 jest.mock("@/types/ChallengeBuilder", () => ({
@@ -65,7 +63,7 @@ describe("useCameraViewModel", () => {
 
   it("should initialize with default states", async () => {
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
+      useCameraViewModel(mockNavigation, mockRoute),
     );
 
     await waitFor(() => {
@@ -80,7 +78,7 @@ describe("useCameraViewModel", () => {
 
   it("should toggle camera facing", async () => {
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
+      useCameraViewModel(mockNavigation, mockRoute),
     );
 
     await act(async () => {
@@ -98,7 +96,7 @@ describe("useCameraViewModel", () => {
 
   it("should toggle flash mode", async () => {
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
+      useCameraViewModel(mockNavigation, mockRoute),
     );
 
     await act(async () => {
@@ -116,7 +114,7 @@ describe("useCameraViewModel", () => {
 
   it("should toggle location enabled state", async () => {
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
+      useCameraViewModel(mockNavigation, mockRoute),
     );
 
     await act(async () => {
@@ -141,7 +139,7 @@ describe("useCameraViewModel", () => {
     });
 
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
+      useCameraViewModel(mockNavigation, mockRoute),
     );
 
     await waitFor(() => {
@@ -159,7 +157,7 @@ describe("useCameraViewModel", () => {
     });
 
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
+      useCameraViewModel(mockNavigation, mockRoute),
     );
 
     await waitFor(() => {
@@ -172,7 +170,7 @@ describe("useCameraViewModel", () => {
     (createChallenge as jest.Mock).mockRejectedValueOnce("mock-error");
 
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
+      useCameraViewModel(mockNavigation, mockRoute),
     );
 
     await act(async () => {
@@ -190,7 +188,7 @@ describe("useCameraViewModel", () => {
     ]);
 
     const { result } = renderHook(() =>
-      useCameraViewModel(mockFirestoreCtrl, mockNavigation, mockRoute),
+      useCameraViewModel(mockNavigation, mockRoute),
     );
 
     await act(async () => {

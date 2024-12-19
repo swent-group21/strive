@@ -1,20 +1,14 @@
 import { renderHook, act, waitFor } from "@testing-library/react-native";
 import { useFriendsScreenViewModel } from "@/src/viewmodels/friends/FriendsScreenViewModel";
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
+import * as GetFirestoreCtrl from "@/src/models/firebase/GetFirestoreCtrl";
 
-jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      getAllUsers: jest.fn(),
-      getFriends: jest.fn(),
-      getFriendRequests: jest.fn(),
-    };
-  });
-});
+jest.mock("@/src/models/firebase/GetFirestoreCtrl", () => ({
+  getAllUsers: jest.fn(),
+  getFriends: jest.fn(),
+  getFriendRequests: jest.fn(),
+}));
 
 describe("useFriendsScreenViewModel", () => {
-  const mockFirestoreCtrl = new FirestoreCtrl();
-
   const uid = "current-user-id";
 
   beforeEach(() => {
@@ -22,36 +16,37 @@ describe("useFriendsScreenViewModel", () => {
   });
 
   it("fetches and sets users correctly", async () => {
-    const mockUsers = [
-      { uid: "user1", name: "John Doe" },
-      { uid: "user2", name: "Jane Smith" },
-    ];
-    (mockFirestoreCtrl.getAllUsers as jest.Mock).mockResolvedValueOnce(
-      mockUsers,
-    );
+    const usersMock = jest
+      .spyOn(GetFirestoreCtrl, "getAllUsers")
+      .mockImplementationOnce(
+        (): Promise<any> =>
+          Promise.resolve([
+            { name: "John Doe", uid: "user1" },
+            { name: "Jane Smith", uid: "user2" },
+          ]),
+      );
 
-    const { result } = renderHook(() =>
-      useFriendsScreenViewModel(mockFirestoreCtrl, uid),
-    );
+    const { result } = renderHook(() => useFriendsScreenViewModel(uid));
 
     await waitFor(() => result.current.users.length > 0);
 
-    expect(mockFirestoreCtrl.getAllUsers).toHaveBeenCalled();
-    expect(result.current.users).toEqual(mockUsers);
+    expect(GetFirestoreCtrl.getAllUsers).toHaveBeenCalled();
+    expect(result.current.users).toEqual([
+      { name: "John Doe", uid: "user1" },
+      { name: "Jane Smith", uid: "user2" },
+    ]);
   });
 
   it("filters users based on searchText", async () => {
-    const mockUsers = [
-      { uid: "user1", name: "John Doe" },
-      { uid: "user2", name: "Jane Smith" },
-    ];
-    (mockFirestoreCtrl.getAllUsers as jest.Mock).mockResolvedValueOnce(
-      mockUsers,
+    jest.spyOn(GetFirestoreCtrl, "getAllUsers").mockImplementationOnce(
+      (): Promise<any> =>
+        Promise.resolve([
+          { uid: "user1", name: "John Doe" },
+          { uid: "user2", name: "Jane Smith" },
+        ]),
     );
 
-    const { result } = renderHook(() =>
-      useFriendsScreenViewModel(mockFirestoreCtrl, uid),
-    );
+    const { result } = renderHook(() => useFriendsScreenViewModel(uid));
 
     await waitFor(() => result.current.users.length > 0);
 
@@ -65,17 +60,15 @@ describe("useFriendsScreenViewModel", () => {
   });
 
   it("excludes current user from filtered users", async () => {
-    const mockUsers = [
-      { uid: "user1", name: "John Doe" },
-      { uid: "current-user-id", name: "Me" },
-    ];
-    (mockFirestoreCtrl.getAllUsers as jest.Mock).mockResolvedValueOnce(
-      mockUsers,
+    jest.spyOn(GetFirestoreCtrl, "getAllUsers").mockImplementationOnce(
+      (): Promise<any> =>
+        Promise.resolve([
+          { uid: "user1", name: "John Doe" },
+          { uid: "current-user-id", name: "Me" },
+        ]),
     );
 
-    const { result } = renderHook(() =>
-      useFriendsScreenViewModel(mockFirestoreCtrl, uid),
-    );
+    const { result } = renderHook(() => useFriendsScreenViewModel(uid));
 
     await waitFor(() => result.current.users.length > 0);
 
@@ -87,34 +80,33 @@ describe("useFriendsScreenViewModel", () => {
   });
 
   it("fetches and sets friends correctly", async () => {
-    const mockFriends = [{ uid: "friend1", name: "Alice" }];
-    (mockFirestoreCtrl.getFriends as jest.Mock).mockResolvedValueOnce(
-      mockFriends,
-    );
+    jest
+      .spyOn(GetFirestoreCtrl, "getFriends")
+      .mockImplementationOnce(
+        (): Promise<any> =>
+          Promise.resolve([{ uid: "friend1", name: "Alice" }]),
+      );
 
-    const { result } = renderHook(() =>
-      useFriendsScreenViewModel(mockFirestoreCtrl, uid),
-    );
+    const { result } = renderHook(() => useFriendsScreenViewModel(uid));
 
     await waitFor(() => result.current.friends.length > 0);
 
-    expect(mockFirestoreCtrl.getFriends).toHaveBeenCalledWith(uid);
-    expect(result.current.friends).toEqual(mockFriends);
+    expect(GetFirestoreCtrl.getFriends).toHaveBeenCalledWith(uid);
+    expect(result.current.friends).toEqual([{ uid: "friend1", name: "Alice" }]);
   });
 
   it("fetches and sets friend requests correctly", async () => {
-    const mockRequests = [{ uid: "request1", name: "Bob" }];
-    (mockFirestoreCtrl.getFriendRequests as jest.Mock).mockResolvedValueOnce(
-      mockRequests,
-    );
+    jest
+      .spyOn(GetFirestoreCtrl, "getFriendRequests")
+      .mockImplementationOnce(
+        (): Promise<any> => Promise.resolve([{ uid: "request1", name: "Bob" }]),
+      );
 
-    const { result } = renderHook(() =>
-      useFriendsScreenViewModel(mockFirestoreCtrl, uid),
-    );
+    const { result } = renderHook(() => useFriendsScreenViewModel(uid));
 
     await waitFor(() => result.current.requests.length > 0);
 
-    expect(mockFirestoreCtrl.getFriendRequests).toHaveBeenCalledWith(uid);
-    expect(result.current.requests).toEqual(mockRequests);
+    expect(GetFirestoreCtrl.getFriendRequests).toHaveBeenCalledWith(uid);
+    expect(result.current.requests).toEqual([{ uid: "request1", name: "Bob" }]);
   });
 });

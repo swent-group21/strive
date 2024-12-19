@@ -1,11 +1,9 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
 import ProfileScreen from "@/src/views/home/profile_screen";
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
 describe("ProfileScreen UI Tests", () => {
   const mockSetUser = jest.fn();
-  const mockFirestoreCtrl = new FirestoreCtrl();
   const mockNavigation = {};
   const mockUser = {
     uid: "12345",
@@ -21,7 +19,6 @@ describe("ProfileScreen UI Tests", () => {
         user={mockUser}
         setUser={mockSetUser}
         navigation={mockNavigation}
-        firestoreCtrl={mockFirestoreCtrl}
       />,
     );
 
@@ -35,7 +32,6 @@ describe("ProfileScreen UI Tests", () => {
         user={mockUser}
         setUser={mockSetUser}
         navigation={mockNavigation}
-        firestoreCtrl={mockFirestoreCtrl}
       />,
     );
 
@@ -49,7 +45,6 @@ describe("ProfileScreen UI Tests", () => {
         user={mockUser}
         setUser={mockSetUser}
         navigation={mockNavigation}
-        firestoreCtrl={mockFirestoreCtrl}
       />,
     );
 
@@ -63,7 +58,6 @@ describe("ProfileScreen UI Tests", () => {
         user={mockUser}
         setUser={mockSetUser}
         navigation={mockNavigation}
-        firestoreCtrl={mockFirestoreCtrl}
       />,
     );
 
@@ -77,7 +71,6 @@ describe("ProfileScreen UI Tests", () => {
         user={mockUser}
         setUser={mockSetUser}
         navigation={mockNavigation}
-        firestoreCtrl={mockFirestoreCtrl}
       />,
     );
 
@@ -91,7 +84,6 @@ describe("ProfileScreen UI Tests", () => {
         user={mockUser}
         setUser={mockSetUser}
         navigation={mockNavigation}
-        firestoreCtrl={mockFirestoreCtrl}
       />,
     );
 
@@ -105,7 +97,6 @@ describe("ProfileScreen UI Tests", () => {
         user={mockUser}
         setUser={mockSetUser}
         navigation={mockNavigation}
-        firestoreCtrl={mockFirestoreCtrl}
       />,
     );
 

@@ -3,11 +3,12 @@ import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
 } from "expo-location";
-import FirestoreCtrl, {
-  DBChallenge,
-  DBChallengeDescription,
-} from "@/src/models/firebase/FirestoreCtrl";
+import { DBChallenge } from "@/src/models/firebase/TypeFirestoreCtrl";
 import { GeoPoint } from "firebase/firestore";
+import {
+  getChallengeDescription,
+  getPostsByChallengeTitle,
+} from "@/src/models/firebase/GetFirestoreCtrl";
 
 /**
  * Default location centered on the city of Nice, France.
@@ -16,13 +17,11 @@ const defaultLocation = new GeoPoint(43.6763, 7.0122);
 
 /**
  * View model for the map screen.
- * @param firestoreCtrl : FirestoreCtrl object
  * @param navigation : navigation object
  * @param firstLocation : the user's first location
  * @returns : permission, userLocation, and challengesWithLocation
  */
 export function useMapScreenViewModel(
-  firestoreCtrl: FirestoreCtrl,
   navigation: any,
   firstLocation: GeoPoint | undefined,
   challengeArea: { center: GeoPoint; radius: number } | undefined,
@@ -80,8 +79,7 @@ export function useMapScreenViewModel(
     // Fetches the current challenge and its title.
     const fetchCurrentChallenge = async () => {
       try {
-        const currentChallengeData =
-          await firestoreCtrl.getChallengeDescription();
+        const currentChallengeData = await getChallengeDescription();
         return currentChallengeData.title;
       } catch (error) {
         console.error("Error fetching current challenge: ", error);
@@ -91,8 +89,7 @@ export function useMapScreenViewModel(
     // Fetches challenges with valid locations from Firestore.
     const fetchChallenges = async (challengeTitle: string) => {
       try {
-        const challengesData =
-          await firestoreCtrl.getPostsByChallengeTitle(challengeTitle);
+        const challengesData = await getPostsByChallengeTitle(challengeTitle);
         const filteredChallenges = challengesData.filter(
           (challenge) =>
             challenge.location !== undefined && challenge.location !== null,
@@ -106,7 +103,7 @@ export function useMapScreenViewModel(
     fetchCurrentChallenge().then((challengeTitle) => {
       fetchChallenges(challengeTitle);
     });
-  }, [firestoreCtrl]);
+  }, []);
 
   return {
     permission,

@@ -1,7 +1,7 @@
 import { FlatList, Dimensions, StyleSheet } from "react-native";
 import { FriendListItem } from "@/src/views/components/friends/friend_list_item";
 import { ThemedText } from "@/src/views/components/theme/themed_text";
-import { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 
 const { height, width } = Dimensions.get("window");
 

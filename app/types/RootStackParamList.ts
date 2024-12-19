@@ -1,4 +1,4 @@
-import { DBChallenge, DBGroup } from "@/src/models/firebase/FirestoreCtrl";
+import { DBChallenge, DBGroup } from "@/src/models/firebase/TypeFirestoreCtrl";
 
 /*
  * RootStackParamList defines the types for the navigation stack

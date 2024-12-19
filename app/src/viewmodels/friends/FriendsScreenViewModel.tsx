@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
+import {
+  getAllUsers,
+  getFriendRequests,
+  getFriendSuggestions,
+  getFriends,
+} from "@/src/models/firebase/GetFirestoreCtrl";
 
 /**
  * View model for the Friends screen.
- * @param firestoreCtrl : FirestoreCtrl object
  * @param uid : the user's ID
  * @returns : searchText, setSearchText, users, friends, requests, filteredUsers, handleFriendPress
  */
-export function useFriendsScreenViewModel(
-  firestoreCtrl: FirestoreCtrl,
-  uid: string,
-): {
+export function useFriendsScreenViewModel(uid: string): {
   searchText: string;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   users: DBUser[];
@@ -31,57 +33,57 @@ export function useFriendsScreenViewModel(
   useEffect(() => {
     const fetchSuggestions = async () => {
       try {
-        const suggestions = await firestoreCtrl.getFriendSuggestions(uid);
+        const suggestions = await getFriendSuggestions(uid);
         setSuggestions(suggestions);
       } catch (error) {
         console.error("Error fetching friend suggestions: ", error);
       }
     };
     fetchSuggestions();
-  }, [firestoreCtrl, uid]);
+  }, [uid]);
 
   // Fetch users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const users = await firestoreCtrl.getAllUsers();
+        const users = await getAllUsers();
         setUsers(users);
       } catch (error) {
         console.error("Error fetching users: ", error);
       }
     };
     fetchUsers();
-  }, [firestoreCtrl]);
+  }, []);
 
   // Fetch friends
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const friends = await firestoreCtrl.getFriends(uid);
+        const friends = await getFriends(uid);
         setFriends(friends);
       } catch (error) {
         console.error("Error fetching friends: ", error);
       }
     };
     fetchFriends();
-  }, [firestoreCtrl, uid]);
+  }, [uid]);
 
   // Fetch requests
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const requests = await firestoreCtrl.getFriendRequests(uid);
+        const requests = await getFriendRequests(uid);
         setRequests(requests);
       } catch (error) {
         console.error("Error fetching requests: ", error);
       }
     };
     fetchRequests();
-  }, [firestoreCtrl, uid]);
+  }, [uid]);
 
   const filteredUsers = searchText
     ? users.filter(
-        (user) =>
+        (user: DBUser) =>
           user.uid &&
           user.uid !== uid &&
           user.name?.toLowerCase().includes(searchText.toLowerCase()),

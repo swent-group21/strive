@@ -7,7 +7,7 @@ import { ThemedTextInput } from "@/src/views/components/theme/themed_text_input"
 import { ThemedIconButton } from "@/src/views/components/theme/themed_icon_button";
 import { ThemedText } from "@/src/views/components/theme/themed_text";
 import { ThemedScrollView } from "@/src/views/components/theme/themed_scroll_view";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 import SetUsernameViewModel from "@/src/viewmodels/auth/SetUsernameViewModel";
 
 const { width, height } = Dimensions.get("window");
@@ -23,12 +23,10 @@ const { width, height } = Dimensions.get("window");
 export default function SetUsernameScreen({
   user,
   navigation,
-  firestoreCtrl,
   setUser,
 }: {
   readonly user: DBUser;
   readonly navigation: any;
-  readonly firestoreCtrl: FirestoreCtrl;
   readonly setUser: React.Dispatch<React.SetStateAction<DBUser | null>>;
 }) {
   const {
@@ -38,7 +36,7 @@ export default function SetUsernameScreen({
     handleUsernameChange,
     pickImage,
     upload,
-  } = SetUsernameViewModel(user, firestoreCtrl, setUser);
+  } = SetUsernameViewModel(user, setUser);
 
   return (
     <ThemedView style={styles.screenContainer}>

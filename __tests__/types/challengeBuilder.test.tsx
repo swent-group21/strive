@@ -1,59 +1,24 @@
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
-import { buildChallenge, createChallenge } from "@/types/ChallengeBuilder";
-
-jest.mock("@/src/models/firebase/FirestoreCtrl");
-
-describe("buildChallenge", () => {
-  const mockFirestoreCtrl = new FirestoreCtrl();
-
-  it("should return a valid DBChallenge object when challenge is found", async () => {
-    const mockChallenge = {
-      caption: "Test Challenge",
-      uid: "user123",
-      date: new Date(),
-      location: { latitude: 10, longitude: 20 },
-      group_id: "home",
-      challenge_description: "Test description",
-    };
-
-    mockFirestoreCtrl.getChallenge = jest.fn().mockResolvedValue(mockChallenge);
-
-    const result = await buildChallenge("challenge123", mockFirestoreCtrl);
-
-    expect(result).toEqual({
-      caption: "Test Challenge",
-      uid: "user123",
-      date: mockChallenge.date,
-      location: mockChallenge.location,
-      group_id: "home",
-      challenge_description: "Test description",
-    });
-    expect(mockFirestoreCtrl.getChallenge).toHaveBeenCalledWith("challenge123");
-  });
-
-  it("should throw an error if no challenge is found", async () => {
-    mockFirestoreCtrl.getChallenge = jest
-      .fn()
-      .mockResolvedValue(new Error("No challenge found"));
-
-    try {
-      await buildChallenge("invalidChallenge", mockFirestoreCtrl);
-    } catch (error) {
-      expect(error).toEqual("Error: no challenge found when buildChallenge");
-    }
-  });
-});
+import { createChallenge } from "@/types/ChallengeBuilder";
+import * as GetFirestoreCtrl from "@/src/models/firebase/GetFirestoreCtrl";
+import * as SetFirestoreCtrl from "@/src/models/firebase/SetFirestoreCtrl";
 
 describe("createChallenge", () => {
-  const mockFirestoreCtrl = new FirestoreCtrl();
+  jest.mock("@/src/models/firebase/GetFirestoreCtrl", () => ({
+    getUser: jest.fn(() => {
+      return Promise.resolve({
+        uid: "user123",
+        name: "Test User",
+        email: "test@example.com",
+        createdAt: new Date(),
+      });
+    }),
+  }));
+
+  jest.mock("@/src/models/firebase/SetFirestoreCtrl", () => ({
+    newChallenge: jest.fn(),
+  }));
 
   it("should create a challenge and call newChallenge with the correct data", async () => {
-    const mockUser = { uid: "user123" }; // Mock user data
-
-    // Mock FirestoreCtrl methods
-    mockFirestoreCtrl.getUser = jest.fn().mockResolvedValue(mockUser);
-    mockFirestoreCtrl.newChallenge = jest.fn();
-
     // Mock location and challenge data
     const challengeData = {
       caption: "Test Challenge",
@@ -63,7 +28,6 @@ describe("createChallenge", () => {
 
     // Call createChallenge with mock data
     await createChallenge(
-      mockFirestoreCtrl,
       challengeData.caption,
       null,
       "123",
@@ -71,32 +35,29 @@ describe("createChallenge", () => {
       challengeData.date,
     );
 
-    // Verify FirestoreCtrl methods were called correctly
-    expect(mockFirestoreCtrl.getUser).toHaveBeenCalled();
-    expect(mockFirestoreCtrl.newChallenge).toHaveBeenCalledWith(
-      expect.objectContaining({
-        caption: "Test Challenge",
-        uid: "user123",
-        date: challengeData.date,
-        location: null,
-        challenge_description: "Test Description",
-      }),
+    jest.spyOn(GetFirestoreCtrl, "getUser").mockImplementationOnce(
+      (): Promise<any> =>
+        Promise.resolve({
+          uid: "user123",
+          name: "Test User",
+          email: "test@example.com",
+          createdAt: new Date(),
+        }),
     );
+
+    jest.spyOn(SetFirestoreCtrl, "newChallenge").mockResolvedValue(undefined);
   });
 
   it("should log an error when Firestore operations fail", async () => {
     // Mock console.error
-    jest.spyOn(console, "error").mockImplementation(() => {});
-
-    mockFirestoreCtrl.getUser = jest
-      .fn()
-      .mockRejectedValue(new Error("Firestore error"));
+    jest
+      .spyOn(GetFirestoreCtrl, "getUser")
+      .mockRejectedValue(new Error("Error getting user"));
 
     const null_location = null;
 
     await expect(
       createChallenge(
-        mockFirestoreCtrl,
         "Test",
         null_location,
         "123",

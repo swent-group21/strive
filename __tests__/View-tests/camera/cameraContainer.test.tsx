@@ -2,7 +2,6 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import Camera from "@/src/views/camera/CameraContainer";
 import useCameraViewModel from "@/src/viewmodels/camera/CameraViewModel";
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
 // Mock de useCameraViewModel
 jest.mock("@/src/viewmodels/camera/CameraViewModel");
@@ -11,20 +10,11 @@ jest.mock("expo-font", () => ({
   isLoaded: jest.fn(() => true),
 }));
 
-jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      // FirestoreCtrl mock functions
-    };
-  });
-});
-
 describe("Camera Component UI Tests", () => {
   const mockToggleCameraFacing = jest.fn();
   const mockToggleFlashMode = jest.fn();
   const mockTakePicture = jest.fn();
   const mockSetIsCameraEnabled = jest.fn();
-  const mockFirestoreCtrl = new FirestoreCtrl();
 
   beforeEach(() => {
     // Mock le retour de useCameraViewModel
@@ -51,18 +41,14 @@ describe("Camera Component UI Tests", () => {
   });
 
   it("renders the CameraView when isCameraEnabled is true", () => {
-    const { getByTestId } = render(
-      <Camera navigation={{}} firestoreCtrl={mockFirestoreCtrl} route={{}} />,
-    );
+    const { getByTestId } = render(<Camera navigation={{}} route={{}} />);
 
     const cameraView = getByTestId("camera-view");
     expect(cameraView).toBeTruthy();
   });
 
   it("renders the flash button and toggles flash mode when pressed", () => {
-    const { getByTestId } = render(
-      <Camera navigation={{}} firestoreCtrl={mockFirestoreCtrl} route={{}} />,
-    );
+    const { getByTestId } = render(<Camera navigation={{}} route={{}} />);
 
     const flashButton = getByTestId("Flash-Button");
     fireEvent.press(flashButton);
@@ -71,9 +57,7 @@ describe("Camera Component UI Tests", () => {
   });
 
   it("renders the capture button and triggers takePicture when pressed", () => {
-    const { getByTestId } = render(
-      <Camera navigation={{}} firestoreCtrl={mockFirestoreCtrl} route={{}} />,
-    );
+    const { getByTestId } = render(<Camera navigation={{}} route={{}} />);
 
     const captureButton = getByTestId("Camera-Button");
     fireEvent.press(captureButton);
@@ -82,9 +66,7 @@ describe("Camera Component UI Tests", () => {
   });
 
   it("renders the toggle camera button and toggles camera facing when pressed", () => {
-    const { getByTestId } = render(
-      <Camera navigation={{}} firestoreCtrl={mockFirestoreCtrl} route={{}} />,
-    );
+    const { getByTestId } = render(<Camera navigation={{}} route={{}} />);
 
     const toggleButton = getByTestId("Switch-Button");
     fireEvent.press(toggleButton);
@@ -111,9 +93,7 @@ describe("Camera Component UI Tests", () => {
       setIsCameraEnabled: jest.fn(),
     });
 
-    const { queryByTestId } = render(
-      <Camera navigation={{}} firestoreCtrl={mockFirestoreCtrl} route={{}} />,
-    );
+    const { queryByTestId } = render(<Camera navigation={{}} route={{}} />);
 
     const cameraView = queryByTestId("camera-view");
     expect(cameraView).toBeNull();
@@ -138,9 +118,7 @@ describe("Camera Component UI Tests", () => {
       setIsCameraEnabled: jest.fn(),
     });
 
-    const { getByText } = render(
-      <Camera navigation={{}} firestoreCtrl={mockFirestoreCtrl} route={{}} />,
-    );
+    const { getByText } = render(<Camera navigation={{}} route={{}} />);
 
     const permissionText = getByText(
       "We need your permission to show the camera",

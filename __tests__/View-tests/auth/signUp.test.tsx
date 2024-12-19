@@ -2,20 +2,12 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import SignUp from "@/src/views/auth/sign_up_screen";
 import useSignUpViewModel from "@/src/viewmodels/auth/SignUpViewModel";
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
 jest.mock("@/src/viewmodels/auth/SignUpViewModel");
-
-jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
-  return jest.fn().mockImplementation(() => ({
-    // Implement the FirestoreCtrl methods here
-  }));
-});
 
 describe("SignUp Screen Tests", () => {
   const mockNavigation = { goBack: jest.fn() };
   const mockSetUser = jest.fn();
-  const mockFirestoreCtrl = new FirestoreCtrl();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -39,11 +31,7 @@ describe("SignUp Screen Tests", () => {
 
   it("renders all input fields and the Sign Up button", () => {
     const { getByTestId } = render(
-      <SignUp
-        navigation={mockNavigation}
-        setUser={mockSetUser}
-        firestoreCtrl={mockFirestoreCtrl}
-      />,
+      <SignUp navigation={mockNavigation} setUser={mockSetUser} />,
     );
 
     expect(getByTestId("sign-up-screen")).toBeTruthy();
@@ -58,16 +46,12 @@ describe("SignUp Screen Tests", () => {
   it("calls setName when the name input changes", () => {
     const mockSetName = jest.fn();
     (useSignUpViewModel as jest.Mock).mockReturnValue({
-      ...useSignUpViewModel(mockNavigation, mockSetUser, mockFirestoreCtrl),
+      ...useSignUpViewModel(mockNavigation, mockSetUser),
       setName: mockSetName,
     });
 
     const { getByTestId } = render(
-      <SignUp
-        navigation={mockNavigation}
-        setUser={mockSetUser}
-        firestoreCtrl={mockFirestoreCtrl}
-      />,
+      <SignUp navigation={mockNavigation} setUser={mockSetUser} />,
     );
 
     const nameInput = getByTestId("name-input");
@@ -79,16 +63,12 @@ describe("SignUp Screen Tests", () => {
   it("calls handleSignUp when the Sign Up button is pressed", () => {
     const mockHandleSignUp = jest.fn();
     (useSignUpViewModel as jest.Mock).mockReturnValue({
-      ...useSignUpViewModel(mockNavigation, mockSetUser, mockFirestoreCtrl),
+      ...useSignUpViewModel(mockNavigation, mockSetUser),
       handleSignUp: mockHandleSignUp,
     });
 
     const { getByTestId } = render(
-      <SignUp
-        navigation={mockNavigation}
-        setUser={mockSetUser}
-        firestoreCtrl={mockFirestoreCtrl}
-      />,
+      <SignUp navigation={mockNavigation} setUser={mockSetUser} />,
     );
 
     const signUpButton = getByTestId("sign-up-button");

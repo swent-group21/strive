@@ -8,10 +8,7 @@ import {
 import { ThemedText } from "@/src/views/components/theme/themed_text";
 import { ThemedView } from "@/src/views/components/theme/themed_view";
 import { ThemedIconButton } from "@/src/views/components/theme/themed_icon_button";
-import FirestoreCtrl, {
-  DBChallenge,
-  DBUser,
-} from "@/src/models/firebase/FirestoreCtrl";
+import { DBChallenge, DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 import { useChallengeViewModel } from "@/src/viewmodels/components/posts/ChallengeViewModel";
 
 const { width, height } = Dimensions.get("window");
@@ -19,14 +16,12 @@ const { width, height } = Dimensions.get("window");
 export function Challenge({
   challengeDB,
   index,
-  firestoreCtrl,
   navigation,
   testID,
   currentUser,
 }: {
   readonly challengeDB: DBChallenge;
   readonly index: number;
-  readonly firestoreCtrl: FirestoreCtrl;
   readonly navigation: any;
   readonly testID: string;
   readonly currentUser: DBUser;
@@ -37,8 +32,9 @@ export function Challenge({
     comments,
     handleDoubleTap,
     handleLikePress,
-    placeholderImage,
-  } = useChallengeViewModel({ challengeDB, firestoreCtrl, currentUser });
+    icon,
+    image,
+  } = useChallengeViewModel({ challengeDB, currentUser });
 
   return (
     <TouchableWithoutFeedback
@@ -49,7 +45,7 @@ export function Challenge({
         {/* User Info */}
         <ThemedView style={styles.userInfo}>
           {user?.image_id ? (
-            <Image source={{ uri: user.image_id }} style={styles.userAvatar} />
+            <Image source={{ uri: icon }} style={styles.userAvatar} />
           ) : (
             <ThemedView style={styles.defaultAvatar}>
               <ThemedText style={styles.avatarText}>
@@ -63,12 +59,7 @@ export function Challenge({
         </ThemedView>
 
         {/* Challenge Image */}
-        <Image
-          source={{
-            uri: challengeDB.image_id || placeholderImage,
-          }}
-          style={styles.challengeImage}
-        />
+        <Image source={{ uri: image }} style={styles.challengeImage} />
 
         {/* Challenge Description */}
         {Boolean(challengeDB.caption) && (
@@ -100,7 +91,6 @@ export function Challenge({
             onPress={() =>
               navigation.navigate("Maximize", {
                 navigation,
-                firestoreCtrl,
                 challenge: challengeDB,
                 user: currentUser,
               })

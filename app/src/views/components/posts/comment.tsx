@@ -1,48 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
-import FirestoreCtrl, {
-  DBUser,
-  DBComment,
-} from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser, DBComment } from "@/src/models/firebase/TypeFirestoreCtrl";
 import { Colors } from "@/constants/Colors";
+import { getImageUrl, getUser } from "@/src/models/firebase/GetFirestoreCtrl";
 
 const { width, height } = Dimensions.get("window");
 
 /**
  * The SingleComment component displays a single comment.
  * @param comment : the comment object
- * @param firestoreCtrl : FirestoreCtrl object to fetch user details
  * @returns : a component for the comment
  */
-export function SingleComment({
-  comment,
-  firestoreCtrl,
-}: {
-  comment: Readonly<DBComment>;
-  firestoreCtrl: FirestoreCtrl;
-}) {
+export function SingleComment({ comment }: { comment: Readonly<DBComment> }) {
   const [user, setUser] = useState<DBUser | null>(null);
+  const [icon, setIcon] = useState<string>("person-circle-outline");
 
   // Fetch user data
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await firestoreCtrl.getUser(comment.uid); // Assuming `post_id` links to the user
+        const userData = await getUser(comment.uid); // Assuming `post_id` links to the user
         setUser(userData);
+        if (userData.image_id != null) {
+          setIcon(await getImageUrl(userData.image_id));
+        }
       } catch (error) {
         console.error("Error fetching user data for comment:", error);
       }
     };
 
     fetchUser();
-  }, [comment.post_id, firestoreCtrl]);
+  }, [comment.post_id]);
 
   return (
     <View style={styles.commentContainer}>
       {/* User Avatar */}
       {user?.image_id ? (
         <Image
-          source={{ uri: user.image_id }}
+          source={{ uri: icon }}
           style={styles.userAvatar}
           testID="comment-user-avatar"
         />

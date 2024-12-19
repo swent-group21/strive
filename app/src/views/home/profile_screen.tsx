@@ -8,7 +8,7 @@ import { ThemedIconButton } from "@/src/views/components/theme/themed_icon_butto
 import { TopBar } from "@/src/views/components/navigation/top_bar";
 import { Icon } from "react-native-elements";
 import { useProfileScreenViewModel } from "@/src/viewmodels/home/ProfileScreenViewModel";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 import { Colors } from "@/constants/Colors";
 
 const { width, height } = Dimensions.get("window");
@@ -18,31 +18,28 @@ const { width, height } = Dimensions.get("window");
  * @param user : user object
  * @param setUser : function to set the user object
  * @param navigation : navigation object
- * @param firestoreCtrl : FirestoreCtrl object
  * @returns : a screen for the user's profile
  */
 export default function ProfileScreen({
   user,
   setUser,
   navigation,
-  firestoreCtrl,
 }: {
   readonly user: DBUser;
   readonly setUser: React.Dispatch<React.SetStateAction<DBUser | null>>;
   readonly navigation: any;
-  readonly firestoreCtrl: FirestoreCtrl;
 }) {
   const {
     userIsGuest,
     name,
-    setName,
+    sName,
     image,
     pickImage,
     handleLogOut,
     handleChangeEmail,
     handleChangePassword,
     navigateGoBack,
-  } = useProfileScreenViewModel(user, setUser, firestoreCtrl, navigation);
+  } = useProfileScreenViewModel(user, setUser, navigation);
 
   if (userIsGuest) {
     return (
@@ -87,7 +84,7 @@ export default function ProfileScreen({
       <ThemedTextInput
         style={styles.username}
         value={name}
-        onChangeText={setName}
+        onChangeText={sName}
         placeholder="Enter your name"
       />
 

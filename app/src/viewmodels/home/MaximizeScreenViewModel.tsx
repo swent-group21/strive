@@ -1,23 +1,32 @@
 import { useEffect, useState } from "react";
-import FirestoreCtrl, {
+import {
   DBChallenge,
   DBComment,
   DBUser,
-} from "@/src/models/firebase/FirestoreCtrl";
+} from "@/src/models/firebase/TypeFirestoreCtrl";
 import { GeoPoint } from "firebase/firestore";
+import {
+  getCommentsOf,
+  getGroup,
+  getImageUrl,
+  getLikesOf,
+  getUser,
+} from "@/src/models/firebase/GetFirestoreCtrl";
+import {
+  appendComment,
+  updateLikesOf,
+} from "@/src/models/firebase/SetFirestoreCtrl";
 
 /**
  * View model for the maximize screen.
  * @param user : the user object
  * @param challenge : the challenge object
- * @param firestoreCtrl : FirestoreCtrl object
  * @param navigation : navigation object
  * @returns : commentText, setCommentText, commentList, postUser, likeList, isLiked, toggleLike, addComment, postDate, postTitle, postImage, and postDescription
  */
 export function useMaximizeScreenViewModel(
   user: DBUser,
   challenge: DBChallenge,
-  firestoreCtrl: FirestoreCtrl,
   navigation: any,
 ) {
   const [commentText, setCommentText] = useState("");
@@ -27,6 +36,8 @@ export function useMaximizeScreenViewModel(
   const [isLiked, setIsLiked] = useState(false);
   const [groupCenter, setGroupCenter] = useState<GeoPoint | undefined>();
   const [groupRadius, setGroupRadius] = useState<number | undefined>();
+  const [icon, setIcon] = useState<string>("person-circle-outline");
+  const [image, setImage] = useState<string>("https://via.placeholder.com/300");
 
   const currentUserId = user.uid;
   const currentUserName = user.name;
@@ -39,36 +50,50 @@ export function useMaximizeScreenViewModel(
   useEffect(() => {
     // Fetch post user data
     const postUid = challenge.uid;
-    firestoreCtrl.getUser(postUid).then((user) => {
+    getUser(postUid).then((user) => {
       setPostUser(user);
     });
 
     // Fetch comments
-    firestoreCtrl
-      .getCommentsOf(challenge.challenge_id ?? "")
-      .then((comments) => {
-        const sortedComments = comments.sort(
-          (a, b) => a.created_at.getTime() - b.created_at.getTime(),
-        );
-        setCommentList(sortedComments);
-      });
+    getCommentsOf(challenge.challenge_id ?? "").then((comments) => {
+      const sortedComments = comments.sort(
+        (a, b) => a.created_at.getTime() - b.created_at.getTime(),
+      );
+      setCommentList(sortedComments);
+    });
 
     // Fetch likes
-    firestoreCtrl.getLikesOf(challenge.challenge_id ?? "").then((likes) => {
+    getLikesOf(challenge.challenge_id ?? "").then((likes) => {
       setLikeList(likes);
       setIsLiked(likes.includes(currentUserId));
     });
-  }, [challenge, firestoreCtrl, currentUserId]);
+  }, [challenge, currentUserId]);
 
   // Gets the challenge's group area, if it exists
   useEffect(() => {
     if (groupId) {
-      firestoreCtrl.getGroup(groupId).then((group) => {
+      getGroup(groupId).then((group) => {
         setGroupCenter(group.location);
         setGroupRadius(group.radius);
       });
     }
   }, [groupId]);
+
+  const fetchImgUrl = async (img) => {
+    return getImageUrl(img);
+  };
+
+  useEffect(() => {
+    if (user.image_id !== undefined || user.image_id == null) {
+      fetchImgUrl(user.image_id).then(setIcon);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (challenge.image_id) {
+      fetchImgUrl(challenge.image_id).then(setImage);
+    }
+  }, [challenge.image_id]);
 
   const toggleLike = () => {
     setIsLiked(!isLiked);
@@ -77,26 +102,25 @@ export function useMaximizeScreenViewModel(
       : [...likeList, currentUserId];
 
     setLikeList(updatedLikeList);
-    firestoreCtrl.updateLikesOf(challenge.challenge_id ?? "", updatedLikeList);
+    updateLikesOf(challenge.challenge_id ?? "", updatedLikeList);
   };
 
   const addComment = async () => {
     if (commentText.length > 0) {
-      const newComment: DBComment = {
+      const commentData: DBComment = {
         comment_text: commentText,
         user_name: currentUserName ?? "",
         created_at: new Date(),
         post_id: challenge.challenge_id ?? "",
         uid: currentUserId,
       };
-      await firestoreCtrl.addComment(newComment);
-      setCommentList([...commentList, newComment]);
+      await appendComment(commentData);
+      setCommentList([...commentList, commentData]);
       setCommentText("");
     }
   };
 
   const postDate: any = challenge.date ? challenge.date : new Date();
-  const postImage = challenge.image_id ?? "";
   const postCaption =
     challenge.caption == "" ? "Secret Challenge" : challenge.caption;
 
@@ -110,10 +134,11 @@ export function useMaximizeScreenViewModel(
     toggleLike,
     addComment,
     postDate,
-    postImage,
     postCaption,
     navigateGoBack,
     groupCenter,
     groupRadius,
+    icon,
+    image,
   };
 }

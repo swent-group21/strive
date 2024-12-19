@@ -14,10 +14,7 @@ import { SingleComment } from "@/src/views/components/posts/comment";
 import { ThemedScrollView } from "@/src/views/components/theme/themed_scroll_view";
 import { ThemedTextInput } from "@/src/views/components/theme/themed_text_input";
 import { useMaximizeScreenViewModel } from "@/src/viewmodels/home/MaximizeScreenViewModel";
-import FirestoreCtrl, {
-  DBUser,
-  DBChallenge,
-} from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser, DBChallenge } from "@/src/models/firebase/TypeFirestoreCtrl";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,12 +22,10 @@ export default function MaximizeScreen({
   user,
   navigation,
   route,
-  firestoreCtrl,
 }: {
   readonly user: DBUser;
   readonly navigation: any;
   readonly route: any;
-  readonly firestoreCtrl: FirestoreCtrl;
 }) {
   const challenge: DBChallenge = route.params?.challenge;
   const noImage = "@/assets/images/no-image.svg";
@@ -45,12 +40,13 @@ export default function MaximizeScreen({
     toggleLike,
     addComment,
     postDate,
-    postImage,
     postCaption,
     navigateGoBack,
     groupCenter,
     groupRadius,
-  } = useMaximizeScreenViewModel(user, challenge, firestoreCtrl, navigation);
+    icon,
+    image,
+  } = useMaximizeScreenViewModel(user, challenge, navigation);
 
   const [lastTap, setLastTap] = useState<number | null>(null);
 
@@ -86,10 +82,7 @@ export default function MaximizeScreen({
           {/* User Info */}
           <ThemedView style={styles.userInfo}>
             {postUser?.image_id ? (
-              <Image
-                source={{ uri: postUser.image_id }}
-                style={styles.userAvatar}
-              />
+              <Image source={{ uri: icon }} style={styles.userAvatar} />
             ) : (
               <ThemedView style={styles.defaultAvatar}>
                 <Text style={styles.avatarText}>
@@ -123,7 +116,6 @@ export default function MaximizeScreen({
                   navigation.navigate("MapScreen", {
                     navigation: navigation,
                     user: user,
-                    firestoreCtrl: firestoreCtrl,
                     location: challenge.location,
                     challengeArea: groupCenter &&
                       groupRadius && {
@@ -145,7 +137,7 @@ export default function MaximizeScreen({
           <ThemedView style={styles.imageContainer}>
             <Image
               testID="post-image"
-              source={postImage ? { uri: postImage } : require(noImage)}
+              source={challenge.image_id ? { uri: image } : require(noImage)}
               style={styles.postImage}
             />
           </ThemedView>
@@ -199,7 +191,6 @@ export default function MaximizeScreen({
               <SingleComment
                 key={comment.created_at.getTime().toPrecision(21)}
                 comment={comment} // Add the 'comment' property
-                firestoreCtrl={firestoreCtrl} // Add the 'firestoreCtrl' property
               />
             ))
           )}

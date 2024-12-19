@@ -1,13 +1,6 @@
 import { renderHook, act } from "@testing-library/react-native";
 import { signInAsGuest } from "@/types/Auth";
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 import WelcomeFinalViewModel from "@/src/viewmodels/welcome/FinalScreenViewModel";
-
-// Mock FirestoreCtrl
-jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
-  return jest.fn().mockImplementation(() => ({}));
-});
-const mockFirestoreCtrl = new FirestoreCtrl();
 
 // Mock Auth functions
 jest.mock("@/types/Auth", () => ({
@@ -28,7 +21,6 @@ describe("WelcomeFinalViewModel", () => {
   it("should navigate to SignIn when navigateToSignIn is called", () => {
     const { result } = renderHook(() =>
       WelcomeFinalViewModel({
-        firestoreCtrl: mockFirestoreCtrl,
         navigation: mockNavigation,
         setUser: mockSetUser,
       }),
@@ -44,7 +36,6 @@ describe("WelcomeFinalViewModel", () => {
   it("should navigate to SignUp when navigateToSignUp is called", () => {
     const { result } = renderHook(() =>
       WelcomeFinalViewModel({
-        firestoreCtrl: mockFirestoreCtrl,
         navigation: mockNavigation,
         setUser: mockSetUser,
       }),
@@ -60,7 +51,6 @@ describe("WelcomeFinalViewModel", () => {
   it("should call signInAsGuest when continueAsGuest is called", async () => {
     const { result } = renderHook(() =>
       WelcomeFinalViewModel({
-        firestoreCtrl: mockFirestoreCtrl,
         navigation: mockNavigation,
         setUser: mockSetUser,
       }),
@@ -70,11 +60,7 @@ describe("WelcomeFinalViewModel", () => {
       await result.current.continueAsGuest();
     });
 
-    expect(signInAsGuest).toHaveBeenCalledWith(
-      mockFirestoreCtrl,
-      mockNavigation,
-      mockSetUser,
-    );
+    expect(signInAsGuest).toHaveBeenCalledWith(mockNavigation, mockSetUser);
   });
 
   it("should handle errors in continueAsGuest gracefully", async () => {
@@ -86,7 +72,6 @@ describe("WelcomeFinalViewModel", () => {
 
     const { result } = renderHook(() =>
       WelcomeFinalViewModel({
-        firestoreCtrl: mockFirestoreCtrl,
         navigation: mockNavigation,
         setUser: mockSetUser,
       }),

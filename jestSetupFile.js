@@ -48,6 +48,12 @@ jest.mock("firebase/firestore", () => ({
   where: jest.fn(),
   onSnapshot: jest.fn(),
   updateDoc: jest.fn(),
+  GeoPoint: jest.fn().mockImplementation((lat, lng) => ({
+    latitude: lat,
+    longitude: lng,
+    isEqual: (other) => lat === other.latitude && lng === other.longitude,
+    toJSON: () => ({ latitude: lat, longitude: lng }),
+  })),
 }));
 
 jest.mock("firebase/auth", () => ({
@@ -110,8 +116,6 @@ jest.mock("react-native-elements", () => {
     // Mock other exports if needed
   };
 });
-
-jest.mock("@/src/models/firebase/FirestoreCtrl");
 
 jest.mock("react-native-maps", () => {
   const { View } = require("react-native");

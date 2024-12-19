@@ -3,7 +3,7 @@ import { ThemedView } from "@/src/views/components/theme/themed_view";
 import { ThemedText } from "@/src/views/components/theme/themed_text";
 import Timer from "@/src/views/components/challenge/timer";
 import { ViewStyle, Dimensions } from "react-native";
-import { DBChallengeDescription } from "@/src/models/firebase/FirestoreCtrl";
+import { DBChallengeDescription } from "@/src/models/firebase/TypeFirestoreCtrl";
 
 const { width, height } = Dimensions.get("window");
 

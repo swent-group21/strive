@@ -4,7 +4,7 @@ import { Colors } from "@/constants/Colors";
 import { ThemedText } from "@/src/views/components/theme/themed_text";
 import { ThemedView } from "@/src/views/components/theme/themed_view";
 import { ThemedTextButton } from "@/src/views/components/theme/themed_text_button";
-import FirestoreCtrl, { DBGroup } from "@/src/models/firebase/FirestoreCtrl";
+import { DBGroup } from "@/src/models/firebase/TypeFirestoreCtrl";
 
 const { width, height } = Dimensions.get("window");
 
@@ -12,7 +12,6 @@ const { width, height } = Dimensions.get("window");
  * The Group component displays a group.
  * @param groupDB : the group object
  * @param index : the index of the group
- * @param firestoreCtrl : FirestoreCtrl object
  * @param navigation : navigation object
  * @param testID : testID for the component
  * @returns : a component for the group
@@ -20,13 +19,11 @@ const { width, height } = Dimensions.get("window");
 export default function GroupIcon({
   groupDB,
   navigation,
-  firestoreCtrl,
   index,
   testID,
 }: {
   readonly groupDB: DBGroup;
   readonly navigation: any;
-  readonly firestoreCtrl: FirestoreCtrl;
   readonly index: number;
   readonly testID: string;
 }) {

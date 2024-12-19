@@ -11,7 +11,7 @@ import { ThemedView } from "@/src/views/components/theme/themed_view";
 import { ThemedTextInput } from "@/src/views/components/theme/themed_text_input";
 import { ThemedTextButton } from "@/src/views/components/theme/themed_text_button";
 import { ThemedText } from "@/src/views/components/theme/themed_text";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 import SignInViewModel from "@/src/viewmodels/auth/SignInViewModel";
 
 const { width, height } = Dimensions.get("window");
@@ -19,17 +19,14 @@ const { width, height } = Dimensions.get("window");
 /**
  * Screen for signing in
  * @param navigation : navigation object
- * @param firestoreCtrl : FirestoreCtrl object
  * @param setUser : function to set the user object
  * @returns : a screen for signing in
  */
 export default function SignInScreen({
   navigation,
-  firestoreCtrl,
   setUser,
 }: {
   readonly navigation: any;
-  readonly firestoreCtrl: FirestoreCtrl;
   readonly setUser: React.Dispatch<React.SetStateAction<DBUser | null>>;
 }) {
   const {
@@ -39,7 +36,7 @@ export default function SignInScreen({
     handleEmailChange,
     handlePasswordChange,
     handleSignIn,
-  } = SignInViewModel(firestoreCtrl, navigation, setUser);
+  } = SignInViewModel(navigation, setUser);
 
   return (
     <KeyboardAvoidingView

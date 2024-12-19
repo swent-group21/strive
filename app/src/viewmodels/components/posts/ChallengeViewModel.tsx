@@ -1,24 +1,28 @@
 import { useEffect, useState } from "react";
-import FirestoreCtrl, {
+import {
   DBChallenge,
   DBUser,
   DBComment,
-} from "@/src/models/firebase/FirestoreCtrl";
+} from "@/src/models/firebase/TypeFirestoreCtrl";
+import {
+  getCommentsOf,
+  getImageUrl,
+  getLikesOf,
+  getUser,
+} from "@/src/models/firebase/GetFirestoreCtrl";
+import { updateLikesOf } from "@/src/models/firebase/SetFirestoreCtrl";
 
 /**
  * The Challenge viewmodel helps display a challenge.
  * @param challengeDB : the challenge object
- * @param firestoreCtrl : FirestoreCtrl object
  * @param currentUser : the current user object
  * @returns : a viewmodel component for the challenge
  */
 export function useChallengeViewModel({
   challengeDB,
-  firestoreCtrl,
   currentUser,
 }: {
   readonly challengeDB: DBChallenge;
-  readonly firestoreCtrl: FirestoreCtrl;
   readonly currentUser: DBUser;
 }) {
   const [user, setUser] = useState<DBUser | null>(null);
@@ -29,14 +33,18 @@ export function useChallengeViewModel({
   // Double-tap logic
   const [lastTap, setLastTap] = useState<number | null>(null);
 
-  const placeholderImage = "https://via.placeholder.com/300";
+  const [icon, setIcon] = useState<string>("person-circle-outline");
+  const [image, setImage] = useState<string>("https://via.placeholder.com/300");
 
   // Fetch user data
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await firestoreCtrl.getUser(challengeDB.uid);
+        const userData = await getUser(challengeDB.uid);
         setUser(userData || null);
+        userData.image_id
+          ? await getImageUrl(userData.image_id).then(setIcon)
+          : "";
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -45,15 +53,13 @@ export function useChallengeViewModel({
     if (challengeDB.uid) {
       fetchUser();
     }
-  }, [challengeDB.uid, firestoreCtrl]);
+  }, [challengeDB.uid]);
 
   // Fetch likes
   useEffect(() => {
     const fetchLikes = async () => {
       try {
-        const fetchedLikes = await firestoreCtrl.getLikesOf(
-          challengeDB.challenge_id ?? "",
-        );
+        const fetchedLikes = await getLikesOf(challengeDB.challenge_id ?? "");
         setIsLiked(fetchedLikes.includes(currentUser.uid));
         setLikes(fetchedLikes);
       } catch (error) {
@@ -68,7 +74,7 @@ export function useChallengeViewModel({
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const fetchedComments = await firestoreCtrl.getCommentsOf(
+        const fetchedComments = await getCommentsOf(
           challengeDB.challenge_id ?? "",
         );
         setComments(fetchedComments);
@@ -77,7 +83,7 @@ export function useChallengeViewModel({
       }
     };
     fetchComments();
-  }, [challengeDB.challenge_id, firestoreCtrl]);
+  }, [challengeDB.challenge_id]);
 
   const handleLikePress = async () => {
     try {
@@ -89,12 +95,24 @@ export function useChallengeViewModel({
         : likes.filter((userId) => userId !== currentUser.uid);
 
       setLikes(newLikeList);
-      firestoreCtrl.updateLikesOf(challengeDB.challenge_id ?? "", newLikeList);
+      updateLikesOf(challengeDB.challenge_id ?? "", newLikeList);
       console.log("Likes updated successfully");
     } catch (error) {
       console.error("Error updating likes:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchImgUrl = async (img: string) => {
+      console.log("Using fetch");
+      setImage(await getImageUrl(img));
+    };
+
+    console.log("challengeDB", challengeDB);
+    if (challengeDB.image_id) {
+      fetchImgUrl(challengeDB.image_id);
+    }
+  }, [challengeDB]);
 
   const handleDoubleTap = () => {
     const now = Date.now();
@@ -111,6 +129,7 @@ export function useChallengeViewModel({
     comments,
     handleDoubleTap,
     handleLikePress,
-    placeholderImage,
+    icon,
+    image,
   };
 }

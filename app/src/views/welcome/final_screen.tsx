@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions } from "react-native";
 import { ThemedView } from "@/src/views/components/theme/themed_view";
 import { ThemedText } from "@/src/views/components/theme/themed_text";
 import { ThemedTextButton } from "@/src/views/components/theme/themed_text_button";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 import WelcomeFinalViewModel from "@/src/viewmodels/welcome/FinalScreenViewModel";
 
 // Get the window dimensions
@@ -19,14 +19,12 @@ const { width, height } = Dimensions.get("window");
 export default function WelcomeFinalScreen({
   setUser,
   navigation,
-  firestoreCtrl,
 }: {
   readonly setUser: React.Dispatch<React.SetStateAction<DBUser | null>>;
   readonly navigation: any;
-  readonly firestoreCtrl: FirestoreCtrl;
 }) {
   const { navigateToSignIn, navigateToSignUp, continueAsGuest } =
-    WelcomeFinalViewModel({ firestoreCtrl, navigation, setUser });
+    WelcomeFinalViewModel({ navigation, setUser });
 
   return (
     <ThemedView style={styles.container} testID="welcome-final-screen">

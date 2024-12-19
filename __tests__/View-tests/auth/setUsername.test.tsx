@@ -1,7 +1,6 @@
 import React from "react";
 import { render, fireEvent, screen } from "@testing-library/react-native";
 import SetUsernameScreen from "@/src/views/auth/set_up_screen";
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
 // Mock de SetUsernameViewModel
 jest.mock("@/src/viewmodels/auth/SetUsernameViewModel", () => jest.fn());
@@ -10,7 +9,6 @@ import SetUsernameViewModel from "@/src/viewmodels/auth/SetUsernameViewModel";
 
 describe("SetUsernameScreen Tests", () => {
   const mockNavigation = { navigate: jest.fn(), goBack: jest.fn() };
-  const mockFirestoreCtrl = new FirestoreCtrl();
   const mockSetUser = jest.fn();
 
   const SetUsernameTest = () => (
@@ -22,7 +20,6 @@ describe("SetUsernameScreen Tests", () => {
         createdAt: new Date(),
       }}
       navigation={mockNavigation}
-      firestoreCtrl={mockFirestoreCtrl}
       setUser={mockSetUser}
     />
   );

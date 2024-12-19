@@ -16,11 +16,10 @@ import { useListOfFilteredUsersViewModel } from "@/src/viewmodels/components/fri
 export default function ListOfFilteredUsers({
   filteredUsers = [],
   searchText,
-  firestoreCtrl,
   uid,
 }: any) {
   const { userStatuses, handleAdd, handleRemove } =
-    useListOfFilteredUsersViewModel({ filteredUsers, firestoreCtrl, uid });
+    useListOfFilteredUsersViewModel({ filteredUsers, uid });
 
   return (
     <ThemedView style={{ padding: 10, backgroundColor: "transparent" }}>
@@ -29,7 +28,7 @@ export default function ListOfFilteredUsers({
           data={filteredUsers}
           keyExtractor={(item) => item.uid || Math.random().toString()}
           renderItem={({ item }) => {
-            const { isFriend, isRequested } = userStatuses[item.uid] || {
+            const { isFriendB, isRequestedB } = userStatuses[item.uid] || {
               isFriend: false,
               isRequested: false,
             };
@@ -39,8 +38,8 @@ export default function ListOfFilteredUsers({
                 name={item.name}
                 key={item.uid}
                 avatar={item.image_id}
-                isFriend={isFriend}
-                isRequested={isRequested}
+                isFriend={isFriendB}
+                isRequested={isRequestedB}
                 onAdd={() => handleAdd(item.uid)}
                 onCancelRequest={() => handleRemove(item.uid)}
               />

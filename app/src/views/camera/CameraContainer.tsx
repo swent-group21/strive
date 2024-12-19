@@ -15,7 +15,7 @@ const { width, height } = Dimensions.get("window");
  * @param firestoreCtrl : FirestoreCtrl object
  * @returns : a screen for the camera
  */
-export default function Camera({ navigation, firestoreCtrl, route }: any) {
+export default function Camera({ navigation, route }: any) {
   const {
     facing,
     permission,
@@ -35,7 +35,7 @@ export default function Camera({ navigation, firestoreCtrl, route }: any) {
     makeChallenge,
     goBack,
     isInHome,
-  } = useCameraViewModel(firestoreCtrl, navigation, route);
+  } = useCameraViewModel(navigation, route);
 
   if (!permission) {
     return (

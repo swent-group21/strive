@@ -3,29 +3,29 @@ import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
 } from "expo-location";
-import FirestoreCtrl, {
+import {
   DBChallenge,
   DBChallengeDescription,
-} from "@/src/models/firebase/FirestoreCtrl";
+} from "@/src/models/firebase/TypeFirestoreCtrl";
 import { useMapScreenViewModel } from "@/src/viewmodels/map/MapScreenViewModel";
 import { GeoPoint } from "firebase/firestore";
+import {
+  getKChallenges,
+  getPostsByChallengeTitle,
+} from "@/src/models/firebase/GetFirestoreCtrl";
 
-// Mock FirestoreCtrl
-jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
-  return jest.fn().mockImplementation(() => ({
-    getKChallenges: jest.fn(() => []),
-    getChallengeDescription: jest.fn(
-      () =>
-        ({
-          title: "Description Test",
-          description: "Description",
-          endDate: new Date(2024, 1, 1, 0, 0, 0, 0),
-        }) as DBChallengeDescription,
-    ),
-    getPostsByChallengeTitle: jest.fn(() => []),
-  }));
-});
-const mockFirestoreCtrl = new FirestoreCtrl();
+jest.mock("@/src/models/firebase/GetFirestoreCtrl", () => ({
+  getKChallenges: jest.fn(() => []),
+  getChallengeDescription: jest.fn(
+    () =>
+      ({
+        title: "Description Test",
+        description: "Description",
+        endDate: new Date(2024, 1, 1, 0, 0, 0, 0),
+      }) as DBChallengeDescription,
+  ),
+  getPostsByChallengeTitle: jest.fn(() => []),
+}));
 
 // Mock `expo-location`
 jest.mock("expo-location", () => ({
@@ -65,12 +65,7 @@ describe("useMapScreenViewModel", () => {
     });
 
     const { result } = renderHook(() =>
-      useMapScreenViewModel(
-        mockFirestoreCtrl,
-        mockNavigation,
-        undefined,
-        undefined,
-      ),
+      useMapScreenViewModel(mockNavigation, undefined, undefined),
     );
 
     await waitFor(() => {
@@ -93,12 +88,7 @@ describe("useMapScreenViewModel", () => {
     const undefined_firstLocation = undefined;
 
     const { result } = renderHook(() =>
-      useMapScreenViewModel(
-        mockFirestoreCtrl,
-        mockNavigation,
-        undefined_firstLocation,
-        undefined,
-      ),
+      useMapScreenViewModel(mockNavigation, undefined_firstLocation, undefined),
     );
 
     await waitFor(() => {
@@ -123,12 +113,7 @@ describe("useMapScreenViewModel", () => {
     const undefined_firstLocation = undefined;
 
     const { result } = renderHook(() =>
-      useMapScreenViewModel(
-        mockFirestoreCtrl,
-        mockNavigation,
-        undefined_firstLocation,
-        undefined,
-      ),
+      useMapScreenViewModel(mockNavigation, undefined_firstLocation, undefined),
     );
 
     await waitFor(() => {
@@ -165,25 +150,18 @@ describe("useMapScreenViewModel", () => {
       },
     ];
 
-    (
-      mockFirestoreCtrl.getPostsByChallengeTitle as jest.Mock
-    ).mockResolvedValueOnce(mockChallenges);
+    (getPostsByChallengeTitle as jest.Mock).mockResolvedValueOnce(
+      mockChallenges,
+    );
 
     const undefined_firstLocation = undefined;
 
     const { result } = renderHook(() =>
-      useMapScreenViewModel(
-        mockFirestoreCtrl,
-        mockNavigation,
-        undefined_firstLocation,
-        undefined,
-      ),
+      useMapScreenViewModel(mockNavigation, undefined_firstLocation, undefined),
     );
 
     await waitFor(() => {
-      expect(mockFirestoreCtrl.getPostsByChallengeTitle).toHaveBeenCalledWith(
-        "Description Test",
-      );
+      expect(getPostsByChallengeTitle).toHaveBeenCalledWith("Description Test");
       expect(result.current.challengesWithLocation).toEqual([
         mockChallenges[0],
       ]); // Only valid locations should be included
@@ -194,25 +172,18 @@ describe("useMapScreenViewModel", () => {
     // Mock console error
     jest.spyOn(console, "error").mockImplementationOnce(() => {});
 
-    (mockFirestoreCtrl.getKChallenges as jest.Mock).mockRejectedValueOnce(
+    (getKChallenges as jest.Mock).mockRejectedValueOnce(
       new Error("FirestoreError"),
     );
 
     const undefined_firstLocation = undefined;
 
     const { result } = renderHook(() =>
-      useMapScreenViewModel(
-        mockFirestoreCtrl,
-        mockNavigation,
-        undefined_firstLocation,
-        undefined,
-      ),
+      useMapScreenViewModel(mockNavigation, undefined_firstLocation, undefined),
     );
 
     await waitFor(() => {
-      expect(mockFirestoreCtrl.getPostsByChallengeTitle).toHaveBeenCalledWith(
-        "Description Test",
-      );
+      expect(getPostsByChallengeTitle).toHaveBeenCalledWith("Description Test");
       expect(result.current.challengesWithLocation).toEqual([]);
     });
   });
@@ -224,12 +195,7 @@ describe("useMapScreenViewModel", () => {
     const undefined_firstLocation = undefined;
 
     const { result } = renderHook(() =>
-      useMapScreenViewModel(
-        mockFirestoreCtrl,
-        mockNavigation,
-        undefined_firstLocation,
-        undefined,
-      ),
+      useMapScreenViewModel(mockNavigation, undefined_firstLocation, undefined),
     );
 
     await waitFor(() => {

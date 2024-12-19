@@ -5,28 +5,22 @@ import { ThemedView } from "@/src/views/components/theme/themed_view";
 import { ThemedText } from "@/src/views/components/theme/themed_text";
 import { TopBar } from "@/src/views/components/navigation/top_bar";
 import { useMapScreenViewModel } from "@/src/viewmodels/map/MapScreenViewModel";
-import FirestoreCtrl, {
-  DBChallenge,
-  DBUser,
-} from "@/src/models/firebase/FirestoreCtrl";
+import { DBChallenge, DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 
 /**
  * Screen for the map
  * @param user : user object
  * @param navigation : navigation object
- * @param firestoreCtrl : FirestoreCtrl object
  * @param route : route object
  * @returns : a screen for the map
  */
 export default function MapScreen({
   user,
   navigation,
-  firestoreCtrl,
   route,
 }: {
   readonly user: DBUser;
   readonly navigation: any;
-  readonly firestoreCtrl: FirestoreCtrl;
   readonly route: any;
 }) {
   const firstLocation = route.params?.location;
@@ -38,14 +32,7 @@ export default function MapScreen({
     challengeArea,
     isMapReady,
     setIsMapReady,
-  } = useMapScreenViewModel(
-    firestoreCtrl,
-    navigation,
-    firstLocation,
-    geoRestriction,
-  );
-  console.info("--> AREA", challengeArea);
-  console.info("--> CHALLENGES", challengesWithLocation);
+  } = useMapScreenViewModel(navigation, firstLocation, geoRestriction);
 
   if (userLocation === undefined || challengesWithLocation.length === 0) {
     return (
@@ -100,7 +87,6 @@ export default function MapScreen({
                 navigation.navigate("Maximize", {
                   challenge,
                   user,
-                  firestoreCtrl,
                 });
               }}
             />

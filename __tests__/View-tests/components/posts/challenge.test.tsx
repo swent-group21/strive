@@ -1,46 +1,36 @@
 import React from "react";
-import {
-  render,
-  fireEvent,
-  waitFor,
-  screen,
-} from "@testing-library/react-native";
+import { render, fireEvent, screen } from "@testing-library/react-native";
 import { Challenge } from "@/src/views/components/posts/challenge";
-import FirestoreCtrl, {
-  DBChallenge,
-  DBUser,
-} from "@/src/models/firebase/FirestoreCtrl";
+import { DBChallenge, DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 
 // Mock du ViewModel
 jest.mock("@/src/viewmodels/components/posts/ChallengeViewModel", () => ({
   useChallengeViewModel: jest.fn(),
 }));
 
-// Mock FirestoreCtrl methods
-jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      getUser: jest.fn().mockResolvedValue({
-        uid: "user123",
-        name: "Current User",
-        email: "test@test.com",
-        createdAt: new Date(),
-      }),
-      getLikesOf: jest.fn().mockResolvedValue(["12345", "67890"]),
-      getCommentsOf: jest.fn().mockResolvedValue([
-        {
-          uid: "12345",
-          name: "Test User",
-          comment: "This is a test comment",
-          created_at: new Date(),
-        },
-      ]),
-      updateLikesOf: jest
-        .fn()
-        .mockResolvedValue(["challenge123", ["12345", "67890", "user123"]]),
-    };
-  });
-});
+jest.mock("@/src/models/firebase/GetFirestoreCtrl", () => ({
+  getUser: jest.fn().mockResolvedValue({
+    uid: "user123",
+    name: "Current User",
+    email: "test@test.com",
+    createdAt: new Date(),
+  }),
+  getLikesOf: jest.fn().mockResolvedValue(["12345", "67890"]),
+  getCommentsOf: jest.fn().mockResolvedValue([
+    {
+      uid: "12345",
+      name: "Test User",
+      comment: "This is a test comment",
+      created_at: new Date(),
+    },
+  ]),
+}));
+
+jest.mock("@/src/models/firebase/SetFirestoreCtrl", () => ({
+  updateLikesOf: jest
+    .fn()
+    .mockResolvedValue(["challenge123", ["12345", "67890", "user123"]]),
+}));
 
 const challengeDB: DBChallenge = {
   caption: "challengeName",
@@ -53,7 +43,6 @@ const challengeDB: DBChallenge = {
 
 describe("Challenge Component", () => {
   const mockNavigation = { navigate: jest.fn() };
-  const mockFirestoreCtrl = new FirestoreCtrl();
   const mockUseChallengeViewModel =
     require("@/src/viewmodels/components/posts/ChallengeViewModel").useChallengeViewModel;
   const mockDate = new Date();
@@ -93,7 +82,6 @@ describe("Challenge Component", () => {
       <Challenge
         challengeDB={challengeDB}
         index={0}
-        firestoreCtrl={mockFirestoreCtrl}
         navigation={mockNavigation}
         testID="challenge"
         currentUser={currentUser}
@@ -118,7 +106,6 @@ describe("Challenge Component", () => {
       <Challenge
         challengeDB={challengeDB}
         index={0}
-        firestoreCtrl={mockFirestoreCtrl}
         navigation={mockNavigation}
         testID="challenge"
         currentUser={currentUser}
@@ -148,7 +135,6 @@ describe("Challenge Component", () => {
       <Challenge
         challengeDB={challengeDB}
         index={0}
-        firestoreCtrl={mockFirestoreCtrl}
         navigation={mockNavigation}
         testID="challenge"
         currentUser={currentUser}
@@ -182,7 +168,6 @@ describe("Challenge Component", () => {
       <Challenge
         challengeDB={challengeDB}
         index={0}
-        firestoreCtrl={mockFirestoreCtrl}
         navigation={mockNavigation}
         testID="challenge"
         currentUser={currentUser}

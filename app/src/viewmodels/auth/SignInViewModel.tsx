@@ -1,5 +1,5 @@
 import { useState } from "react";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 import { logInWithEmail } from "@/types/Auth";
 
 /**
@@ -10,7 +10,6 @@ import { logInWithEmail } from "@/types/Auth";
  * @returns : functions for the SignIn screen
  */
 export default function SignInViewModel(
-  firestoreCtrl: FirestoreCtrl,
   navigation: any,
   setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
 ): {
@@ -36,7 +35,7 @@ export default function SignInViewModel(
         return;
       }
 
-      await logInWithEmail(email, password, firestoreCtrl, navigation, setUser);
+      await logInWithEmail(email, password, navigation, setUser);
     } catch (error) {
       console.error("Error during sign-in:", error);
       setErrorMessage("Failed to sign in. Please try again.");

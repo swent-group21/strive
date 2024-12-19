@@ -7,7 +7,8 @@ import {
   signOut,
   updateEmail,
 } from "@/src/models/firebase/Firebase";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { getUser } from "@/src/models/firebase/GetFirestoreCtrl";
+import { createUser } from "@/src/models/firebase/SetFirestoreCtrl";
 
 /***
  * Function to check if the email is valid
@@ -19,19 +20,18 @@ export function isValidEmail(email: string) {
     /^[a-zA-Z0-9]+([._-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-][a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
   return reg.test(email);
 }
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 
 /***
  * Function to log in with email and password
  * @param email - email to log in with
  * @param password - password to log in with
- * @param firestoreCtrl - FirestoreCtrl object
  * @param navigation - navigation object
  * @param setUser - setUser function
  */
 export const logInWithEmail = async (
   email: string,
   password: string,
-  firestoreCtrl: FirestoreCtrl,
   navigation: any,
   setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
 ) => {
@@ -41,29 +41,25 @@ export const logInWithEmail = async (
       // Checks that the user exists in auth
       if (response.user) {
         // Checks that the user's info exists in the database
-        const user = await firestoreCtrl
-          .getUser(response.user.uid)
-          .catch(() => {
-            // User might not exist in the database
-            firestoreCtrl
-              .createUser(response.user.uid, {
-                uid: response.user.uid || "",
-                name: response.user.displayName || "",
-                email: response.user.email || "",
-                createdAt: new Date(),
-                groups: [],
-              })
-              .then(() => {
-                alert("User did not exist. Please set up your profile.");
-                setUser({
-                  uid: response.user.uid || "",
-                  name: response.user.displayName || "",
-                  email: response.user.email || "",
-                  createdAt: new Date(),
-                });
-                navigation.navigate("SetUser");
-              });
+        const user = await getUser(response.user.uid).catch(() => {
+          // User might not exist in the database
+          createUser(response.user.uid, {
+            uid: response.user.uid || "",
+            name: response.user.displayName || "",
+            email: response.user.email || "",
+            createdAt: new Date(),
+            groups: [],
+          }).then(() => {
+            alert("User did not exist. Please set up your profile.");
+            setUser({
+              uid: response.user.uid || "",
+              name: response.user.displayName || "",
+              email: response.user.email || "",
+              createdAt: new Date(),
+            });
+            navigation.navigate("SetUser");
           });
+        });
         // User exists in both auth and database
         if (user) {
           setUser(user);
@@ -88,7 +84,6 @@ export const logInWithEmail = async (
  * @param userName - name of the user
  * @param email - email to sign up with
  * @param password - password to sign up with
- * @param firestoreCtrl - FirestoreCtrl object
  * @param navigation - navigation object
  * @param setUser - setUser function
  */
@@ -96,7 +91,6 @@ export const signUpWithEmail = async (
   userName: string,
   email: string,
   password: string,
-  firestoreCtrl: FirestoreCtrl,
   navigation: any,
   setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
 ) => {
@@ -113,8 +107,7 @@ export const signUpWithEmail = async (
         };
 
         // Creates user in firestore
-        firestoreCtrl
-          .createUser(userCredential.user.uid, userData)
+        createUser(userCredential.user.uid, userData)
           .then(() => {
             setUser(userData);
             navigation.navigate("SetUser");
@@ -136,12 +129,10 @@ export const signUpWithEmail = async (
 
 /***
  * Function to sign in as a guest
- * @param firestoreCtrl - FirestoreCtrl object
  * @param navigation - navigation object
  * @param setUser - setUser function
  */
 export const signInAsGuest = async (
-  firestoreCtrl: FirestoreCtrl,
   navigation: any,
   setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
 ) => {
@@ -153,8 +144,7 @@ export const signInAsGuest = async (
         email: "",
         createdAt: new Date(),
       };
-      firestoreCtrl
-        .createUser(userCredential.user.uid, userData)
+      createUser(userCredential.user.uid, userData)
         .then(() => {
           setUser(userData);
           navigation.navigate("Home");

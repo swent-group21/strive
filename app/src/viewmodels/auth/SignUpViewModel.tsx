@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { isValidEmail, signUpWithEmail } from "@/types/Auth";
 import { Alert } from "react-native";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 
 /**
  * ViewModel for the SignUp screen
@@ -13,7 +13,6 @@ import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 export default function useSignUpViewModel(
   navigation: any,
   setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
-  firestoreCtrl: FirestoreCtrl,
 ): {
   name: string;
   surname: string;
@@ -60,7 +59,6 @@ export default function useSignUpViewModel(
         `${name} ${surname}`,
         email,
         password,
-        firestoreCtrl,
         navigation,
         setUser,
       );

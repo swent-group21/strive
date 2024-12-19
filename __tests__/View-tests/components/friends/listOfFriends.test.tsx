@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import ListOfFriends from "@/src/views/components/friends/list_of_friends";
-import { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 
 describe("ListOfFriends", () => {
   const mockFriends: DBUser[] = [

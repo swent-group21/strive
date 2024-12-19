@@ -16,6 +16,7 @@ import {
   sendPasswordResetEmail,
   updateEmail,
 } from "@/src/models/firebase/Firebase";
+import { getUser } from "@/src/models/firebase/GetFirestoreCtrl";
 
 jest.mock("@/src/models/firebase/Firebase", () => ({
   auth: jest.fn(),
@@ -26,7 +27,8 @@ jest.mock("@/src/models/firebase/Firebase", () => ({
   sendPasswordResetEmail: jest.fn(),
   updateEmail: jest.fn(),
 }));
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
+import { createUser } from "@/src/models/firebase/SetFirestoreCtrl";
 
 jest.unmock("@/types/Auth");
 describe("isValidEmail", () => {
@@ -79,30 +81,28 @@ describe("isValidEmail", () => {
 });
 
 // Mock FirestoreCtrl
-jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      getUser: jest.fn((uid: string) => {
-        if (uid === "user123") {
-          return Promise.resolve({
-            uid: "user123",
-            name: "Test User",
-            email: "test@example.com",
-            createdAt: new Date(),
-          });
-        }
-        return Promise.reject(new Error("User not found"));
-      }),
-      createUser: jest.fn((uid: string, user: DBUser) => {
-        if (uid === "user" || uid === "guest123") {
-          return Promise.resolve();
-        }
-        return Promise.reject(new Error("User not found"));
-      }),
-    };
-  });
-});
-const mockFirestoreCtrl = new FirestoreCtrl();
+jest.mock("@/src/models/firebase/GetFirestoreCtrl", () => ({
+  getUser: jest.fn((uid: string) => {
+    if (uid === "user123") {
+      return Promise.resolve({
+        uid: "user123",
+        name: "Test User",
+        email: "test@example.com",
+        createdAt: new Date(),
+      });
+    }
+    return Promise.reject(new Error("User not found"));
+  }),
+}));
+
+jest.mock("@/src/models/firebase/SetFirestoreCtrl", () => ({
+  createUser: jest.fn((uid: string, user: DBUser) => {
+    if (uid === "user" || uid === "guest123") {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error("User not found"));
+  }),
+}));
 
 describe("logInWithEmail", () => {
   // Mock navigation
@@ -129,13 +129,12 @@ describe("logInWithEmail", () => {
     });
 
     // Mock Firestore response
-    mockFirestoreCtrl.getUser("user123");
+    getUser("user123");
 
     // Call the function
     await logInWithEmail(
       "test@example.com",
       "password123",
-      mockFirestoreCtrl,
       mockNavigation,
       setUser,
     );
@@ -146,7 +145,7 @@ describe("logInWithEmail", () => {
       "test@example.com",
       "password123",
     );
-    expect(mockFirestoreCtrl.getUser).toHaveBeenCalledWith("user123");
+    expect(getUser).toHaveBeenCalledWith("user123");
     expect(setUser).toHaveBeenCalledWith({
       uid: "user123",
       name: "Test User",
@@ -184,13 +183,12 @@ describe("logInWithEmail", () => {
     await logInWithEmail(
       "test@example.com",
       "password123",
-      mockFirestoreCtrl,
       mockNavigation,
       setUser,
     );
 
     // Assertions
-    expect(mockFirestoreCtrl.createUser).toHaveBeenCalledWith("user", {
+    expect(createUser).toHaveBeenCalledWith("user", {
       uid: "user",
       name: "",
       email: "test@example.com",
@@ -213,7 +211,6 @@ describe("logInWithEmail", () => {
     await logInWithEmail(
       "test@example.com",
       "wrongpassword",
-      mockFirestoreCtrl,
       mockNavigation,
       setUser,
     );
@@ -224,7 +221,7 @@ describe("logInWithEmail", () => {
       "test@example.com",
       "wrongpassword",
     );
-    expect(mockFirestoreCtrl.getUser).not.toHaveBeenCalled();
+    expect(getUser).not.toHaveBeenCalled();
     expect(setUser).not.toHaveBeenCalled();
     // No navigation reset or navigate should occur
     expect(mockNavigation.reset).not.toHaveBeenCalled();
@@ -250,7 +247,6 @@ describe("logInWithEmail", () => {
     await logInWithEmail(
       "test@example.com",
       "password123",
-      mockFirestoreCtrl,
       mockNavigation,
       setUser,
     );
@@ -297,7 +293,6 @@ describe("signUpWithEmail", () => {
       "Test User",
       "test@example.com",
       "password123",
-      mockFirestoreCtrl,
       mockNavigation,
       mockSetUser,
     );
@@ -308,7 +303,7 @@ describe("signUpWithEmail", () => {
       "test@example.com",
       "password123",
     );
-    expect(mockFirestoreCtrl.createUser).toHaveBeenCalledWith("user", {
+    expect(createUser).toHaveBeenCalledWith("user", {
       uid: "user",
       name: "Test User",
       email: "test@example.com",
@@ -334,7 +329,6 @@ describe("signUpWithEmail", () => {
       "Test User",
       "test@example.com",
       "password123",
-      mockFirestoreCtrl,
       mockNavigation,
       mockSetUser,
     );
@@ -345,7 +339,7 @@ describe("signUpWithEmail", () => {
       "test@example.com",
       "password123",
     );
-    expect(mockFirestoreCtrl.createUser).toHaveBeenCalledWith("user", {
+    expect(createUser).toHaveBeenCalledWith("user", {
       uid: "user",
       name: "Test User",
       email: "test@example.com",
@@ -368,7 +362,6 @@ describe("signUpWithEmail", () => {
       "Test User",
       "test@example.com",
       "password123",
-      mockFirestoreCtrl,
       mockNavigation,
       mockSetUser,
     );
@@ -379,7 +372,7 @@ describe("signUpWithEmail", () => {
       "test@example.com",
       "password123",
     );
-    expect(mockFirestoreCtrl.createUser).not.toHaveBeenCalled();
+    expect(createUser).not.toHaveBeenCalled();
     expect(mockSetUser).not.toHaveBeenCalled();
     expect(mockNavigation.navigate).not.toHaveBeenCalled();
   });
@@ -390,7 +383,6 @@ describe("signUpWithEmail", () => {
       "",
       "test@example.com",
       "password123",
-      mockFirestoreCtrl,
       mockNavigation,
       mockSetUser,
     );
@@ -398,7 +390,7 @@ describe("signUpWithEmail", () => {
     // Assertions
     expect(global.alert).toHaveBeenCalledWith("Please fill in all fields.");
     expect(createUserWithEmailAndPassword).not.toHaveBeenCalled();
-    expect(mockFirestoreCtrl.createUser).not.toHaveBeenCalled();
+    expect(createUser).not.toHaveBeenCalled();
     expect(mockSetUser).not.toHaveBeenCalled();
     expect(mockNavigation.navigate).not.toHaveBeenCalled();
   });
@@ -425,11 +417,11 @@ describe("signInAsGuest", () => {
     });
 
     // Call the function
-    await signInAsGuest(mockFirestoreCtrl, mockNavigation, mockSetUser);
+    await signInAsGuest(mockNavigation, mockSetUser);
 
     // Assertions
     expect(signInAnonymously).toHaveBeenCalledWith(auth);
-    expect(mockFirestoreCtrl.createUser).toHaveBeenCalledWith("guest123", {
+    expect(createUser).toHaveBeenCalledWith("guest123", {
       uid: "guest123",
       name: "Guest",
       email: "",
@@ -446,11 +438,11 @@ describe("signInAsGuest", () => {
     });
 
     // Call the function
-    await signInAsGuest(mockFirestoreCtrl, mockNavigation, mockSetUser);
+    await signInAsGuest(mockNavigation, mockSetUser);
 
     // Assertions
     expect(signInAnonymously).toHaveBeenCalledWith(auth);
-    expect(mockFirestoreCtrl.createUser).toHaveBeenCalledWith("guest123", {
+    expect(createUser).toHaveBeenCalledWith("guest123", {
       uid: "guest123",
       name: "Guest",
       email: "",
@@ -470,11 +462,11 @@ describe("signInAsGuest", () => {
     );
 
     // Call the function
-    await signInAsGuest(mockFirestoreCtrl, mockNavigation, mockSetUser);
+    await signInAsGuest(mockNavigation, mockSetUser);
 
     // Assertions
     expect(signInAnonymously).toHaveBeenCalledWith(auth);
-    expect(mockFirestoreCtrl.createUser).not.toHaveBeenCalled();
+    expect(createUser).not.toHaveBeenCalled();
     expect(mockSetUser).not.toHaveBeenCalled();
     expect(mockNavigation.navigate).not.toHaveBeenCalled();
   });

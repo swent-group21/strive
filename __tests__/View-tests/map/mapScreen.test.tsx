@@ -1,7 +1,6 @@
 import React from "react";
 import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import MapScreen from "@/src/views/map/map_screen";
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
 jest.mock("@/src/viewmodels/map/MapScreenViewModel", () => ({
   useMapScreenViewModel: jest.fn(),
@@ -23,7 +22,6 @@ describe("MapScreen UI Tests", () => {
     goBack: jest.fn(),
     navigate: jest.fn(),
   };
-  const mockFirestoreCtrl = new FirestoreCtrl();
   const mockDate = new Date();
   const mockUser = {
     uid: "123",
@@ -70,7 +68,6 @@ describe("MapScreen UI Tests", () => {
         user={mockUser}
         navigation={mockNavigation}
         route={{ params: { user: mockUser } }}
-        firestoreCtrl={mockFirestoreCtrl}
       />,
     );
 
@@ -85,7 +82,6 @@ describe("MapScreen UI Tests", () => {
         user={mockUser}
         navigation={mockNavigation}
         route={{ params: { user: mockUser } }}
-        firestoreCtrl={mockFirestoreCtrl}
       />,
     );
 

@@ -6,7 +6,7 @@ import { ThemedScrollView } from "@/src/views/components/theme/themed_scroll_vie
 import { BottomBar } from "@/src/views/components/navigation/bottom_bar";
 import { ThemedView } from "@/src/views/components/theme/themed_view";
 import CreateGroupViewModel from "@/src/viewmodels/group/CreateGroupViewModel";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 import Slider from "@react-native-community/slider";
 
 const { width, height } = Dimensions.get("window");
@@ -14,11 +14,9 @@ const { width, height } = Dimensions.get("window");
 export default function CreateGroupScreen({
   user,
   navigation,
-  firestoreCtrl,
 }: {
   readonly user: DBUser;
   readonly navigation: any;
-  readonly firestoreCtrl: FirestoreCtrl;
 }) {
   const {
     groupName,
@@ -31,7 +29,7 @@ export default function CreateGroupScreen({
     MIN_RADIUS,
     MAX_RADIUS,
     permission,
-  } = CreateGroupViewModel({ user, navigation, firestoreCtrl });
+  } = CreateGroupViewModel({ user, navigation });
 
   if (permission === "WAITING") {
     return (

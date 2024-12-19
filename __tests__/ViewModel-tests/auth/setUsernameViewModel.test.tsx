@@ -1,23 +1,22 @@
 import { renderHook, act } from "@testing-library/react-native";
 import * as ImagePicker from "expo-image-picker";
 import SetUsernameViewModel from "@/src/viewmodels/auth/SetUsernameViewModel";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
+import * as SetFirestoreCtrl from "@/src/models/firebase/SetFirestoreCtrl";
 
 // Mock FirestoreCtrl
-jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      setName: jest.fn(),
-      setProfilePicture: jest.fn(),
-      getChallengeDescription: jest.fn().mockResolvedValueOnce({
-        title: "Challenge Title",
-        description: "Challenge Description",
-        endDate: new Date(2024, 1, 1, 0, 0, 0, 0),
-      }),
-    };
-  });
-});
-const mockFirestoreCtrl = new FirestoreCtrl();
+jest.mock("@/src/models/firebase/GetFirestoreCtrl", () => ({
+  getChallengeDescription: jest.fn().mockResolvedValueOnce({
+    title: "Challenge Title",
+    description: "Challenge Description",
+    endDate: new Date(2024, 1, 1, 0, 0, 0, 0),
+  }),
+}));
+
+jest.mock("@/src/models/firebase/SetFirestoreCtrl", () => ({
+  setName: jest.fn(),
+  setProfilePicture: jest.fn(),
+}));
 
 // Mock ImagePicker
 jest.mock("expo-image-picker", () => ({
@@ -45,7 +44,7 @@ describe("SetUsernameViewModel", () => {
 
   it("should update username when handleUsernameChange is called", () => {
     const { result } = renderHook(() =>
-      SetUsernameViewModel(mockUser, mockFirestoreCtrl, mockSetUser),
+      SetUsernameViewModel(mockUser, mockSetUser),
     );
 
     act(() => {
@@ -62,7 +61,7 @@ describe("SetUsernameViewModel", () => {
     });
 
     const { result } = renderHook(() =>
-      SetUsernameViewModel(mockUser, mockFirestoreCtrl, mockSetUser),
+      SetUsernameViewModel(mockUser, mockSetUser),
     );
 
     await act(async () => {
@@ -81,7 +80,7 @@ describe("SetUsernameViewModel", () => {
     );
 
     const { result } = renderHook(() =>
-      SetUsernameViewModel(mockUser, mockFirestoreCtrl, mockSetUser),
+      SetUsernameViewModel(mockUser, mockSetUser),
     );
 
     await act(async () => {
@@ -93,7 +92,7 @@ describe("SetUsernameViewModel", () => {
 
   it("should set errorMessage if username is not entered", async () => {
     const { result } = renderHook(() =>
-      SetUsernameViewModel(mockUser, mockFirestoreCtrl, mockSetUser),
+      SetUsernameViewModel(mockUser, mockSetUser),
     );
 
     await act(async () => {
@@ -104,13 +103,11 @@ describe("SetUsernameViewModel", () => {
   });
 
   it("should call FirestoreCtrl methods and reset errorMessage on successful upload", async () => {
-    (mockFirestoreCtrl.setName as jest.Mock).mockResolvedValueOnce(null);
-    (mockFirestoreCtrl.setProfilePicture as jest.Mock).mockResolvedValueOnce(
-      null,
-    );
+    jest.spyOn(SetFirestoreCtrl, "setName").mockResolvedValue(null);
+    jest.spyOn(SetFirestoreCtrl, "setProfilePicture").mockResolvedValue(null);
 
     const { result } = renderHook(() =>
-      SetUsernameViewModel(mockUser, mockFirestoreCtrl, mockSetUser),
+      SetUsernameViewModel(mockUser, mockSetUser),
     );
 
     act(() => {
@@ -121,12 +118,12 @@ describe("SetUsernameViewModel", () => {
       await result.current.upload();
     });
 
-    expect(mockFirestoreCtrl.setName).toHaveBeenCalledWith(
+    expect(SetFirestoreCtrl.setName).toHaveBeenCalledWith(
       "mock-uid",
       "testUsername",
       mockSetUser,
     );
-    expect(mockFirestoreCtrl.setProfilePicture).not.toHaveBeenCalled();
+    expect(SetFirestoreCtrl.setProfilePicture).not.toHaveBeenCalled();
     expect(result.current.errorMessage).toBeNull();
   });
 
@@ -134,12 +131,12 @@ describe("SetUsernameViewModel", () => {
     // Mock console.error
     jest.spyOn(console, "error").mockImplementation(() => {});
 
-    (mockFirestoreCtrl.setName as jest.Mock).mockRejectedValueOnce(
-      new Error("FirestoreError"),
-    );
+    jest
+      .spyOn(SetFirestoreCtrl, "setName")
+      .mockRejectedValue(new Error("Error setting name"));
 
     const { result } = renderHook(() =>
-      SetUsernameViewModel(mockUser, mockFirestoreCtrl, mockSetUser),
+      SetUsernameViewModel(mockUser, mockSetUser),
     );
 
     act(() => {

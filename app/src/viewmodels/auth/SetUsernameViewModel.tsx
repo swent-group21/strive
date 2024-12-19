@@ -1,6 +1,10 @@
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
+import {
+  setName,
+  setProfilePicture,
+} from "@/src/models/firebase/SetFirestoreCtrl";
 
 /**
  * ViewModel for the SetUsername screen.
@@ -11,7 +15,6 @@ import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
  */
 export default function SetUsernameViewModel(
   user: DBUser,
-  firestoreCtrl: FirestoreCtrl,
   setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
 ): {
   username: string;
@@ -55,9 +58,9 @@ export default function SetUsernameViewModel(
 
     try {
       if (image) {
-        await firestoreCtrl.setProfilePicture(user.uid, image, setUser);
+        await setProfilePicture(user.uid, image, setUser);
       }
-      await firestoreCtrl.setName(user.uid, username, setUser);
+      await setName(user.uid, username, setUser);
     } catch (error) {
       console.error("Error setting up profile: ", error);
       setErrorMessage("Failed to update profile. Please try again.");

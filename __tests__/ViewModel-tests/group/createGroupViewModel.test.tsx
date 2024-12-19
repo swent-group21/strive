@@ -1,7 +1,6 @@
 import { renderHook, act, waitFor } from "@testing-library/react-native";
 import CreateGroupViewModel from "@/src/viewmodels/group/CreateGroupViewModel";
 import { createGroup } from "@/types/GroupBuilder";
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
 jest.mock("@/types/GroupBuilder", () => ({
   createGroup: jest.fn(),
@@ -15,7 +14,6 @@ describe("CreateGroupViewModel", () => {
     createdAt: new Date(),
   };
   const mockNavigation = { navigate: jest.fn() };
-  const mockFirestoreCtrl = new FirestoreCtrl();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -26,7 +24,6 @@ describe("CreateGroupViewModel", () => {
       CreateGroupViewModel({
         user: mockUser,
         navigation: mockNavigation,
-        firestoreCtrl: mockFirestoreCtrl,
       }),
     );
 
@@ -52,7 +49,6 @@ describe("CreateGroupViewModel", () => {
     });
 
     expect(createGroup).toHaveBeenCalledWith(
-      mockFirestoreCtrl,
       "Test Group",
       "Test Challenge",
       ["test-user-id"],
@@ -74,7 +70,6 @@ describe("CreateGroupViewModel", () => {
       CreateGroupViewModel({
         user: mockUser,
         navigation: mockNavigation,
-        firestoreCtrl: mockFirestoreCtrl,
       }),
     );
 

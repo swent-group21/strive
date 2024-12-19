@@ -1,25 +1,22 @@
-import React from "react";
-import {
-  render,
-  fireEvent,
-  waitFor,
-  renderHook,
-  act,
-} from "@testing-library/react-native";
+import { waitFor, renderHook, act } from "@testing-library/react-native";
 import { useListOfFilteredUsersViewModel } from "@/src/viewmodels/components/friends/ListOfFilteredUsersViewModel";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
+import { isFriend, isRequested } from "@/src/models/firebase/GetFirestoreCtrl";
+import {
+  addFriend,
+  removeFriendRequest,
+} from "@/src/models/firebase/SetFirestoreCtrl";
 
 // Mock FirestoreCtrl methods
-jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      isFriend: jest.fn((uid, friendId) => Promise.resolve(friendId === "1")), // John is a friend
-      isRequested: jest.fn(() => Promise.resolve(false)),
-      addFriend: jest.fn(() => Promise.resolve()),
-      removeFriendRequest: jest.fn(() => Promise.resolve()),
-    };
-  });
-});
+jest.mock("@/src/models/firebase/GetFirestoreCtrl", () => ({
+  isFriend: jest.fn((uid, friendId) => Promise.resolve(friendId === "1")), // John is a friend
+  isRequested: jest.fn(() => Promise.resolve(false)),
+}));
+
+jest.mock("@/src/models/firebase/SetFirestoreCtrl", () => ({
+  addFriend: jest.fn(() => Promise.resolve()),
+  removeFriendRequest: jest.fn(() => Promise.resolve()),
+}));
 
 const mockFilteredUsers: DBUser[] = [
   {
@@ -40,8 +37,6 @@ const mockFilteredUsers: DBUser[] = [
 
 // Mock du ViewModel
 describe("ListOfFilteredUsers ViewModel", () => {
-  const mockFirestoreCtrl = new FirestoreCtrl();
-
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, "info").mockImplementation(() => {});
@@ -52,7 +47,6 @@ describe("ListOfFilteredUsers ViewModel", () => {
     const { result } = renderHook(() =>
       useListOfFilteredUsersViewModel({
         filteredUsers: mockFilteredUsers,
-        firestoreCtrl: mockFirestoreCtrl,
         uid: "user-uid",
       }),
     );
@@ -61,8 +55,8 @@ describe("ListOfFilteredUsers ViewModel", () => {
       expect(result.current.userStatuses).toBeDefined();
     });
 
-    expect(mockFirestoreCtrl.isFriend).toHaveBeenCalledWith("user-uid", "1");
-    expect(mockFirestoreCtrl.isRequested).toHaveBeenCalledWith("user-uid", "2");
+    expect(isFriend).toHaveBeenCalledWith("user-uid", "1");
+    expect(isRequested).toHaveBeenCalledWith("user-uid", "2");
 
     // Wait for the promise to resolve
     await act(async () => {
@@ -70,8 +64,8 @@ describe("ListOfFilteredUsers ViewModel", () => {
     });
 
     expect(result.current.userStatuses).toEqual({
-      "1": { isFriend: true, isRequested: false },
-      "2": { isFriend: false, isRequested: false },
+      "1": { isFriendB: true, isRequestedB: false },
+      "2": { isFriendB: false, isRequestedB: false },
     });
   });
 
@@ -80,7 +74,6 @@ describe("ListOfFilteredUsers ViewModel", () => {
     const { result } = renderHook(() =>
       useListOfFilteredUsersViewModel({
         filteredUsers: mockFilteredUsers,
-        firestoreCtrl: mockFirestoreCtrl,
         uid: "user-uid",
       }),
     );
@@ -89,7 +82,7 @@ describe("ListOfFilteredUsers ViewModel", () => {
       await result.current.handleAdd("2");
     });
 
-    expect(mockFirestoreCtrl.addFriend).toHaveBeenCalledWith("user-uid", "2");
+    expect(addFriend).toHaveBeenCalledWith("user-uid", "2");
   });
 
   it("handles removing a friend", async () => {
@@ -97,7 +90,6 @@ describe("ListOfFilteredUsers ViewModel", () => {
     const { result } = renderHook(() =>
       useListOfFilteredUsersViewModel({
         filteredUsers: mockFilteredUsers,
-        firestoreCtrl: mockFirestoreCtrl,
         uid: "user-uid",
       }),
     );
@@ -106,9 +98,6 @@ describe("ListOfFilteredUsers ViewModel", () => {
       await result.current.handleRemove("1");
     });
 
-    expect(mockFirestoreCtrl.removeFriendRequest).toHaveBeenCalledWith(
-      "user-uid",
-      "1",
-    );
+    expect(removeFriendRequest).toHaveBeenCalledWith("user-uid", "1");
   });
 });

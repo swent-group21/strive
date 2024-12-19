@@ -6,7 +6,7 @@ import WelcomeConceptScreen from "@/src/views/welcome/concept_screen";
 import WelcomePersonalScreen from "@/src/views/welcome/personal_screen";
 import WelcomeFinalScreen from "@/src/views/welcome/final_screen";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 
 // Get the device's screen width
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -21,11 +21,9 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 export default function WelcomeScreens({
   setUser,
   navigation,
-  firestoreCtrl,
 }: {
   readonly setUser: React.Dispatch<React.SetStateAction<DBUser | null>>;
   readonly navigation: any;
-  readonly firestoreCtrl: FirestoreCtrl;
 }) {
   const color = useThemeColor({}, "textPrimary");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -51,11 +49,7 @@ export default function WelcomeScreens({
         <WelcomeConceptScreen />
         <WelcomePersonalScreen />
 
-        <WelcomeFinalScreen
-          setUser={setUser}
-          navigation={navigation}
-          firestoreCtrl={firestoreCtrl}
-        />
+        <WelcomeFinalScreen setUser={setUser} navigation={navigation} />
       </ScrollView>
 
       {/* Render the dots, only if not on the last screen */}

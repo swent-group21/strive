@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
+import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
+import { isFriend, isRequested } from "@/src/models/firebase/GetFirestoreCtrl";
+import {
+  addFriend,
+  removeFriendRequest,
+} from "@/src/models/firebase/SetFirestoreCtrl";
 
 /**
  * List of filtered users ViewModel helps display the component
@@ -10,26 +15,24 @@ import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
  */
 export function useListOfFilteredUsersViewModel({
   filteredUsers = [],
-  firestoreCtrl,
   uid,
 }: {
   readonly filteredUsers: DBUser[];
-  readonly firestoreCtrl: FirestoreCtrl;
   readonly uid: string;
 }) {
   const [userStatuses, setUserStatuses] = useState<{
-    [key: string]: { isFriend: boolean; isRequested: boolean };
+    [key: string]: { isFriendB: boolean; isRequestedB: boolean };
   }>({});
 
   // Fetch user statuses with respect to the current user (friend, requested, or not)
   const fetchUserStatuses = async () => {
     const statuses: {
-      [key: string]: { isFriend: boolean; isRequested: boolean };
+      [key: string]: { isFriendB: boolean; isRequestedB: boolean };
     } = {};
     for (const user of filteredUsers) {
-      const isFriend = await firestoreCtrl.isFriend(uid, user.uid);
-      const isRequested = await firestoreCtrl.isRequested(uid, user.uid);
-      statuses[user.uid] = { isFriend, isRequested };
+      const isFriendB = await isFriend(uid, user.uid);
+      const isRequestedB = await isRequested(uid, user.uid);
+      statuses[user.uid] = { isFriendB, isRequestedB };
     }
     setUserStatuses(statuses);
   };
@@ -44,11 +47,11 @@ export function useListOfFilteredUsersViewModel({
   // Handle add friend request
   const handleAdd = async (userId: string) => {
     try {
-      await firestoreCtrl.addFriend(uid, userId);
+      await addFriend(uid, userId);
       console.info("Friend request sent");
       setUserStatuses((prev) => ({
         ...prev,
-        [userId]: { ...prev[userId], isRequested: true },
+        [userId]: { ...prev[userId], isRequestedB: true },
       }));
     } catch (error) {
       console.error("Error adding friend:", error);
@@ -58,11 +61,11 @@ export function useListOfFilteredUsersViewModel({
   // Handle remove friend request
   const handleRemove = async (userId: string) => {
     try {
-      await firestoreCtrl.removeFriendRequest(uid, userId);
+      await removeFriendRequest(uid, userId);
       console.log("Friend request canceled");
       setUserStatuses((prev) => ({
         ...prev,
-        [userId]: { ...prev[userId], isRequested: false },
+        [userId]: { ...prev[userId], isRequestedB: false },
       }));
     } catch (error) {
       console.error("Error canceling friend request:", error);

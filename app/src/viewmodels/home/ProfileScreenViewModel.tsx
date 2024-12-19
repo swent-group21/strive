@@ -1,25 +1,28 @@
 import { useEffect, useState } from "react";
 import { launchImageLibraryAsync } from "expo-image-picker";
-import FirestoreCtrl, { DBUser } from "../../models/firebase/FirestoreCtrl";
+import { DBUser } from "../../models/firebase/TypeFirestoreCtrl";
 import { logOut, resetEmail, resetPassword } from "@/types/Auth";
+import { getProfilePicture } from "@/src/models/firebase/GetFirestoreCtrl";
+import {
+  setName,
+  setProfilePicture,
+} from "@/src/models/firebase/SetFirestoreCtrl";
 
 /**
  * ViewModel for the profile screen.
  * @param user : user object
  * @param setUser : set user object
- * @param firestoreCtrl : FirestoreCtrl object
  * @param navigation : navigation object
  * @returns : functions for the profile screen
  */
 export function useProfileScreenViewModel(
   user: DBUser,
   setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
-  firestoreCtrl: FirestoreCtrl,
   navigation: any,
 ): {
   userIsGuest: boolean;
   name: string;
-  setName: React.Dispatch<React.SetStateAction<string>>;
+  sName: React.Dispatch<React.SetStateAction<string>>;
   image: string | null;
   pickImage: () => Promise<void>;
   upload: () => Promise<void>;
@@ -30,7 +33,7 @@ export function useProfileScreenViewModel(
 } {
   const userIsGuest = user.name === "Guest";
 
-  const [name, setName] = useState<string>(user.name);
+  const [name, sName] = useState<string>(user.name);
   const [image, setImage] = useState<string | null>(user.image_id ?? null);
 
   const navigateGoBack = () => navigation.goBack();
@@ -38,11 +41,12 @@ export function useProfileScreenViewModel(
   // Fetch the user's profile picture
   useEffect(() => {
     const fetchProfilePicture = async () => {
-      const profilePicture = await firestoreCtrl.getProfilePicture(user.uid);
+      const profilePicture = await getProfilePicture(user.uid);
+      console.log("Profile picture: ", profilePicture);
       setImage(profilePicture || null);
     };
     fetchProfilePicture();
-  }, [user.uid, firestoreCtrl]);
+  }, [user.uid]);
 
   // Pick an image from the user's gallery
   const pickImage = async () => {
@@ -69,9 +73,10 @@ export function useProfileScreenViewModel(
     }
 
     try {
-      await firestoreCtrl.setName(user.uid, name, setUser);
+      await setName(user.uid, name, setUser);
       if (image) {
-        await firestoreCtrl.setProfilePicture(user.uid, image, setUser);
+        await setProfilePicture(user.uid, image, setUser);
+        console.log("Image after setProfilePicture: ", image);
       }
     } catch (error) {
       console.error("Error changing profile: ", error);
@@ -86,7 +91,7 @@ export function useProfileScreenViewModel(
   return {
     userIsGuest,
     name,
-    setName,
+    sName,
     image,
     pickImage,
     upload,

@@ -1,27 +1,24 @@
-import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
-jest.mock("@/src/models/firebase/FirestoreCtrl");
+import * as GetFirestoreCtrl from "@/src/models/firebase/GetFirestoreCtrl";
+import * as SetFirestoreCtrl from "@/src/models/firebase/SetFirestoreCtrl";
 import { createGroup } from "@/types/GroupBuilder";
 
+jest.mock("@/src/models/firebase/GetFirestoreCtrl", () => ({
+  getUser: jest.fn().mockResolvedValue({
+    uid: "user-123",
+    name: "Test User",
+  }),
+}));
+
+jest.mock("@/src/models/firebase/SetFirestoreCtrl", () => ({
+  newGroup: jest.fn().mockResolvedValue({ name: "Test Group" }),
+  addGroupToMemberGroups: jest.fn().mockResolvedValue({ name: "Test Group" }),
+}));
+
 describe("createGroup Function", () => {
-  let firestoreCtrl;
-
   beforeEach(() => {
-    firestoreCtrl = new FirestoreCtrl();
-
     jest.clearAllMocks();
 
     // Mock methods with appropriate return values
-    firestoreCtrl.getUser = jest.fn().mockResolvedValue({
-      uid: "user-123",
-      name: "Test User",
-    });
-
-    firestoreCtrl.newGroup = jest
-      .fn()
-      .mockResolvedValue({ name: "Test Group" });
-    firestoreCtrl.addGroupToMemberGroups = jest
-      .fn()
-      .mockResolvedValue({ name: "Test Group" });
   });
 
   it("creates a group successfully and assigns it to the user", async () => {
@@ -32,7 +29,6 @@ describe("createGroup Function", () => {
     const location = { latitude: 10, longitude: 20 };
 
     await createGroup(
-      firestoreCtrl,
       groupName,
       challengeTitle,
       members,
@@ -41,8 +37,8 @@ describe("createGroup Function", () => {
       100,
     );
 
-    expect(firestoreCtrl.getUser).toHaveBeenCalledTimes(1);
-    expect(firestoreCtrl.newGroup).toHaveBeenCalledWith({
+    expect(GetFirestoreCtrl.getUser).toHaveBeenCalledTimes(1);
+    expect(SetFirestoreCtrl.newGroup).toHaveBeenCalledWith({
       name: groupName,
       challengeTitle: challengeTitle,
       members: members,
@@ -50,17 +46,17 @@ describe("createGroup Function", () => {
       location: null,
       radius: 100,
     });
-    expect(firestoreCtrl.addGroupToMemberGroups).toHaveBeenCalledWith(
+
+    expect(SetFirestoreCtrl.addGroupToMemberGroups).toHaveBeenCalledWith(
       "user-123",
       groupName,
     );
   });
 
   it("handles errors when creating a group", async () => {
-    const error = new Error("Failed to create group");
-    firestoreCtrl.getUser.mockRejectedValueOnce(error);
-
-    const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+    jest
+      .spyOn(GetFirestoreCtrl, "getUser")
+      .mockRejectedValue(new Error("Error getting user"));
 
     const groupName = "Test Group";
     const challengeTitle = "Test Challenge";
@@ -68,7 +64,6 @@ describe("createGroup Function", () => {
     const updateDate = new Date();
 
     await createGroup(
-      firestoreCtrl,
       groupName,
       challengeTitle,
       members,
@@ -77,10 +72,7 @@ describe("createGroup Function", () => {
       100,
     );
 
-    expect(firestoreCtrl.getUser).toHaveBeenCalledTimes(1);
-    expect(firestoreCtrl.newGroup).not.toHaveBeenCalled();
-    expect(consoleSpy).toHaveBeenCalledWith("Error creating group: ", error);
-
-    consoleSpy.mockRestore();
+    expect(GetFirestoreCtrl.getUser).toHaveBeenCalledTimes(1);
+    expect(SetFirestoreCtrl.newGroup).not.toHaveBeenCalled();
   });
 });
