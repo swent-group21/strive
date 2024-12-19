@@ -26,6 +26,7 @@ export function useMapScreenViewModel(
   navigation: any,
   firstLocation: GeoPoint | undefined,
   challengeArea: { center: GeoPoint; radius: number } | undefined,
+  group_id: string,
 ): {
   permission: boolean;
   userLocation: GeoPoint | undefined;
@@ -95,7 +96,9 @@ export function useMapScreenViewModel(
           await firestoreCtrl.getPostsByChallengeTitle(challengeTitle);
         const filteredChallenges = challengesData.filter(
           (challenge) =>
-            challenge.location !== undefined && challenge.location !== null,
+            challenge.location !== undefined &&
+            challenge.location !== null &&
+            challenge.group_id == group_id,
         );
         setChallengesWithLocation(filteredChallenges);
       } catch (error) {

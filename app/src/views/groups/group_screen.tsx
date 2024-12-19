@@ -2,13 +2,13 @@ import React from "react";
 import { Dimensions, StyleSheet, ViewStyle } from "react-native";
 import { TopBar } from "@/src/views/components/navigation/top_bar";
 import { Challenge } from "@/src/views/components/posts/challenge";
-import GroupIcon from "@/src/views/components/navigation/group_icon";
+import GroupIcon from "@/src/views/components/groups/group_icon";
 import { ThemedScrollView } from "@/src/views/components/theme/themed_scroll_view";
 import { ThemedView } from "@/src/views/components/theme/themed_view";
 import { BottomBar } from "@/src/views/components/navigation/bottom_bar";
 import { ThemedText } from "@/src/views/components/theme/themed_text";
 import { ThemedTextButton } from "@/src/views/components/theme/themed_text_button";
-import useGroupScreenViewModel from "@/src/viewmodels/group/GroupScreenViewModel";
+import { useGroupScreenViewModel } from "@/src/viewmodels/groups/GroupScreenViewModel";
 import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 const { width, height } = Dimensions.get("window");
@@ -32,7 +32,7 @@ export default function GroupScreen({
     groupId,
     groupCenter,
     groupRadius,
-  } = useGroupScreenViewModel(user, firestoreCtrl, route);
+  } = useGroupScreenViewModel({ user, firestoreCtrl, route });
 
   return (
     <ThemedView style={styles.bigContainer} testID="group-screen">
@@ -74,7 +74,7 @@ export default function GroupScreen({
         >
           <ThemedTextButton
             style={styles.createGroupButton}
-            onPress={() => navigation.navigate("CreateGroup")}
+            onPress={() => navigation.navigate("JoinGroup")}
             text="+"
             textStyle={styles.createGroupText}
             textColorType="textOverLight"
@@ -124,6 +124,7 @@ export default function GroupScreen({
           navigation.navigate("MapScreen", {
             location: groupCenter,
             challengeArea: { center: groupCenter, radius: groupRadius },
+            group_id: groupId,
           })
         }
         centerAction={() =>

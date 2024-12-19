@@ -14,7 +14,7 @@ import { GeoPoint } from "firebase/firestore";
  * @param firestoreCtrl : FirestoreCtrl object
  * @returns : groupName, setGroupName, challengeTitle, setChallengeTitle, and makeGroup
  */
-export default function CreateGroupViewModel({
+export function CreateGroupViewModel({
   user,
   navigation,
   firestoreCtrl,

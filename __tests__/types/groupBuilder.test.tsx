@@ -19,7 +19,7 @@ describe("createGroup Function", () => {
     firestoreCtrl.newGroup = jest
       .fn()
       .mockResolvedValue({ name: "Test Group" });
-    firestoreCtrl.addGroupToMemberGroups = jest
+    firestoreCtrl.addGroupToUser = jest
       .fn()
       .mockResolvedValue({ name: "Test Group" });
   });
@@ -50,7 +50,7 @@ describe("createGroup Function", () => {
       location: null,
       radius: 100,
     });
-    expect(firestoreCtrl.addGroupToMemberGroups).toHaveBeenCalledWith(
+    expect(firestoreCtrl.addGroupToUser).toHaveBeenCalledWith(
       "user-123",
       groupName,
     );

@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from "@testing-library/react-native";
-import CreateGroupViewModel from "@/src/viewmodels/group/CreateGroupViewModel";
+import { CreateGroupViewModel } from "@/src/viewmodels/groups/CreateGroupViewModel";
 import { createGroup } from "@/types/GroupBuilder";
 import FirestoreCtrl from "@/src/models/firebase/FirestoreCtrl";
 
