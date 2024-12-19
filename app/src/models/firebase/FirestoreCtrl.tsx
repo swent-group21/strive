@@ -726,7 +726,7 @@ export default class FirestoreCtrl {
       if (networkState.isConnected && networkState.isInternetReachable) {
         const duplicate_query = query(
           collection(firestore, "groups"),
-          where("gid", "==", groupData.gid),
+          where("name", "==", groupData.name),
         );
         const docSnap = await getDocs(duplicate_query);
         if (!docSnap.empty) {
@@ -788,18 +788,35 @@ export default class FirestoreCtrl {
   }
 
   /**
-   * Update a group in firestore with last post date
-   * @param gid The ID of the group to update.
-   * @param updateTime The time of the last post.
-   * @returns A promise that resolves when the group is updated.
+   * Update a user in firestore with new group
+   * @param uid The ID of the user to update.
+   * @param group_name The group to add to user's data.
+   * @returns A promise that resolves when the group is added to user's info.
    */
-  async addGroupToMemberGroups(uid: string, group_name: string): Promise<void> {
+  async addGroupToUser(uid: string, group_name: string): Promise<void> {
     try {
       await updateDoc(doc(firestore, "users", uid), {
         groups: arrayUnion(group_name),
       });
     } catch (error) {
-      console.error("Error setting name: ", error);
+      console.error("Error adding group to user's groups: ", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a group in firetore to add a new member
+   * @param gid The ID of the group to update.
+   * @param uid The ID of the user to add to the group.
+   * @returns A promise that resolves when the user is added to the group.
+   */
+  async addMemberToGroup(gid: string, uid: string): Promise<void> {
+    try {
+      await updateDoc(doc(firestore, "groups", gid), {
+        members: arrayUnion(uid),
+      });
+    } catch (error) {
+      console.error("Error adding member to group: ", error);
       throw error;
     }
   }
@@ -837,6 +854,29 @@ export default class FirestoreCtrl {
   }
 
   /**
+   * Retrieves all groups from Firestore.
+   * @returns A promise that resolves to an array of groups.
+   * */
+  async getAllGroups(): Promise<DBGroup[]> {
+    try {
+      const groupsRef = collection(firestore, "groups");
+      const querySnapshot = await getDocs(groupsRef);
+      const groups = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          gid: doc.id,
+          ...data,
+        } as DBGroup;
+      });
+
+      return groups;
+    } catch (error) {
+      console.error("Error getting all groups: ", error);
+      throw error;
+    }
+  }
+
+  /**
    * Get a group from firestore
    * @param gid The ID of the group to get.
    * @returns A promise that resolves to the group data.
@@ -846,7 +886,11 @@ export default class FirestoreCtrl {
       const groupRef = doc(firestore, "groups", gid);
       const docSnap = await getDoc(groupRef);
       if (docSnap.exists()) {
-        return docSnap.data() as DBGroup;
+        const data = docSnap.data();
+        return {
+          gid: docSnap.id,
+          ...data,
+        } as DBGroup;
       } else {
         throw new Error("Group not found.");
       }
@@ -1229,5 +1273,44 @@ export default class FirestoreCtrl {
     }
 
     return Array.from(friendSuggestions).slice(0, 10);
+  }
+
+  /**
+   * Get groups suggestions for a user based on its friends.
+   * @param uid The UID of the user.
+   * @returns An array of groups suggestions.
+   */
+  async getGroupSuggestions(uid: string): Promise<DBGroup[]> {
+    const allGroups = await this.getAllGroups();
+    const userFriends = await this.getFriends(uid);
+
+    const groupsSuggestions = new Set<DBGroup>();
+
+    // get groups of friends
+    for (const friend of userFriends) {
+      const groupsOfFriend = await this.getGroupsByUserId(friend.uid);
+      for (const gof of groupsOfFriend) {
+        // if the user is not already in the group and the group is not already suggested
+        if (!gof.members.includes(uid)) {
+          groupsSuggestions.add(gof);
+        }
+      }
+    }
+
+    // complete with random groups
+    const neededSuggestions = 10 - groupsSuggestions.size;
+    if (neededSuggestions > 0) {
+      const randomGroups = allGroups
+        .filter(
+          (group) =>
+            !group.members.includes(uid) &&
+            !Array.from(groupsSuggestions).some((g) => g.gid === group.gid),
+        )
+        .slice(0, neededSuggestions);
+
+      randomGroups.forEach((user) => groupsSuggestions.add(user));
+    }
+
+    return Array.from(groupsSuggestions).slice(0, 10);
   }
 }

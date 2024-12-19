@@ -70,6 +70,7 @@ describe("useMapScreenViewModel", () => {
         mockNavigation,
         undefined,
         undefined,
+        "home",
       ),
     );
 
@@ -98,6 +99,7 @@ describe("useMapScreenViewModel", () => {
         mockNavigation,
         undefined_firstLocation,
         undefined,
+        "home",
       ),
     );
 
@@ -128,6 +130,7 @@ describe("useMapScreenViewModel", () => {
         mockNavigation,
         undefined_firstLocation,
         undefined,
+        "home",
       ),
     );
 
@@ -154,6 +157,7 @@ describe("useMapScreenViewModel", () => {
         date: mockDate,
         location: new GeoPoint(48.8566, 2.3522),
         challenge_description: "Description test",
+        group_id: "home",
       },
       {
         challenge_id: "2",
@@ -162,6 +166,7 @@ describe("useMapScreenViewModel", () => {
         date: mockDate,
         location: null, // Invalid location
         challenge_description: "Description test",
+        group_id: "group1",
       },
     ];
 
@@ -177,6 +182,7 @@ describe("useMapScreenViewModel", () => {
         mockNavigation,
         undefined_firstLocation,
         undefined,
+        "home",
       ),
     );
 
@@ -206,6 +212,7 @@ describe("useMapScreenViewModel", () => {
         mockNavigation,
         undefined_firstLocation,
         undefined,
+        "home",
       ),
     );
 
@@ -229,6 +236,7 @@ describe("useMapScreenViewModel", () => {
         mockNavigation,
         undefined_firstLocation,
         undefined,
+        "home",
       ),
     );
 

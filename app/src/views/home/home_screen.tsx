@@ -18,7 +18,7 @@ import { ThemedText } from "@/src/views/components/theme/themed_text";
 import { ThemedTextButton } from "@/src/views/components/theme/themed_text_button";
 import { useHomeScreenViewModel } from "@/src/viewmodels/home/HomeScreenViewModel";
 import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
-import GroupIcon from "@/src/views/components/navigation/group_icon";
+import GroupIcon from "@/src/views/components/groups/group_icon";
 
 const { width, height } = Dimensions.get("window");
 
@@ -134,24 +134,25 @@ export default function HomeScreen({
               navigation={navigation}
               firestoreCtrl={firestoreCtrl}
               key={index}
-              testID={`group-id-${index}`}
+              testID={`group-id-${group.name}`}
             />
           ))}
           <ThemedView
             style={styles.createGroupContainer}
-            testID="create-group-button"
+            testID="join-group-button"
           >
             <ThemedTextButton
               style={styles.createGroupButton}
               onPress={() =>
                 userIsGuest
-                  ? handleRestrictedAccess("CreateGroup")
-                  : navigation.navigate("CreateGroup")
+                  ? handleRestrictedAccess("JoinGroup")
+                  : navigation.navigate("JoinGroup")
               }
               text="+"
               textStyle={styles.createGroupText}
               textColorType="textOverLight"
               colorType="backgroundSecondary"
+              testID="join-group-pressable-button"
             />
           </ThemedView>
         </ThemedScrollView>
@@ -213,7 +214,7 @@ export default function HomeScreen({
         ListHeaderComponent={
           <ChallengeDescription
             dBChallengeDescription={titleChallenge}
-            onTimerFinished={() => console.info("Timer Finished")}
+            onTimerFinished={() => ({})}
             testID={`description-id`}
           />
         }

@@ -1,7 +1,7 @@
 import React from "react";
 import { render, waitFor } from "@testing-library/react-native";
-import GroupScreen from "@/src/views/group/GroupScreen";
-import useGroupScreenViewModel from "@/src/viewmodels/group/GroupScreenViewModel";
+import GroupScreen from "@/src/views/groups/group_screen";
+import { useGroupScreenViewModel } from "@/src/viewmodels/groups/GroupScreenViewModel";
 import FirestoreCtrl, {
   DBChallenge,
   DBUser,
@@ -35,15 +35,11 @@ const mockUser: DBUser = {
   createdAt: new Date(),
 };
 
-jest.mock("@/src/viewmodels/group/GroupScreenViewModel", () =>
-  jest.fn(() => ({
-    groupChallenges: mockGroupChallenges,
-    otherGroups: mockOtherGroups,
-    groupName: "Test Name",
-    groupChallengeTitle: "Title Test",
-    groupId: "1234",
-  })),
-);
+// Mock the useGroupScreenViewModel hook
+jest.mock("@/src/viewmodels/groups/GroupScreenViewModel", () => ({
+  useGroupScreenViewModel: jest.fn(),
+}));
+
 jest.mock("expo-font", () => ({
   useFonts: jest.fn(() => [true]),
   isLoaded: jest.fn(() => true),
@@ -60,8 +56,21 @@ jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
 const mockFirestoreCtrl = new FirestoreCtrl();
 
 describe("Group Screen renders challenges", () => {
+  const mockUseGroupScreenViewModel =
+    require("@/src/viewmodels/groups/GroupScreenViewModel").useGroupScreenViewModel;
+
   beforeEach(() => {
     jest.clearAllMocks();
+
+    mockUseGroupScreenViewModel.mockReturnValue({
+      groupChallenges: mockGroupChallenges,
+      otherGroups: mockOtherGroups,
+      groupName: "Test Name",
+      groupChallengeTitle: "Title Test",
+      groupId: "1234",
+      groupCenter: { latitude: 0, longitude: 0 },
+      groupRadius: 100,
+    });
   });
 
   afterEach(() => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react-native";
-import CreateGroupScreen from "@/src/views/group/CreateGroupScreen";
+import CreateGroupScreen from "@/src/views/groups/create_group_screen";
 import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 
 // Mock de useGroupScreenViewModel
@@ -8,16 +8,11 @@ import FirestoreCtrl, { DBUser } from "@/src/models/firebase/FirestoreCtrl";
 const mockSetGroupName = jest.fn();
 const mockSetChallengeTitle = jest.fn();
 const mockMakeGroup = jest.fn();
+const setRadius = jest.fn();
 
-jest.mock("@/src/viewmodels/group/CreateGroupViewModel", () =>
-  jest.fn(() => ({
-    groupName: "Test group",
-    setGroupName: mockSetGroupName,
-    challengeTitle: "Test challenge title",
-    setChallengeTitle: mockSetChallengeTitle,
-    makeGroup: mockMakeGroup,
-  })),
-);
+jest.mock("@/src/viewmodels/groups/CreateGroupViewModel", () => ({
+  CreateGroupViewModel: jest.fn(),
+}));
 
 jest.mock("@/src/models/firebase/FirestoreCtrl", () => {
   return jest.fn().mockImplementation(() => ({
@@ -38,9 +33,23 @@ const mockUser: DBUser = {
 
 describe("Create Group Screen renders", () => {
   const mockFirestoreCtrl = new FirestoreCtrl();
+  const mockCreateGroupViewModel =
+    require("@/src/viewmodels/groups/CreateGroupViewModel").CreateGroupViewModel;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockCreateGroupViewModel.mockReturnValue({
+      groupName: "Test group",
+      setGroupName: mockSetGroupName,
+      challengeTitle: "Test challenge title",
+      setChallengeTitle: mockSetChallengeTitle,
+      makeGroup: mockMakeGroup,
+      setRadius: setRadius,
+      radius: 5000,
+      MIN_RADIUS: 2000,
+      MAX_RADIUS: 50000,
+      permission: "AUTHORIZED",
+    });
   });
 
   afterEach(() => {
@@ -98,5 +107,67 @@ describe("Create Group Screen renders", () => {
 
     fireEvent.press(getByTestId("bottom-right-icon-arrow-forward"));
     expect(mockMakeGroup).toHaveBeenCalled();
+  });
+
+  it("renders the radius input and the slider", () => {
+    const { getByTestId } = render(
+      <CreateGroupScreen
+        user={mockUser}
+        navigation={{}}
+        firestoreCtrl={mockFirestoreCtrl}
+      />,
+    );
+    expect(getByTestId("Radius-Input")).toBeTruthy();
+    expect(getByTestId("Radius-Slider")).toBeTruthy();
+  });
+
+  it("displays correct message when waiting for authorization", () => {
+    mockCreateGroupViewModel.mockReturnValue({
+      groupName: "Test group",
+      setGroupName: mockSetGroupName,
+      challengeTitle: "Test challenge title",
+      setChallengeTitle: mockSetChallengeTitle,
+      makeGroup: mockMakeGroup,
+      setRadius: setRadius,
+      radius: 5000,
+      MIN_RADIUS: 2000,
+      MAX_RADIUS: 50000,
+      permission: "WAITING",
+    });
+
+    const { getByTestId } = render(
+      <CreateGroupScreen
+        user={mockUser}
+        navigation={{}}
+        firestoreCtrl={mockFirestoreCtrl}
+      />,
+    );
+
+    expect(getByTestId("permission-waiting-text")).toBeTruthy();
+  });
+
+  it("displays correct message when authorization refused", () => {
+    mockCreateGroupViewModel.mockReturnValue({
+      groupName: "Test group",
+      setGroupName: mockSetGroupName,
+      challengeTitle: "Test challenge title",
+      setChallengeTitle: mockSetChallengeTitle,
+      makeGroup: mockMakeGroup,
+      setRadius: setRadius,
+      radius: 5000,
+      MIN_RADIUS: 2000,
+      MAX_RADIUS: 50000,
+      permission: "REFUSED",
+    });
+
+    const { getByTestId } = render(
+      <CreateGroupScreen
+        user={mockUser}
+        navigation={{}}
+        firestoreCtrl={mockFirestoreCtrl}
+      />,
+    );
+
+    expect(getByTestId("permission-denied-text")).toBeTruthy();
   });
 });

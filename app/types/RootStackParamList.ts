@@ -25,4 +25,5 @@ export type RootStackParamList = {
     currentGroup: DBGroup;
   };
   CreateGroup: undefined;
+  JoinGroup: undefined;
 };

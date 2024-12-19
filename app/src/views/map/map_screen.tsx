@@ -31,6 +31,7 @@ export default function MapScreen({
 }) {
   const firstLocation = route.params?.location;
   const geoRestriction = route.params?.challengeArea;
+  const group_id = route.params?.group_id ?? "home";
   const {
     userLocation,
     challengesWithLocation,
@@ -43,9 +44,8 @@ export default function MapScreen({
     navigation,
     firstLocation,
     geoRestriction,
+    group_id,
   );
-  console.info("--> AREA", challengeArea);
-  console.info("--> CHALLENGES", challengesWithLocation);
 
   if (userLocation === undefined || challengesWithLocation.length === 0) {
     return (

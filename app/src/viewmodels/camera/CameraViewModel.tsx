@@ -53,8 +53,8 @@ export default function useCameraViewModel(
       endDate: new Date(2024, 1, 1, 0, 0, 0, 0),
     });
 
-  let group_id = "home";
-  let isInHome = true;
+  let group_id = route.params?.group_id ?? "home";
+  let isInHome = group_id == "home";
   console.log("group_id: ", group_id);
 
   // Go back to the previous screen
@@ -79,15 +79,13 @@ export default function useCameraViewModel(
 
   // Take a picture with the camera
   const takePicture = async () => {
-    if (camera.current) {
-      try {
-        const capturedPicture =
-          await camera.current?.takePictureAsync(cameraPictureOptions);
-        setPicture(capturedPicture);
-        setIsCameraEnabled(false);
-      } catch (error) {
-        console.log(error);
-      }
+    try {
+      const capturedPicture =
+        await camera.current?.takePictureAsync(cameraPictureOptions);
+      setPicture(capturedPicture);
+      setIsCameraEnabled(false);
+    } catch (error) {
+      console.log(error);
     }
   };
 

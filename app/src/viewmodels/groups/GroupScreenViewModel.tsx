@@ -13,11 +13,15 @@ import { GeoPoint } from "firebase/firestore";
  * @param route : the route object
  * @returns : groupChallenges, otherGroups, groupName, groupChallengeTitle, and groupId
  */
-export default function useGroupScreenViewModel(
-  user: DBUser,
-  firestoreCtrl: FirestoreCtrl,
-  route: any,
-): {
+export function useGroupScreenViewModel({
+  user,
+  firestoreCtrl,
+  route,
+}: {
+  user: DBUser;
+  firestoreCtrl: FirestoreCtrl;
+  route: any;
+}): {
   groupChallenges: DBChallenge[];
   otherGroups: DBGroup[];
   groupName: string;

@@ -132,13 +132,15 @@ const styles = StyleSheet.create({
     height: height * 0.08,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
-    padding: 10,
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
     backgroundColor: "transparent",
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    //width: width * 0.5,
+    textAlign: "center",
   },
   placeholder: {
     width: 30,
