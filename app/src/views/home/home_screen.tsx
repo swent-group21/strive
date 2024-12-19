@@ -109,7 +109,7 @@ export default function HomeScreen({
         leftAction={() => handleRestrictedAccess("Friends")}
         rightIcon={
           userIsGuest || !user.image_id
-            ? "person-circle-outline"
+            ? user.name
             : user.image_id
         }
         rightAction={() => handleRestrictedAccess("Profile")}
