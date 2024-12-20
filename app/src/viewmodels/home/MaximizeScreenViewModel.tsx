@@ -36,6 +36,7 @@ export function useMaximizeScreenViewModel(
   const [isLiked, setIsLiked] = useState(false);
   const [groupCenter, setGroupCenter] = useState<GeoPoint | undefined>();
   const [groupRadius, setGroupRadius] = useState<number | undefined>();
+  const [isLoading, setIsLoading] = useState(false);
   const [icon, setIcon] = useState<string>("person-circle-outline");
   const [image, setImage] = useState<string>("https://via.placeholder.com/300");
 
@@ -127,13 +128,15 @@ export function useMaximizeScreenViewModel(
         post_id: challenge.challenge_id ?? "",
         uid: currentUserId,
       };
+      setIsLoading(true);
       await appendComment(commentData);
       setCommentList([...commentList, commentData]);
       setCommentText("");
+      setIsLoading(false);
     }
   };
 
-  const postDate: any = challenge.date ? challenge.date : new Date();
+  const postDate: Date = challenge.date ? challenge.date : new Date();
   const postCaption =
     challenge.caption == "" ? "Secret Challenge" : challenge.caption;
 
@@ -151,6 +154,7 @@ export function useMaximizeScreenViewModel(
     navigateGoBack,
     groupCenter,
     groupRadius,
+    isLoading,
     icon,
     image,
     showGuestPopup,

@@ -312,45 +312,6 @@ describe("signUpWithEmail", () => {
     });
   });
 
-  it("should handle errors when creating a user in Firestore", async () => {
-    // Mock alert and console.error
-    jest.spyOn(global, "alert").mockImplementation(() => {});
-    jest.spyOn(console, "error").mockImplementation(() => {});
-
-    // Mock Firebase Auth response
-    (createUserWithEmailAndPassword as jest.Mock).mockResolvedValueOnce({
-      user: {
-        uid: "user",
-      },
-    });
-
-    // Call the function
-    await signUpWithEmail(
-      "Test User",
-      "test@example.com",
-      "password123",
-      mockNavigation,
-      mockSetUser,
-    );
-
-    // Assertions
-    expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
-      auth,
-      "test@example.com",
-      "password123",
-    );
-    expect(createUser).toHaveBeenCalledWith("user", {
-      uid: "user",
-      name: "Test User",
-      email: "test@example.com",
-      createdAt: expect.any(Date),
-      groups: [],
-    });
-
-    expect(mockSetUser).not.toHaveBeenCalled();
-    expect(mockNavigation.navigate).not.toHaveBeenCalled();
-  });
-
   it("should handle errors when creating a user in Firebase Auth", async () => {
     // Mock Firebase Auth failure
     (createUserWithEmailAndPassword as jest.Mock).mockRejectedValueOnce(

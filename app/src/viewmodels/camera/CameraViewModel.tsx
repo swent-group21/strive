@@ -52,6 +52,7 @@ export default function useCameraViewModel(navigation: any, route: any) {
       description: "Challenge Description",
       endDate: new Date(2024, 1, 1, 0, 0, 0, 0),
     });
+  const [isLoading, setIsLoading] = useState(false);
 
   let group_id = "home";
   let isInHome = true;
@@ -135,7 +136,10 @@ export default function useCameraViewModel(navigation: any, route: any) {
         }
 
         // Check if the location is within the group's area
+        setIsLoading(true);
         const group: DBGroup = await getGroup(group_id);
+        setIsLoading(false);
+
         if (!isInGroupArea(location, group)) {
           alert("You need to be in the group's area to create a challenge");
           navigation.navigate("GroupScreen", { currentGroup: group });
@@ -143,9 +147,9 @@ export default function useCameraViewModel(navigation: any, route: any) {
         }
       }
 
-      console.log("Picture URI: ", picture?.uri);
+      setIsLoading(true);
       const imageId = await uploadImage(picture?.uri);
-      console.log("image id making challenge: ", imageId);
+
       await createChallenge(
         caption,
         isLocationEnabled ? location : null,
@@ -160,7 +164,9 @@ export default function useCameraViewModel(navigation: any, route: any) {
         const group: DBGroup = await getGroup(group_id);
         navigation.navigate("GroupScreen", { currentGroup: group });
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.error("Unable to create challenge", error);
       return error;
     }
@@ -186,6 +192,7 @@ export default function useCameraViewModel(navigation: any, route: any) {
     makeChallenge,
     goBack,
     isInHome,
+    isLoading,
   };
 }
 

@@ -95,32 +95,29 @@ export const signUpWithEmail = async (
   setUser: React.Dispatch<React.SetStateAction<DBUser | null>>,
 ) => {
   if (userName && email && password) {
-    // Creates user in auth
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const userData: DBUser = {
-          uid: userCredential.user.uid,
-          name: userName,
-          email: email,
-          createdAt: new Date(),
-          groups: [],
-        };
+    try {
+      // Creates user in auth
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      const userData: DBUser = {
+        uid: userCredential.user.uid,
+        name: userName,
+        email: email,
+        createdAt: new Date(),
+        groups: [],
+      };
 
-        // Creates user in firestore
-        createUser(userCredential.user.uid, userData)
-          .then(() => {
-            setUser(userData);
-            navigation.navigate("SetUser");
-          })
-          .catch((error) => {
-            alert("Failed to create user: " + error);
-            console.error("Failed to create user: ", error);
-          });
-      })
-      .catch((error) => {
-        alert("Failed to create user: " + error);
-        console.error("Failed to create user: ", error);
-      });
+      // Creates user in firestore
+      await createUser(userCredential.user.uid, userData);
+      setUser(userData);
+      navigation.navigate("SetUser");
+    } catch (error) {
+      alert("Failed to create user: " + error);
+      console.error("Failed to create user: ", error);
+    }
   } else {
     alert("Please fill in all fields.");
     console.error("Please fill in all fields.");

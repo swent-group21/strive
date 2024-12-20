@@ -287,4 +287,38 @@ describe("MaximizeScreen UI Tests", () => {
     // Check for post description
     expect(getByText("This is a comment")).toBeTruthy();
   });
+
+  it("renders loading indicator when loading", () => {
+    jest
+      .spyOn(
+        require("@/src/viewmodels/home/MaximizeScreenViewModel"),
+        "useMaximizeScreenViewModel",
+      )
+      .mockReturnValue({
+        commentText: "",
+        setCommentText: jest.fn(),
+        commentList: [],
+        postUser: { name: "Post User" },
+        likeList: [],
+        isLiked: false,
+        toggleLike: jest.fn(),
+        addComment: jest.fn(),
+        postDate: new Date(),
+        postImage: "test_image",
+        postCaption: "Test Challenge",
+        navigateGoBack: jest.fn(),
+        userProfilePicture: "test_pp",
+        isLoading: true,
+      });
+
+    const { getByTestId } = render(
+      <MaximizeScreen
+        user={mockUser}
+        navigation={mockNavigation}
+        route={mockRoute}
+      />,
+    );
+
+    expect(getByTestId("loading-indicator")).toBeTruthy();
+  });
 });

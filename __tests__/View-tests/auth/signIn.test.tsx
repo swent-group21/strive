@@ -105,4 +105,22 @@ describe("SignInScreen Tests", () => {
     fireEvent.press(forgotPasswordButton);
     expect(mockNavigation.navigate).toHaveBeenCalledWith("ForgotPassword");
   });
+
+  it("renders loading splash when loading", () => {
+    (SignInViewModel as jest.Mock).mockReturnValue({
+      email: "",
+      password: "",
+      errorMessage: null,
+      handleEmailChange: jest.fn(),
+      handlePasswordChange: jest.fn(),
+      handleSignIn: jest.fn(),
+      isLoading: true,
+    });
+
+    const { getByTestId } = render(
+      <SignInScreen navigation={mockNavigation} setUser={mockSetUser} />,
+    );
+
+    expect(getByTestId("loading-splash")).toBeTruthy();
+  });
 });

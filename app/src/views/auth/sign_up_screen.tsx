@@ -7,6 +7,7 @@ import { ThemedText } from "@/src/views/components/theme/themed_text";
 import { ThemedView } from "@/src/views/components/theme/themed_view";
 import { ThemedScrollView } from "@/src/views/components/theme/themed_scroll_view";
 import useSignUpViewModel from "@/src/viewmodels/auth/SignUpViewModel";
+import { LoadingSplash } from "@/src/views/components/loading/loading_splash";
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,8 +35,17 @@ export default function SignUp({
     isEmailValid,
     isPasswordValid,
     isConfirmPasswordValid,
+    isLoading,
   } = useSignUpViewModel(navigation, setUser);
 
+  if (isLoading) {
+    return (
+      <LoadingSplash
+        loading_text="Creating your account..."
+        testID="loading-splash"
+      />
+    );
+  }
   return (
     <ThemedView style={styles.signUpScreen} testID="sign-up-screen">
       <ThemedView style={styles.ovalShape} colorType="backgroundSecondary" />

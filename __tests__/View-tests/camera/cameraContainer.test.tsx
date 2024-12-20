@@ -39,6 +39,31 @@ describe("Camera Component UI Tests", () => {
     jest.clearAllMocks();
   });
 
+  it("renders LoadingSplash when the camera is loading", () => {
+    (useCameraViewModel as jest.Mock).mockReturnValueOnce({
+      facing: "back",
+      permission: { granted: true },
+      requestPermission: jest.fn(),
+      camera: { current: null },
+      picture: null,
+      isCameraEnabled: false,
+      flashMode: "off",
+      isFlashEnabled: false,
+      zoom: 0,
+      toggleCameraFacing: jest.fn(),
+      toggleFlashMode: jest.fn(),
+      takePicture: jest.fn(),
+      imageUrlGen: jest.fn(),
+      setIsCameraEnabled: jest.fn(),
+      isLoading: true,
+    });
+
+    const { getByTestId } = render(<Camera navigation={{}} route={{}} />);
+
+    const loadingSplash = getByTestId("loading-splash");
+    expect(loadingSplash).toBeTruthy();
+  });
+
   it("renders the CameraView when isCameraEnabled is true", () => {
     const { getByTestId } = render(<Camera navigation={{}} route={{}} />);
 

@@ -13,6 +13,7 @@ import { ThemedTextButton } from "@/src/views/components/theme/themed_text_butto
 import { ThemedText } from "@/src/views/components/theme/themed_text";
 import { DBUser } from "@/src/models/firebase/TypeFirestoreCtrl";
 import SignInViewModel from "@/src/viewmodels/auth/SignInViewModel";
+import { LoadingSplash } from "../components/loading/loading_splash";
 
 const { width, height } = Dimensions.get("window");
 
@@ -36,8 +37,14 @@ export default function SignInScreen({
     handleEmailChange,
     handlePasswordChange,
     handleSignIn,
+    isLoading,
   } = SignInViewModel(navigation, setUser);
 
+  if (isLoading) {
+    return (
+      <LoadingSplash loading_text="Signing you in..." testID="loading-splash" />
+    );
+  }
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}

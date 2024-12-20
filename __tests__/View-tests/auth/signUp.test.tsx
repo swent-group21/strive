@@ -76,4 +76,30 @@ describe("SignUp Screen Tests", () => {
 
     expect(mockHandleSignUp).toHaveBeenCalled();
   });
+
+  it("renders loading splash when loading", () => {
+    (useSignUpViewModel as jest.Mock).mockReturnValue({
+      name: "",
+      surname: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      setName: jest.fn(),
+      setSurname: jest.fn(),
+      setEmail: jest.fn(),
+      setPassword: jest.fn(),
+      setConfirmPassword: jest.fn(),
+      handleSignUp: jest.fn(),
+      isEmailValid: true,
+      isPasswordValid: true,
+      isConfirmPasswordValid: true,
+      isLoading: true,
+    });
+
+    const { getByTestId } = render(
+      <SignUp navigation={mockNavigation} setUser={mockSetUser} />,
+    );
+
+    expect(getByTestId("loading-splash")).toBeTruthy();
+  });
 });

@@ -19,18 +19,21 @@ export default function SignInViewModel(
   handleEmailChange: (text: string) => void;
   handlePasswordChange: (text: string) => void;
   handleSignIn: () => Promise<void>;
+  isLoading: boolean;
 } {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleEmailChange = (text: string) => setEmail(text);
-
   const handlePasswordChange = (text: string) => setPassword(text);
 
   const handleSignIn = async () => {
+    setIsLoading(true);
     try {
       if (!email || !password) {
+        setIsLoading(false);
         setErrorMessage("Email and Password are required.");
         return;
       }
@@ -40,6 +43,7 @@ export default function SignInViewModel(
       console.error("Error during sign-in:", error);
       setErrorMessage("Failed to sign in. Please try again.");
     }
+    setIsLoading(false);
   };
 
   return {
@@ -49,5 +53,6 @@ export default function SignInViewModel(
     handleEmailChange,
     handlePasswordChange,
     handleSignIn,
+    isLoading,
   };
 }

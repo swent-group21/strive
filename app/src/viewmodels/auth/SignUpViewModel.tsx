@@ -28,12 +28,14 @@ export default function useSignUpViewModel(
   isEmailValid: boolean;
   isPasswordValid: boolean;
   isConfirmPasswordValid: boolean;
+  isLoading: boolean;
 } {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const isEmailValid = isValidEmail(email) || email.length === 0;
   const isPasswordValid = password.length >= 8 || password.length === 0;
@@ -54,6 +56,8 @@ export default function useSignUpViewModel(
       return;
     }
 
+    setIsLoading(true);
+    console.log("Signing up with email and password...");
     try {
       await signUpWithEmail(
         `${name} ${surname}`,
@@ -66,6 +70,8 @@ export default function useSignUpViewModel(
       console.error("Error during sign-up: ", error);
       alert("Failed to sign up. Please try again.");
     }
+    console.log("Sign up successful!");
+    setIsLoading(false);
   };
 
   return {
@@ -83,5 +89,6 @@ export default function useSignUpViewModel(
     isEmailValid,
     isPasswordValid,
     isConfirmPasswordValid,
+    isLoading,
   };
 }
